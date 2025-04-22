@@ -49,3 +49,10 @@ Content-Type: application/json
   "price": "1101",
   "category": "test category"
 }
+
+
+
+
+### Get Products with Cookie
+GET http://localhost:3000/admin/getProducts
+cookies:

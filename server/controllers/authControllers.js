@@ -17,15 +17,16 @@ const localLogin = (req, res, next) => {
       if (!user) return res.status(401).json({ message: info?.message|| "Invalid username or password" }) 
       
        const Payload={userID:user._id.toString(),isadmin:user.isadmin}
-       console.log(Payload)
+      
       const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN, { expiresIn: "1h" });
-      console.log(accessToken)
+      
       const refreshToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
-      console.log(refreshToken)
+   
       await redis.set(`refresh:${user._id.toString()}`,  refreshToken); 
       res.cookie("access_token", accessToken, { httpOnly: true, secure: false,maxAge:24*60*60*1000 });
+      
       if(user.isadmin){
-        return res.json({message:'welcome admin',isadmin:user.isadmin})
+        return res.json({message:'welcome admin',isadmin:user.isadmin , accessToken,refreshToken})
       }
       return res.json({message:'welcome user'})
   })(req, res, next)

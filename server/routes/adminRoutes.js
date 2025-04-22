@@ -4,7 +4,7 @@ const {addProduct,getProducts,getProductById,editProduct,deleteProduct}=require(
 const upload=require('../config/multer')
 const {verifyToken,isAdmin}=require('../Middleware/authMiddleware')
 // router.use(verifyToken)
-// router.use(isAdmin)
+router.use(isAdmin)
 
 router.post('/addProduct',upload.array("images"),addProduct)
 router.get('/getProducts',getProducts)

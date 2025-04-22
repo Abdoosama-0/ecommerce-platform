@@ -23,6 +23,7 @@ const refreshAccessToken=(refreshToken)=>{
 const verifyToken= async (req, res, next) => {
     const accessToken = req.cookies.access_token 
     if (!accessToken) {
+        console.log("no access_token")
         return res.status(401).json({ message: "Unauthorized, you must have accessToken to do this" });
     }
 
@@ -75,15 +76,40 @@ const user = await User.findById(decodedPayload.userID);
 
 
 
-
+/**
+access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2ODAzMjJmZDAxMzg5NmZhMzUwNTcxZTgiLCJpc2FkbWluIjp0cnVlLCJpYXQiOjE3NDUyODI2NjEsImV4cCI6MTc0NTI4NjI2MX0.98758NNGuJ2rIUMlmK-QFz7iKbLBGKdHmqix2Llg88o; Path=/; HttpOnly; Expires=Wed, 23 Apr 2025 00:44:21 GMT;
+ */
 
 //==========================================================================================
 const isAdmin =async(req,res,next)=>{
-  const  role=req.user.role
-  if(!role){return res.status(404).json({msg:"user not found"})}
-  if(role==="Admin"){return next()}
-  return res.status(401).json({msg:"this command is only for admins "})
-}
+
+  const token=req.cookies.access_token 
+ 
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, you must have accessToken to do this" });
+  }
+  try{
+  const decodedPayload = jwt.verify(token, process.env.SECRET_TOKEN );
+  console.log("decodedPayload",decodedPayload)
+
+  if(!decodedPayload) {
+    return res.status(401).json({ message: "wrong access token" });
+  }
+  const isadmin=decodedPayload.isadmin
+
+  if(isadmin){
+
+    return next()
+  }
+  else{
+    console.log("not admin")
+    return res.status(403).json({ message: "you are not admin" });
+  }
+}catch(error){
+  console.log("error",error)
+  return res.status(403).json({ message: "invalid token" });
+
+}}
 
 
 //==========================================================================================
