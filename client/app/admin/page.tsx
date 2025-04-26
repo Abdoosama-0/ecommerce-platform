@@ -1,9 +1,50 @@
+'use client';
+import Auth from "@/components/auth";
+import Loading from "@/components/loading";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 
 export default function Admin() {
+  const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState<string>("");
+  const [auth, setAuth] = useState<boolean>(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch("http://localhost:3000/admin/adminWelcome", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                });
+                const data = await res.json();
+                setMessage(data.message);
+                if (res.ok) {
+                    setAuth(true);
+                    
+                }
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
     return (
- 
+      <>
+      {loading ? (<><Loading/></>):(<>
+      {!auth &&
+      <Auth error={message}/>
+      }
+
+
+      {auth && 
         <div className="flex flex-col  bg-blue-500 min-h-screen gap-5">
           <h1 className="m-2">Welcome  Admin</h1>
 
@@ -22,8 +63,8 @@ export default function Admin() {
           </div>
         
         </div>
-    
-  
+       }
+  </>)}</>
     );
   }
   

@@ -1,13 +1,36 @@
 const Product=require('../models/products')
+const Order = require('../models/order');
+
+const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('userId', 'name email') // يعرض اسم وإيميل المستخدم
+      .populate('products.productId', 'title price'); // يعرض اسم وسعر كل منتج
+
+    res.status(200).json({message:"all orders",orders} );
+  } catch (error) {
+    console.error( 'Error fetching orders:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+const adminWelcome= async(req,res)=>{
+  return res.json({message:'welcome admin'})
+
+}
+
 
 const addProduct=async(req,res)=>{
     try {
         const { title, price, details, category } = req.body;
-        let imageUrls = []; 
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ error: "No images uploaded" });
+        let imageUrls = [];
+    
+        // التحقق إذا كان في صور مرفوعة
+        if (req.files && req.files.length > 0) {
+          // إضافة الصور الجديدة للمصفوفة
+          imageUrls = req.files.map((file) => file.path);
         }
-       imageUrls = req.files.map((file) => file.path);
        
         const newProduct = new Product({
           title,
@@ -65,13 +88,13 @@ const addProduct=async(req,res)=>{
         const id = req.query.id;
         let imageUrls = [];
     
-        // التحقق إذا كان في صور مرفوعة
+        
         if (req.files && req.files.length > 0) {
-          // إضافة الصور الجديدة للمصفوفة
+         
           imageUrls = req.files.map((file) => file.path);
         }
     
-        // التحقق من وجود صور قديمة في الـ body
+
         if (req.body.existingImages) {
           try {
             const existingImages = JSON.parse(req.body.existingImages); // فك الـ JSON للصور القديمة
@@ -128,4 +151,4 @@ const addProduct=async(req,res)=>{
       }
     }
 
-module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct}
+module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders}

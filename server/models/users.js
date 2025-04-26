@@ -22,14 +22,15 @@ const userSchema=new Schema({
         type:String
     },
 
-    isadmin:{
+    isAdmin:{
         type:Boolean,
         default:false
     },
     cart: {
         type: Array, 
         default: [] 
-    }
+    },
+
 })
 userSchema.methods.verifyPassword = async function(password) {
     return await bcrypt.compare(password, this.password);

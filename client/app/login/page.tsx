@@ -27,9 +27,8 @@ const router = useRouter(); // ← داخل الدالة الرئيسية
           const data = await res.json();
     
           if (res.ok) {
-            console.log(data.message); // ← هنا بنطبع البيانات المستلمة من السيرفر
-            console.log(data.isadmin); 
-            if (data.isadmin) {
+       
+            if (data.isAdmin){
               router.push("/admin"); // ← ينقلك لصفحة الادمن
             }else {
             router.push("/"); // ← ينقلك للصفحة الرئيسية

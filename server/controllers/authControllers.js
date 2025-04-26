@@ -7,7 +7,7 @@ const validator = require('validator');
 
 //=========================================
 const jwt=require('jsonwebtoken')
-const redis=require('../config/redis')
+
 
 //=========================================================================
 
@@ -16,19 +16,15 @@ const localLogin = (req, res, next) => {
       if (err) return res.status(500).json({ message: "Server error", error: err }) 
       if (!user) return res.status(401).json({ message: info?.message|| "Invalid username or password" }) 
       
-       const Payload={userID:user._id.toString(),isadmin:user.isadmin}
+       const Payload={userID:user._id.toString(),isAdmin:user.isAdmin}
       
-      const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN, { expiresIn: "1h" });
+      const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN, { expiresIn: "72h" });
       
-      const refreshToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
    
-      await redis.set(`refresh:${user._id.toString()}`,  refreshToken); 
-      res.cookie("access_token", accessToken, { httpOnly: true, secure: false,maxAge:24*60*60*1000 });
+      res.cookie("access_token", accessToken, { httpOnly: true, secure: false, maxAge: 100 * 365 * 24 * 60 * 60 * 1000 }); // 100 years
       
-      if(user.isadmin){
-        return res.json({message:'welcome admin',isadmin:user.isadmin , accessToken,refreshToken})
-      }
-      return res.json({message:'welcome user'})
+     
+      return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
   })(req, res, next)
 }
 
