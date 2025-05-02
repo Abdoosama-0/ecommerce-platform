@@ -1,6 +1,7 @@
 'use client'
 import Auth from "@/components/auth";
 import Loading from "@/components/loading";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 
@@ -25,6 +26,7 @@ export default function Orders() {
     createdAt: string;
     totalQuantity: number;
     totalPrice: number;
+    status: string;
   }
   const[data,setData]=useState<Order[]>([])
  const [loading, setLoading] = useState(true)
@@ -77,9 +79,10 @@ export default function Orders() {
 {loading ? (<><Loading/></>):(<>
 {!auth ? (<><Auth error={message}/></>) : (<>
 
-<main className="min-h-screen bg-gray-100 p-4">
+<main className="min-h-screen bg-gray-100 p-4 ">
+  <div className=" flex flex-col gap-2">
 {data.map((order,index) => (
-
+<Link href={`/admin/orders/${order._id}/`}>
 <div key={index} className="flex flex-col gap-1  text-xl font-bold bg-blue-400 rounded-lg p-4 ">
  
     <div className="flex flex-row gap-10 ">
@@ -89,16 +92,17 @@ export default function Orders() {
     <div className="flex flex-row gap-10 ">
     <span>Number of products: {order.totalQuantity}</span>
     <span>total price: {order.totalPrice}</span>
+    <span>status: {order.status}</span>
     </div>
     <span>time: { new Date(order.createdAt).toLocaleString('en-GB', options)}</span>
 
   </div>
 
 
-
+  </Link>
 ))}
 
-
+</div>
 </main>
 
 

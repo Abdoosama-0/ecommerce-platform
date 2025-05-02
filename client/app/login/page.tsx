@@ -1,38 +1,43 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { use, useEffect } from "react";
 import { useState } from "react";
 
 export default function LoginPage() {
 const url = "http://localhost:3000";
 const router = useRouter(); // ← داخل الدالة الرئيسية
 
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // <-- هنا بنخزن رسالة الخطأ
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
         try {
+          const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: string, quantity: number }[];
+        
           const res = await fetch(`${url}/auth/localLogin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
              credentials: 'include',
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username, password,cart }),
           });
     
           const data = await res.json();
     
           if (res.ok) {
+            localStorage.setItem('isLogged','true')
        
-            if (data.isAdmin){
-              router.push("/admin"); // ← ينقلك لصفحة الادمن
-            }else {
+            localStorage.removeItem('cart');
+          
+
             router.push("/"); // ← ينقلك للصفحة الرئيسية
-            }
+            
             // ممكن تحفظ التوكن هنا أو تنقل المستخدم
           } else {
             setErrorMessage(data.message || 'Login failed'); // <-- عرض الخطأ للمستخدم

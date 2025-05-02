@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import EditProduct from "@/components/updateProduct";
 import Loading from "@/components/loading";
 import Auth from "@/components/auth";
@@ -9,7 +8,7 @@ import Images from "@/components/images";
 export default function Product() {
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<string >("");
-  const [auth, setAuth] = useState<boolean>(false);
+
   type data={
     imageUrls: string[];
     // حسب شكل المنتج في قاعدة البيانات
@@ -23,9 +22,15 @@ export default function Product() {
 const [data, setData] = useState<data | null>(null); 
 const [edit,setEdit]=useState(false)
 
-  const fetchData = async (productId:string) => {
+
+useEffect(() => {
+  const path = window.location.pathname;
+const segments = path.split('/');
+const productId = segments[1]; 
+console.log(productId)
+const fetchData = async () => {
     try {
-    const res = await fetch(`http://localhost:3000/admin/getProductById?id=${productId}`, {
+    const res = await fetch(`http://localhost:3000/product?id=${productId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -33,27 +38,24 @@ const [edit,setEdit]=useState(false)
       credentials: 'include',
     });
     const data = await res.json();
-    setMessage(data.message)
-    if (res.ok) {
-      console.log('Product data:', data); // هنا بنطبع البيانات في الكونسول
-      setData(data); // هنا بنخزن البيانات في الحالة
-      setAuth(true); 
+   
+    if (!res.ok) {
+        setMessage(data.message)
+      
+   
     } 
     else {
-      console.error('Error fetching product data:', data.message);
+     
+      setData(data); 
     }
+    
     setLoading(false)
   }catch (error) {
     setLoading(false)
     console.error('Error fetching data:', error);
   }}
-useEffect(() => {
-  const path = window.location.pathname;
-const segments = path.split('/');
-const productId = segments[3]; 
 
-
-  fetchData(productId); 
+  fetchData();
 }, []); 
 
 
@@ -80,10 +82,10 @@ const goToPreviousImage = () => {
 
     return (
 <main className="">
-{/* {loading ? (<><Loading/></>):(<></>)} */}
+
   {loading ? (<><Loading/></>):(<>
 
-    {!auth ? (<><Auth error={message}/></>) : (<>
+    
        {/* =============================part 1 (edit)=================================== */}
     
   <div className="bg-gray-700 min-h-screen w-full flex flex-col p-4 text-3xl text-white font-bold ">
@@ -107,25 +109,14 @@ const goToPreviousImage = () => {
   </div>
   {/* ==================================third element============================================ */}
        
-          <button onClick={() => setEdit(true)} className="px-4 bg-gray-900 w-fit mt-4 text-white p-2 rounded-lg justify-center items-center  cursor-pointer">
-            Edit</button>
+         
        
   </div>
 
 
-        {/* =============================part 2 (edit)=================================== */}
-        {edit && 
-        <>
-       
-        <div onClick={() => setEdit(false)} className='fixed z-10 top-0 left-0 w-full h-full bg-gray-900 opacity-90 flex items-center justify-center'>
-        </div>
-    
-        <EditProduct  currentCategory={data?.category } currentDetails={data?.details} currentPrice={data?.price} currentTitle={data?.title} currentImages={data?.imageUrls}/>
-        
-        </>
-        }
+      
 </>) }
-</>)}
+
 </main>
   
     );

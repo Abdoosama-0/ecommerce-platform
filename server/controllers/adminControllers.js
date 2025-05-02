@@ -1,5 +1,73 @@
 const Product=require('../models/products')
 const Order = require('../models/order');
+const User = require('../models/users');
+
+const banUser = async (req, res) => {
+  const userId = req.query.id; // الحصول
+
+  const user = await User.findById(userId);
+  if (!user) {
+return res.status(404).json({ message: 'User not found' });
+  }
+  user.isBanned = !user.isBanned;
+
+  await user.save();
+  return res.status(200).json({ message: 'success', newStatus:user.isBanned });
+}
+
+const getUsers = async (req, res) => {
+const users =await User.find()
+ .select('_id name email phone address isAdmin isBanned') // تحديد الحقول التي تريد إرجاعها
+if (!users) {
+  return res.status(404).json({ message: 'Users not found' });
+}
+const usersCount = await User.countDocuments(); // إجمالي المستخدمين
+return res.status(200).json({ message: 'all Users', usersCount, users });
+
+
+}
+
+
+const updateOrderStatus = async (req, res) => {
+  const orderId = req.query.id; // الحصول
+
+  const { status } = req.body; // الحصول على الحالة الجديدة من الطلب
+    if(!status) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
+    if (!['pending', 'shipped', 'delivered', 'cancelled'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' ,validValues:['pending', 'shipped', 'delivered', 'cancelled']}); 
+    }
+ 
+    // تحديث حالة الطلب في قاعدة البيانات
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }, // لإرجاع النسخة المحدثة من الطلب
+
+    );
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json({ message: 'Order status updated successfully', order: updatedOrder });
+  
+};
+
+
+const getOrder = async (req, res) => {
+  const orderId = req.query.id; 
+  const order = await Order.findById(orderId)
+  .populate('userId', 'name email phone address') 
+  .populate('products.productId', 'title price imageUrls'); 
+  if (!order) {
+    return res.status(404).json({ message: 'Order not found' });
+  }
+  res.status(200).json({message:"order found",order} );
+
+
+}
+
+
 
 const getOrders = async (req, res) => {
   try {
@@ -151,4 +219,4 @@ const addProduct=async(req,res)=>{
       }
     }
 
-module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders}
+module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser}

@@ -1,19 +1,32 @@
 require('../config/mongo')
-const mongoose =require('mongoose')
+const mongoose =require('mongoose');
+
 const Schema=mongoose.Schema
+const addressSchema = new mongoose.Schema({
+    government: { type: String, required: true },
+    city: { type: String, required: true },
+    area :{ type: String, required: true },
+    street: { type: String },
+    buildingNumber: { type: String },
+    departmentNumber: { type: String },
+    // أضف المزيد من الحقول حسب الحاجة
+  });
 const orderSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [
       {
+        _id: false, // <-- هذا يمنع إنشاء _id تلقائيًا لكل عنصر
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
         quantity: Number,
       }
     ],
+    status: { type: String, enum: ['pending', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
     createdAt: { type: Date, default: Date.now },
     totalQuantity: { type: Number, default: 0 },
     totalPrice: { type: Number, default: 0 },
+    address:{ type: addressSchema,required:true },
+    paymentMethod:{ type: String, enum: ['cash on delivery'], default: 'cash on delivery' },
   });
 
-  const order =mongoose.model('order',orderSchema)
-  module.exports= order
-  
+  const Order = mongoose.model('Order', orderSchema); // <-- لاحظ حرف الـ O الكبير
+  module.exports = Order;

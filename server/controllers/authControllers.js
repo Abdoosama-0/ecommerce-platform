@@ -13,9 +13,17 @@ const jwt=require('jsonwebtoken')
 
 const localLogin = (req, res, next) => {
   passport.authenticate('local', { session: false }, async(err, user, info) => {
+    
       if (err) return res.status(500).json({ message: "Server error", error: err }) 
       if (!user) return res.status(401).json({ message: info?.message|| "Invalid username or password" }) 
+
+        const cart=req.body.cart||[]
       
+      const editUser =await User.findById(user._id)
+      if (!editUser) return res.status(401).json({ message: "User not found" })
+        editUser.cart=cart
+      await editUser.save()
+
        const Payload={userID:user._id.toString(),isAdmin:user.isAdmin}
       
       const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN, { expiresIn: "72h" });
@@ -53,15 +61,20 @@ if(!validator.isStrongPassword(password)){
 
 
 //================================================================================================================
-
+const address=req.body.address||""
+const phone=req.body.phone||""
 
 //================================================================================================================
     const hashed =await bcrypt.hash(password,10)
     const newUser=new User({
+
+       
          name,
          email,
          username,
          password:hashed,
+         address,
+         phone,
         
     })
     await newUser.save()
