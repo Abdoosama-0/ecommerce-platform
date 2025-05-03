@@ -6,6 +6,13 @@ const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
 
+const addresses =async (req,res)=>{
+  const user= await User.findById(req.userId)
+  if(!user){
+    return res.status(404).json({ message: 'User not found' });
+  }
+  return res.status(200).json({ message: 'succuss get addresses' ,addresses: user.addresses });
+}
 
 const logout = (req, res) => {
   res.clearCookie('access_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
@@ -119,7 +126,7 @@ const order = async (req, res) => {
   try {
     const {  address,paymentMethod,products } = req.body;
     const userId=req.userId
-    console.log(userId)
+  
     if (
       !address ||
       !address.government ||
@@ -186,7 +193,7 @@ const address = async (req, res) => {
   }
 
   
-    const user = await User.findById(req.userID);
+    const user = await User.findById(req.userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -202,4 +209,4 @@ const address = async (req, res) => {
   
 };
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses}

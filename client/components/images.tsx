@@ -30,14 +30,14 @@ const goToNextImage = () => {
   
 
     return (
-       <div className=" w-[70%] h-auto aspect-[4/5] md:aspect-[16/9] bg-zinc-800 relative rounded-xl overflow-hidden">
-           <Image
-             src={imageUrls? imageUrls[currentImageIndex] : ''}
-             alt={'Product'}
-             layout="fill"
-             objectFit="contain"
-             className="object-cover"
-           />
+      <div className="min-w-[17rem] min-h-[25rem]  aspect-[auto] bg-zinc-800 relative rounded-xl overflow-hidden">
+  <Image
+    src={imageUrls ? imageUrls[currentImageIndex] : 'https://wallpapers.com/images/hd/blank-white-background-xbsfzsltjksfompa.jpg'}
+    alt="Product"
+    layout="fill"
+    objectFit="cover"//contain fill cover none scale-down
+    priority
+  />
            
            {/* زر التبديل للصورة السابقة */}
            <button

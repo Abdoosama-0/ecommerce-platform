@@ -30,7 +30,7 @@ export default function  Nav() {
     
   return (
     
-<main className="absolute top-0 left-0 w-full h-16  bg-slate-950 shadow-md z-50 flex items-center text-2xl text-white font-bold justify-between ">
+<main className="absolute top-0 left-0 w-full h-16  bg-slate-950 shadow-md z-30 flex items-center text-2xl text-white font-bold justify-between ">
 
     <div className="ml-10  w-full">
     <Link href={`/`}>
