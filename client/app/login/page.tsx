@@ -36,7 +36,7 @@ const router = useRouter(); // ← داخل الدالة الرئيسية
             localStorage.removeItem('cart');
           
 
-            router.push("/"); // ← ينقلك للصفحة الرئيسية
+            router.back(); // ← ينقلك للصفحة الرئيسية
             
             // ممكن تحفظ التوكن هنا أو تنقل المستخدم
           } else {

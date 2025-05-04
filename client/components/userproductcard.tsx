@@ -1,61 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import deleteProduct from '@/utils/deleteProduct';
 import Link from 'next/link';
+import AddToCart from './addToCart';
 
 interface ProductCardProps {
   image?: string;
   title?: string;
-  price?: string;
+  price?: number;
   productId?: string;
 }
-const url = "http://localhost:3000";
+
+
 const UserProductCard = ({ image, title, price, productId }: ProductCardProps) => {
-  const handleClick = async(productId: string) => {
 
 
-    if(localStorage.getItem('isLogged')==='true'){
-      try{
-        const res= await fetch(`${url}/addToCart`,{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-         
-          credentials: 'include',
-          body:JSON.stringify({ product: { productId, quantity: 1 } }),
-        })
-      }catch(err){
-        console.log(err)
-      }
 
-    }
-    else{
-    // الحصول على العربة الحالية أو إنشاء واحدة جديدة
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: string, quantity: number }[];
-  
-    // البحث عن العنصر داخل العربة
-    const existingItem = cart.find(item => item.productId === productId);
-  
-    if (existingItem) {
-      // إذا كان المنتج موجود، زيادة الكمية
-      existingItem.quantity += 1;
-    } else {
-      // إذا لم يكن موجود، إضافته مع كمية 1
-      cart.push({ productId: productId, quantity: 1 });
-    }
-  
-    // حفظ التحديث في localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-  
-    // عرض النتيجة في الكونسول (اختياري)
-    console.log('=========================================');
-    console.log(localStorage.getItem('cart'));
-    console.log('=========================================');
-  }
-
-  };
-  
   
   return (
     <Link  href={`/${productId}/`}>
@@ -77,10 +37,8 @@ const UserProductCard = ({ image, title, price, productId }: ProductCardProps) =
         <span>{price} EGP</span>
 
   
-      </div>
-      <div  onClick={(e) => {  e.preventDefault();productId && handleClick(productId)}} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
-        <h1>add to cart</h1>
-      </div>
+      </div> 
+     {productId && <AddToCart productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
       
     </div></Link>
   )

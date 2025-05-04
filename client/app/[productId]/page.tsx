@@ -5,10 +5,16 @@ import Loading from "@/components/loading";
 import Auth from "@/components/auth";
 import Images from "@/components/images";
 import NewAddress from "@/components/newAddress";
+import AddToCart from "@/components/addToCart";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Product() {
+  const url="http://localhost:3000"
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<string >("");
+const router = useRouter();
 
   type data={
     imageUrls: string[];
@@ -20,15 +26,20 @@ export default function Product() {
     category: string;
     // ضيف باقي الخصائص لو فيه أكتر
   }
+  const [edit,setEdit]=useState(false)
 const [data, setData] = useState<data | null>(null); 
-const [edit,setEdit]=useState(false)
 
+useEffect(()=>{
+  console.log('========================')
+
+  console.log(JSON.parse(localStorage.getItem('isLogged')||'[]'))
+},[])
 
 useEffect(() => {
   const path = window.location.pathname;
 const segments = path.split('/');
 const productId = segments[1]; 
-console.log(productId)
+
 const fetchData = async () => {
     try {
     const res = await fetch(`http://localhost:3000/product?id=${productId}`, {
@@ -39,7 +50,7 @@ const fetchData = async () => {
       credentials: 'include',
     });
     const data = await res.json();
-   
+  
     if (!res.ok) {
         setMessage(data.message)
       
@@ -48,6 +59,7 @@ const fetchData = async () => {
     else {
      
       setData(data); 
+      console.log(data.price)
     }
     
     setLoading(false)
@@ -58,18 +70,17 @@ const fetchData = async () => {
 
   fetchData();
 }, []); 
+const price = data?.price || 0
+const [quantity,setQuantity]=useState<number>(1)
+const [totalPrice, setTotalPrice] = useState<number>(quantity * price);
+useEffect(()=>{
+
+setTotalPrice(quantity*price)
+
+},[quantity, price])
 
 
 
-
-
-useEffect(() => {
-  console.log("productId");
-  console.log(productId);
-
-  console.log("productId");
-}, []);
-const url="http://localhost:3000"
 type address={
   government: string,
  city:string,
@@ -117,8 +128,16 @@ useEffect(() => {
 const path = window.location.pathname;
 const segments = path.split('/');
 const productId = segments[1];
-const [quantity,setQuantity]=useState<number>(1)
+
 const [paymentMethod,setPaymentMethod]=useState<string>("cash on delivery")
+
+
+
+
+
+
+
+
 const orderData = {
   products: [
     {
@@ -170,6 +189,8 @@ const handleSubmit = async(e: React.FormEvent)=>{
     console.log(err)
   }
 }
+
+
     return (
 <main className="">
 
@@ -195,8 +216,15 @@ const handleSubmit = async(e: React.FormEvent)=>{
   </div>
 
   <div className=" border-2 p-2 flex flex-col  w-full md:w-[40%] gap-2">
-      <button  onClick={()=>{setClicked(true) ; getAddresses()}} className="cursor-pointer w-full p-2 bg-slate-800 rounded-2xl hover:opacity-50">buy</button>
-      <button className="cursor-pointer w-full p-2 bg-slate-800 rounded-2xl hover:opacity-50">add to cart</button>
+      <button   onClick={() => {
+    // if (localStorage.getItem('isLogged') === 'true') {
+      router.push('/login');
+    // } else {
+    //   setClicked(true);
+    //   getAddresses(); // استدعاء الدالة عند الضغط إذا لم يكن مسجلاً الدخول
+    // }
+  }} className="cursor-pointer w-full p-2 bg-slate-800 rounded-2xl hover:opacity-50">buy</button>
+        {productId && <AddToCart productId={productId} name={data?.title || "Unknown Product"} price={data?.price|| 0} imageUrl={data?.imageUrls[0] || ""} />}
    
   </div>
 </div>
@@ -216,14 +244,34 @@ const handleSubmit = async(e: React.FormEvent)=>{
 
       
 </>) }
+
 {clicked&&(
+// =================================
   <>
+{/* {localStorage.getItem('isLogged')==='true' ? (router.push('/login'))
+:(<>  </>)} */}
+
   <div onClick={()=>{setClicked(false)}} className=" fixed inset-0 bg-slate-900 opacity-90 z-40 ">
 
   </div>
 
-  <form onSubmit={handleSubmit}  className= '  bg-white text-black fixed z-50 inset-0 m-auto rounded-lg w-[80%] h-[80%] overflow-hidden  flex flex-col gap-2'>
+  <form onSubmit={handleSubmit}  className= '  bg-white text-black fixed z-50 inset-0 m-auto rounded-lg w-[80%] h-[85%] overflow-hidden  flex flex-col gap-2'>
   <div className=' overflow-y-auto p-4 '>
+  <label className="block mb-2 text-sm font-medium text-gray-700">
+  Quantity11
+</label>
+<select
+  value={quantity}
+  onChange={(e) => setQuantity(Number(e.target.value))}
+  className="w-full p-2 border rounded-lg text-black mb-2"
+>
+  {Array.from({ length: 10 }, (_, i) => (
+    <option key={i + 1} value={i + 1}>
+      {i + 1}
+    </option>
+  ))}
+</select>
+
   <label className="block mb-2 text-sm font-medium text-gray-700">
           Payment Method
         </label>
@@ -238,7 +286,7 @@ const handleSubmit = async(e: React.FormEvent)=>{
         <label className="block mb-2 text-sm font-medium text-gray-700">
           choose address
         </label>
-        <div className="flex flex-col gap-2 w-full p-2 text-black max-h-80  overflow-y-auto">
+        <div className="flex flex-col gap-2 w-full p-2 text-black max-h-72  overflow-y-auto">
   {addresses.slice().reverse().map((address, index)=> (
     <div
       key={index}
@@ -265,10 +313,18 @@ const handleSubmit = async(e: React.FormEvent)=>{
 
           
   </div>
-
+ <h1>totalPrice : {totalPrice}</h1>
 <button  type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
     </form>
-  </>)}
+  
+  
+  
+  
+  
+  
+  </>
+// =================================
+)}
 
   {add&&(
   <>

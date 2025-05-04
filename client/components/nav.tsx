@@ -19,7 +19,7 @@ export default function  Nav() {
       if(res.ok){
         localStorage.setItem('isLogged','false')
         alert('logged out successfully')
-        window.location.reload
+        window.location.reload()
       }
     }catch(err){
       console.log(err)

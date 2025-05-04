@@ -5,6 +5,90 @@ const Order = require('../models/order');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
+const deleteFromCart = async (req, res) => {
+  const user = await User.findById(req.userId);
+  const { productId } = req.body;
+
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+
+  // التأكد من وجود المنتج في السلة
+  const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+
+  if (productIndex === -1) {
+    return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
+  }
+
+  // حذف المنتج من السلة
+  user.cart.splice(productIndex, 1);
+
+  // حفظ التغييرات
+  await user.save();
+
+  return res.status(200).json({ message: 'تم حذف المنتج من السلة بنجاح' });
+};
+
+
+
+const decreaseQuantity = async (req, res) => {
+  const user = await User.findById(req.userId);
+  const { productId } = req.body;
+
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+
+  // البحث عن المنتج داخل سلة التسوق
+  const product = user.cart.find(item => item.productId.toString() === productId);
+  
+  if (!product) {
+    return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
+  }
+
+ 
+  // تقليل الكمية
+  if (product.quantity > 1) {
+    product.quantity--;
+    await user.save();
+  } else {
+    // إذا كانت الكمية 1، نقوم بحذف المنتج من السلة
+    const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+    if (productIndex !== -1) {
+      user.cart.splice(productIndex, 1);
+      await user.save();
+      return res.status(200).json({ message: 'تم حذف العنصر' });
+    }
+  }
+  // حفظ التغييرات
+
+
+  return res.status(200).json({ message: 'تمت النقصان بنجاح', quantity: product.quantity });
+};
+const increaseQuantity = async (req, res) => {
+  const user = await User.findById(req.userId);
+  const { productId } = req.body;
+
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+
+  // البحث عن المنتج داخل سلة التسوق
+  const product = user.cart.find(item => item.productId.toString() === productId);
+  
+  if (!product) {
+    return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
+  }
+
+  // زيادة الكمية
+  product.quantity++;
+
+  // حفظ التغييرات
+  await user.save();
+
+  return res.status(200).json({ message: 'تمت الزيادة بنجاح', quantity: product.quantity });
+};
+
 
 const addresses =async (req,res)=>{
   const user= await User.findById(req.userId)
@@ -78,11 +162,13 @@ const cart= async(req,res)=>{
   if (!userId){
     return res.status(404).json({message:'userId not found'})
   }
-  const user = await User.findById(userId)
-  if (!userId){
+  const user = await User.findById(userId).populate('cart.productId', 'title price imageUrls');
+  if (!user){
     return res.status(404).json({message:'user not found'})
   }
+ 
   return res.status(200).json({message:'get user card successfully' ,cart:user.cart})
+
 }
 
  
@@ -209,4 +295,4 @@ const address = async (req, res) => {
   
 };
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart}

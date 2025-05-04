@@ -21,7 +21,7 @@ const localLogin = (req, res, next) => {
       
       const editUser =await User.findById(user._id)
       if (!editUser) return res.status(401).json({ message: "User not found" })
-        editUser.cart=cart
+        editUser.cart=[...cart,...editUser.cart]
       await editUser.save()
 
        const Payload={userID:user._id.toString(),isAdmin:user.isAdmin}

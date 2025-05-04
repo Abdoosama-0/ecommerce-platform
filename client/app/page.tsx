@@ -117,7 +117,7 @@ useEffect(() => {
                     title={el.title}
                     image={el.imageUrls[0]}
                     productId={el._id}
-                    price={el.price.toString()}
+                    price={el.price}
                   />
       
             ))}
