@@ -37,16 +37,21 @@ const localLogin = (req, res, next) => {
 }
 
 const register = async(req,res)=>{
-    const {name,email,username,password}=req.body
+    const {name,email,username,password,phone}=req.body
+    if(
+      !name||!email||!username||!password||!phone
+    ){
+      return res.status(400).json({message:"complete the data please"})
+    }
 //===================================================================check email=============================================
 //is eil valid
      if(!validator.isEmail(email)){
-       return res.status(400).json({msg:"this is not an email"})
+       return res.status(400).json({message:"this is not an email"})
      }
 //is email already token
      const emailIsExists=await User.findOne({email:email})
      if(emailIsExists){
-        return res.status(400).json({msg:"this email is already used"})
+        return res.status(400).json({message:"this email is already used"})
      }
 //===================================================================check username=============================================
 //is username already token
@@ -56,13 +61,13 @@ if(usernameIsExists){
 }
 //===================================================================check password=============================================
 if(!validator.isStrongPassword(password)){
-    return res.status(400).json({msg:"Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."})
+    return res.status(400).json({message:"Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."})
 }
 
 
 //================================================================================================================
-const address=req.body.address||""
-const phone=req.body.phone||""
+
+
 
 //================================================================================================================
     const hashed =await bcrypt.hash(password,10)
@@ -73,12 +78,11 @@ const phone=req.body.phone||""
          email,
          username,
          password:hashed,
-         address,
          phone,
         
     })
     await newUser.save()
-    res.json({msg:"done"})//res.redirect('/auth/login')
+    res.json({message:"done"})//res.redirect('/auth/login')
 
 }
 module.exports={register,localLogin}

@@ -220,8 +220,7 @@ const handleIncrease = async (productId:string) => {
     
   return (
     <>
-    {loading ? (<> <h1 onClick={(e) => {  e.preventDefault()}} className="flex items-center justify-center py-1 px-2 rounded-2xl w-full border-2 border-amber-600"> loading...</h1></>):(
-        < >
+
   {//code js
       (// start
         () => {//fun
@@ -230,7 +229,11 @@ const handleIncrease = async (productId:string) => {
              
               return <div  onClick={(e) => {  e.preventDefault()}} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
                 <button onClick={(e)=>{e.preventDefault();handleIncrease(cart[itemIndex].productId._id)}} className="cursor-pointer">+ </button>
-                <p>{cart[itemIndex].quantity}</p>
+                <p>  
+                {loading ? (<> <h1 onClick={(e) => {  e.preventDefault()}} className=" "> loading...</h1></>):(
+        < > {cart[itemIndex].quantity}</>)}
+                  
+                 </p>
                 <button onClick={(e)=>{e.preventDefault();handleDecrease(cart[itemIndex].productId._id)}} className="cursor-pointer">- </button>
               </div>
      
@@ -243,7 +246,7 @@ const handleIncrease = async (productId:string) => {
         )
         ()//call fun
           }
-          </>)}
+          
           </>
   );
 
