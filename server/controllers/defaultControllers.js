@@ -5,6 +5,47 @@ const Order = require('../models/order');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
+
+const updateUserData = async (req,res)=>{
+  const { username, email, name, phone } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.userId,
+    {
+      username,
+      email,
+      name,
+      phone
+    },
+    {
+      new: true,           // يرجع النسخة المحدّثة من المستخدم
+      runValidators: true  // يتأكد من صحة البيانات حسب الـ Schema
+    }
+  );
+
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+
+  return res.status(200).json({ user });
+}
+
+
+
+const userData = async (req,res)=>{
+  const user = await User.findById(req.userId)
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+  return res.status(200).json({ 
+    username: user.username,
+    email:user.email,
+    name:user.name,
+    isAdmin:user.isAdmin,
+    phone:user.phone,
+    addresses:user.addresses
+   });
+}
+
 const deleteFromCart = async (req, res) => {
   const user = await User.findById(req.userId);
   const { productId } = req.body;
@@ -295,4 +336,4 @@ const address = async (req, res) => {
   
 };
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData}

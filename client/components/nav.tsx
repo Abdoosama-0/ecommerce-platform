@@ -51,7 +51,12 @@ export default function Nav() {
           </Link>
         )  : 
         (
+          <>
           <h1 className="cursor-pointer" onClick={handleClick}>logout</h1>
+          <Link href={`/userdata`}>
+            userData
+          </Link>
+        </>
         )
         }
       </div>

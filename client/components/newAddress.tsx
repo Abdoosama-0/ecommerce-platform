@@ -45,7 +45,9 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
           departmentNumber
         }
         }),
-      });
+
+      }
+    );
 
       const data = await res.json();
       

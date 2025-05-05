@@ -1,6 +1,6 @@
 const express = require('express')
 const router=express.Router()
-const {order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart}=require('../controllers/defaultControllers')
+const {order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData}=require('../controllers/defaultControllers')
 const { isUser } = require('../Middleware/authMiddleware')
 
 router.post('/order',isUser,order)
@@ -16,6 +16,8 @@ router.get('/addresses',isUser,addresses)
 router.patch('/increaseQuantity',isUser,increaseQuantity)
 router.patch('/decreaseQuantity',isUser,decreaseQuantity)
 router.delete('/deleteFromCart',isUser,deleteFromCart)
+router.get('/userData',isUser,userData)
+router.patch('/updateUserData',isUser,updateUserData)
 
 
 module.exports=router
