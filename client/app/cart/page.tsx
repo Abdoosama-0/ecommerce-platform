@@ -132,7 +132,7 @@ setLoading(false)
         })
         const data = await res.json(); 
         if(res.ok){
-          alert('clear cart success')
+         
           window.location.reload();
 
         }

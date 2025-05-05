@@ -5,7 +5,74 @@ const Order = require('../models/order');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
+const updateAddress = async (req, res) => {
+  const {
+    government,
+    city,
+    area,
+    street,
+    buildingNumber,
+    departmentNumber
+  } = req.body.currentEditAddress;
 
+  const { selectedAddressIndex } = req.body;
+
+  if (selectedAddressIndex === undefined || selectedAddressIndex < 0) {
+    return res.status(400).json({ message: 'عنوان غير صالح' });
+  }
+
+  const user = await User.findById(req.userId);
+
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+
+  if (!user.addresses[selectedAddressIndex]) {
+    return res.status(404).json({ message: 'العنوان غير موجود' });
+  }
+
+  // فقط تحديث الحقول المحددة بدون تغيير باقي البيانات
+  const current = user.addresses[selectedAddressIndex];
+
+  user.addresses[selectedAddressIndex] = {
+
+    government: government || current.government,
+    city: city || current.city,
+    area: area || current.area,
+    street: street || current.street,
+    buildingNumber: buildingNumber || current.buildingNumber,
+    departmentNumber: departmentNumber || current.departmentNumber,
+    _id: current._id
+  };
+
+  await user.save();
+
+  return res.status(200).json({ address: user.addresses[selectedAddressIndex] });
+};
+
+
+
+const deleteAddress=  async (req,res)=>{
+  const {addressIndex}=req.body
+  if (addressIndex === undefined || addressIndex === null) {
+    return res.status(400).json({ message: 'wrong request' });
+  }
+  const user = await User.findById(req.userId)
+  if (!user) {
+    return res.status(404).json({ message: 'المستخدم غير موجود' });
+  }
+  if (addressIndex < 0 || addressIndex >= user.addresses.length) {
+    return res.status(400).json({ message: 'رقم العنوان غير صالح' });
+  }
+    // حذف العنوان من المصفوفة
+    user.addresses.splice(addressIndex, 1);
+
+    // حفظ التغييرات
+    await user.save();
+
+    return res.status(200).json({ message: 'تم حذف العنوان بنجاح', addresses: user.addresses });
+
+}
 const updateUserData = async (req,res)=>{
   const { username, email, name, phone } = req.body;
   const user = await User.findByIdAndUpdate(
@@ -336,4 +403,4 @@ const address = async (req, res) => {
   
 };
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress}

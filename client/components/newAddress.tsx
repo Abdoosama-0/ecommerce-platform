@@ -13,19 +13,20 @@
 // {government,city,area,street,buildingNumber,departmentNumber}:addressProps
 import { useState } from 'react';
 interface NewAddressProps {
-  setAdd: React.Dispatch<React.SetStateAction<boolean>>; // لاستقبال setAdd من الـ parent
-  getAddresses: () => void; // لاستقبال دالة getAddresses من الـ parent
+  setAdd?: React.Dispatch<React.SetStateAction<boolean>>; // لاستقبال setAdd من الـ parent
+  getAddresses?: () => void; // لاستقبال دالة getAddresses من الـ parent
 }
 export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
   const url = "http://localhost:3000";
 
   const [government, setGovernment] = useState<string>('');
   const [city, setCity] = useState<string>('');
+ 
   const [area, setArea] = useState<string>('');
   const [street, setStreet] = useState<string>('');
   const [buildingNumber, setBuildingNumber] = useState<string>('');
   const [departmentNumber, setDepartmentNumber] = useState<string>('');
-
+ const [message, setMessage] = useState<string>('');
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // لمنع الإعادة التلقائية للصفحة عند إرسال النموذج
 
@@ -52,11 +53,17 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
       const data = await res.json();
       
       if (res.ok) {
+        setMessage('')
         console.log('Address added successfully');
-        // هنا يمكنك إضافة إشعار أو توجيه المستخدم إلى صفحة أخرى إذا رغبت
-        setAdd(false); // إغلاق الـ modal بعد إضافة العنوان بنجاح
+       if (setAdd&&getAddresses){
+        setAdd(false); 
         getAddresses();
+}else{
+  alert('address added successfully')
+  window.location.reload()
+}
       } else {
+        setMessage(data.message)
         console.log('Error adding address:', data);
       }
     } catch (error) {
@@ -137,6 +144,9 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='Enter Department Number'
           />
+        </div>
+        <div>
+          <h1 className='text-red-500 text-sm  '>{message}</h1>
         </div>
 
         {/* Submit Button */}
