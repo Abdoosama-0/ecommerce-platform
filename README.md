@@ -45,7 +45,17 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
    cd ecommerce-platform
    ```
 
-3. Install dependencies for both backend and frontend:
+3. Set up environment variables (.env file):
+
+   ```
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   NODE_ENV=development
+   PORT=5000 (Backend)
+   NEXT_PUBLIC_PORT=3000 (Frontend)
+   ```
+   
+4. Install dependencies for both backend and frontend:
 
    ```bash
    cd server
@@ -56,15 +66,7 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
    npm run dev
    ```
 
-4. Set up environment variables (.env file):
 
-   ```
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   NODE_ENV=development
-   PORT=5000 (Backend)
-   NEXT_PUBLIC_PORT=3000 (Frontend)
-   ```
 
 ## Usage
 
