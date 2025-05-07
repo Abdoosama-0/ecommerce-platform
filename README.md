@@ -36,7 +36,7 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/ecommerce-platform.git
+   git clone https://github.com/Abdoosama-0/ecommerce-platform.git
    ```
 
 2. Navigate to the project directory:
