@@ -1,5 +1,5 @@
 require('dotenv').config()
-const User=require('../models/users')
+const User=require('../models/user')
 const passport=require('passport')
 
 const bcrypt=require('bcrypt')
@@ -57,7 +57,7 @@ const register = async(req,res)=>{
 //is username already token
 const usernameIsExists=await User.findOne({username:username})
 if(usernameIsExists){
-   return res.status(400).json({msg:"this username is already used"})
+   return res.status(400).json({message:"this username is already used"})
 }
 //===================================================================check password=============================================
 if(!validator.isStrongPassword(password)){

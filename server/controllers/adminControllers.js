@@ -1,6 +1,6 @@
-const Product=require('../models/products')
+const Product=require('../models/product')
 const Order = require('../models/order');
-const User = require('../models/users');
+const User = require('../models/user');
 
 const banUser = async (req, res) => {
   const userId = req.query.id; // الحصول
@@ -57,7 +57,7 @@ const updateOrderStatus = async (req, res) => {
 const getOrder = async (req, res) => {
   const orderId = req.query.id; 
   const order = await Order.findById(orderId)
-  .populate('userId', 'name email phone address') 
+  .populate('userId', 'name email phone ') 
   .populate('products.productId', 'title price imageUrls'); 
   if (!order) {
     return res.status(404).json({ message: 'Order not found' });
@@ -70,16 +70,13 @@ const getOrder = async (req, res) => {
 
 
 const getOrders = async (req, res) => {
-  try {
+ 
     const orders = await Order.find()
       .populate('userId', 'name email') // يعرض اسم وإيميل المستخدم
       .populate('products.productId', 'title price'); // يعرض اسم وسعر كل منتج
 
     res.status(200).json({message:"all orders",orders} );
-  } catch (error) {
-    console.error( 'Error fetching orders:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+
 };
 
 
@@ -90,7 +87,7 @@ const adminWelcome= async(req,res)=>{
 
 
 const addProduct=async(req,res)=>{
-    try {
+    
         const { title, price, details, category } = req.body;
         let imageUrls = [];
     
@@ -112,9 +109,7 @@ const addProduct=async(req,res)=>{
         await newProduct.save(); 
     
         res.json({ message: "تم إضافة المنتج بنجاح", product: newProduct });
-      } catch (error) {
-        res.status(500).json({ error,message: "حدث خطأ أثناء إضافة المنتج" });
-      }
+  
     }
     
     const getProducts = async (req, res) => {
@@ -122,7 +117,7 @@ const addProduct=async(req,res)=>{
       const limit = 20; // عدد العناصر لكل صفحة
       const skip = (page - 1) * limit;
     
-      try {
+      
         const products = await Product.find().skip(skip).limit(limit);
         const total = await Product.countDocuments(); // إجمالي المنتجات
     
@@ -132,27 +127,23 @@ const addProduct=async(req,res)=>{
           totalPages: Math.ceil(total / limit),
           totalProducts: total,
         });
-      } catch (error) {
-        res.status(500).json({ error: "حدث خطأ أثناء استرجاع المنتجات" });
-      }
+   
     };
     
     const getProductById = async (req, res) => {
       const  id  = req.query.id;
     
-      try {
+    
         const product = await Product.findById(id);
         if (!product) {
           return res.status(404).json({ error: "المنتج غير موجود" });
         }
         res.json(product);
-      } catch (error) {
-        res.status(500).json({ error: "حدث خطأ أثناء استرجاع المنتج" });
-      }
+     
     }
 
     const editProduct = async (req, res) => {
-      try {
+     
         const id = req.query.id;
         let imageUrls = [];
     
@@ -198,25 +189,20 @@ const addProduct=async(req,res)=>{
         }
     
         res.json({ message: "تم تعديل المنتج بنجاح", product });
-      } catch (error) {
-        console.error(error); // طباعة الخطأ في الكونسول لمساعدتك في تتبع المشكلة 
-        res.status(500).json({ error: error.message || "حدث خطأ أثناء تعديل المنتج" });
-      }
+    
     };
     
 
     const deleteProduct = async (req, res) => {
       const id = req.query.id;
     
-      try {
+      
         const product = await Product.findByIdAndDelete(id);
         if (!product) {
           return res.status(404).json({ error: "المنتج غير موجود" });
         }
         res.json({ message: "تم حذف المنتج بنجاح" });
-      } catch (error) {
-        res.status(500).json({ error: "حدث خطأ أثناء حذف المنتج" });
-      }
+    
     }
 
 module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser}

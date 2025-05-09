@@ -1,6 +1,6 @@
 'use client'
 
-import Register from "@/components/register";
+import RegisterForm from "@/app/register/registerForm";
 
 
 export default function  banUser() {
@@ -10,7 +10,7 @@ export default function  banUser() {
   return (
     
 <>
-<Register/>
+<RegisterForm/>
 
 </>
   );

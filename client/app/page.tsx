@@ -1,7 +1,7 @@
 'use client'
-import Auth from "@/components/auth";
-import Loading from "@/components/loading";
-import UserProductCard from "@/components/userproductcard";
+
+
+import UserProductCard from "./components/userproductcard"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation'
@@ -25,7 +25,7 @@ export default function Home() {
     totalPages: number;
     totalProducts: number;
   };
-const [loading, setLoading] = useState(true)
+
 const [message, setMessage] = useState<string >("");
 const [auth, setAuth] = useState<boolean>(false);
 const [data, setData] = useState<ProductResponse | null>(null);
@@ -77,10 +77,9 @@ useEffect(() => {
              }
              
              
-             setLoading(false)
          }
          catch (error) {
-           setLoading(false)
+     
            console.error('Error fetching data:', error);
            
             
@@ -93,9 +92,9 @@ useEffect(() => {
   return (
     
 <>
-{loading ? (<><Loading/></>):(
+
   
-  <>
+  
 
    {auth &&(<>
 
@@ -130,9 +129,9 @@ useEffect(() => {
 
 
 
-</>
 
-)}
+
+
 </>
    
 

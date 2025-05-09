@@ -9,7 +9,7 @@ interface AddToCartProps {
     price:number
     imageUrl:string
 }
-export default function  AddToCart({productId,price,name,imageUrl}:AddToCartProps) {
+export default function  AddToCartButton({productId,price,name,imageUrl}:AddToCartProps) {
   
   const [loading, setLoading] = useState(true)
 
@@ -224,7 +224,7 @@ const handleIncrease = async (productId:string) => {
   {//code js
       (// start
         () => {//fun
-            const itemIndex = cart.findIndex((item) => item.productId._id === productId);
+            const itemIndex = cart.findIndex((item) => item.productId?._id === productId);
             if (itemIndex !== -1 ) {
              
               return <div  onClick={(e) => {  e.preventDefault()}} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>

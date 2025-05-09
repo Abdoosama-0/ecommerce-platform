@@ -15,10 +15,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+  
   return (
     <html lang="en">
       <body 
-        className={` antialiased  relative  pt-[66px]`}
+        className={` antialiased  relative  pt-[64px] `}
       >
         <Nav/>
         {children}

@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import NewAddress from "./newAddress";
+import NewAddress from "@/app/userdata/components/newAddress";
 interface BuyCartItem {
     productId: string;
     quantity: number;

@@ -14,9 +14,9 @@ const ProductCard = ({ image, title, price, productId }: ProductCardProps) => {
 
   return (
     <Link  href={`/admin/products/${productId}/`}>
-    <div className=' flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2 rounded-xl border-gray-200'>
+    <div className=' p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2  rounded-xl border-gray-200 bg-gray-100'>
       
-      <div className="w-full h-auto aspect-[13/9] bg-zinc-800 relative rounded-xl overflow-hidden">
+      <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
         <Image
           src={image || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
           alt={title || 'Product'}

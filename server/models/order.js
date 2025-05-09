@@ -16,7 +16,7 @@ const orderSchema = new Schema({
     products: [
       {
         _id: false, // <-- هذا يمنع إنشاء _id تلقائيًا لكل عنصر
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         quantity: Number,
       }
     ],

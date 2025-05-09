@@ -2,11 +2,20 @@
 import Auth from "@/components/auth";
 import Images from "@/components/images";
 import Loading from "@/components/loading";
-import UpdateStatus from "@/components/updateStatus";
+import UpdateStatus from "@/app/admin/orders/[orderId]/components/updateStatus";
 import { useEffect, useState } from "react";
 
 
 export default function OrderId() {
+  type address = {
+    government: string,
+    city: string,
+    area: string,
+    street: string,
+    buildingNumber: string,
+    departmentNumber: string,
+    _id:string
+  }
 
     type Order ={
         _id: string;
@@ -15,7 +24,6 @@ export default function OrderId() {
           name: string;
           email: string;
           phone: string;
-            address: string;
         };
         products: {
           productId: {
@@ -30,6 +38,7 @@ export default function OrderId() {
         createdAt: string;
         totalQuantity: number;
         totalPrice: number; 
+        address:address;
         status: string;
       }
       const [updateStatus, setUpdateStatus] = useState<boolean>(false)
@@ -84,7 +93,7 @@ export default function OrderId() {
             <h1 className="">userName : <span>{data?.userId.name}</span></h1>
             <h1 className="">userEmail : <span>{data?.userId.email}</span></h1>
             <h1 className="">userPhone : <span>{data?.userId.phone}</span></h1>
-            <h1 className="">userAddress : <span>{data?.userId.address}</span></h1>
+            <h1 className="">userAddress : <span>{data?.address && `${data.address.government}, ${data.address.city}, ${data.address.area}, ${data.address.street}, Building: ${data.address.buildingNumber}, Dept: ${data.address.departmentNumber}`}</span></h1>
             <h1 className="">createdAt : <span>{data?.createdAt}</span></h1>
             <h1>Status: <span>{data?.status}</span></h1>
         </div>

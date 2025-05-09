@@ -19,7 +19,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "uploads", // اسم المجلد في Cloudinary
-    allowed_formats: ["jpg", "png", "jpeg"], // الصيغ المدعومة
+    allowed_formats: ["jpg", "png", "jpeg","avif"], // الصيغ المدعومة
   },
 });
 

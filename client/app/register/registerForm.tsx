@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
-export default function Register() {
+export default function RegisterForm() {
      const router = useRouter(); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -103,7 +103,7 @@ const [showPassword, setShowPassword] = useState(false); // 👈 حالة إظه
         </div>
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 cursor-pointer"
         >
           Register
         </button>

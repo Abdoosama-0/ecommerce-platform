@@ -1,7 +1,7 @@
 'use client'
 
 import Loading from "@/components/loading";
-import NewAddress from "@/components/newAddress";
+import NewAddress from "@/app/userdata/components/newAddress";
 import { useEffect, useState } from "react";
 
 export default function UserData() {

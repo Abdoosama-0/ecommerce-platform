@@ -1,14 +1,14 @@
 'use client'
 
-import AddToCart from "@/components/addToCart";
+import AddToCart from "@/app/components/addToCartButton";
 import Loading from "@/components/loading";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { json } from "stream/consumers";
 import { useRouter } from "next/navigation";
-import Buy from "@/components/buy";
-import BuyCart from "@/components/buyCart";
-import Add from "@/components/add";
+import BuyForm from "@/app/[productId]/components/buyform";
+import BuyCart from "@/app/cart/components/buyCart";
+import Add from "@/app/cart/components/add";
 
 export default function  Cart() {
   const router = useRouter();
@@ -154,8 +154,8 @@ setLoading(false)
   let totalPrice = 0;
   
   cart.forEach(item => {
-    totalProducts += item.quantity;
-    totalPrice += item.productId.price * item.quantity;
+    totalProducts += item?.quantity;
+    totalPrice += item?.productId?.price * item?.quantity;
   });
   setTotalPrice(totalPrice)
   setProducts(totalProducts)
@@ -174,27 +174,44 @@ setLoading(false)
       <>
       {/* ==================================================================== */}
       <div className="flex justify-between ">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-2 p-2 max-w-[75%]">
-          {cart.map((item, index) => (
-            <Link href={`/${item.productId._id}`}>
-            <div className="p-2  flex flex-col bg-white rounded-2xl" >
-              <div >
-                <img src={item.productId.imageUrls[0]||'https://www.naftomar.gr/wp-content/uploads/2023/11/Image_not_available.png'} alt={item.productId.title} />
-              </div>
-              <p>{item.productId.title}</p>
-              <p>{item.productId.price}</p>
-              <div  onClick={(e)=>{e.preventDefault()}} className="flex flex-row justify-between  gap-4 ">
-          
-              <button onClick={()=>{handleDelete(item.productId._id)}} className="w-full py-1 px-2 rounded-2xl bg-red-600 hover:opacity-50 cursor-pointer ">del</button>
-           
-           <Add  productId={item.productId._id} quantity={item.quantity} refreshCart={refreshCart} setCart={setCart}  cart={cart} />
-       
-           
-              </div>
-             
-            </div>
-            </Link>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 max-w-[75%]">
+        {cart?.map((item, index) => (
+  <div key={index} className="p-2 flex flex-col  gap-2 relative w-full max-w-[220px]  h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
+    <Link href={`/${item?.productId?._id ?? '#'}`} className="hover:opacity-80 transition">
+    
+        <img 
+          src={item?.productId?.imageUrls?.[0] || 'https://www.naftomar.gr/wp-content/uploads/2023/11/Image_not_available.png'} 
+          alt={item?.productId?.title ?? "No title available"} 
+          className="w-full h-64 object-cover object-center rounded-2xl"
+        />
+    
+      <p className="font-semibold mt-2">{item?.productId?.title ?? "No title available"}</p>
+      <p className="text-gray-500">{item?.productId?.price ?? "No price available"}</p>
+    </Link>
+
+    <div className="flex flex-row justify-between gap-4 mt-2">
+      <button 
+        onClick={(e) => {
+          e.preventDefault();
+          if (item?.productId?._id) handleDelete(item.productId._id);
+        }} 
+        className="w-full py-1 px-2 rounded-2xl bg-red-600 text-white hover:opacity-80 transition"
+      >
+        Delete
+      </button>
+
+      <Add 
+        productId={item?.productId?._id} 
+        quantity={item?.quantity ?? 1} 
+        refreshCart={refreshCart} 
+        setCart={setCart}  
+        cart={cart} 
+      />
+    </div>
+  </div>
+
+))}
+
         </div>
 
         <div className="flex flex-col gap-2 min-w-[25%] border-2 p-2 rounded-2xl h-fit">

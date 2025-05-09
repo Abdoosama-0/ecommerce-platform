@@ -1,5 +1,5 @@
 'use client';
-import AddProduct from "@/components/addProduct";
+import AddProduct from "@/app/admin/products/components/addProduct";
 import Auth from "@/components/auth";
 import Loading from "@/components/loading";
 import { useEffect, useState } from "react";

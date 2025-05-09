@@ -7,6 +7,15 @@ export default function Nav() {
   const url = "http://localhost:3000";
 
 
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsLogged(localStorage.getItem("isLogged") === "true");
+    }
+  }, []);
+
+
   const handleClick = async () => {
     try {
       const res = await fetch(`${url}/logout`, {
@@ -33,7 +42,7 @@ export default function Nav() {
 
 
   return (
-    <main className="absolute top-0 left-0 w-full h-16 bg-slate-950 shadow-md z-30 flex items-center text-2xl text-white font-bold justify-between">
+    <main className="absolute top-0 left-0 w-full h-[64px] bg-slate-950 shadow-md z-10 flex items-center text-2xl text-white font-bold justify-between">
       <div className="ml-10 w-full">
         <Link href={`/`}>
           <h1>store</h1>
@@ -45,20 +54,18 @@ export default function Nav() {
           <h1>cart</h1>
         </Link>
 
-        {localStorage.getItem('isLogged') !=='true' ?(
-          <Link href={`/login`}>
-            <h1>login</h1>
-          </Link>
-        )  : 
-        (
-          <>
-          <h1 className="cursor-pointer" onClick={handleClick}>logout</h1>
-          <Link href={`/userdata`}>
-            userData
-          </Link>
+        {!isLogged ? (
+        <Link href={`/login`}>
+          <h1>login</h1>
+        </Link>
+      ) : (
+        <>
+          <h1 className="cursor-pointer" onClick={handleClick}>
+            logout
+          </h1>
+          <Link href={`/userdata`}>userData</Link>
         </>
-        )
-        }
+      )}
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 
-const User = require('../models/users');
-const Product = require('../models/products');
+const User = require('../models/user');
+const Product = require('../models/product');
 const Order = require('../models/order');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
@@ -226,7 +226,7 @@ const clearCart = async (req, res) => {
 };
 
 const addToCart = async (req, res) => {
-  try {
+ 
     const userId = req.userId;
     const { product } = req.body;
 
@@ -259,10 +259,7 @@ const addToCart = async (req, res) => {
     await user.save();
 
     return res.status(200).json({ message: 'Added to cart successfully', cart: user.cart });
-  } catch (error) {
-    console.error('Add to Cart Error:', error);
-    return res.status(500).json({ message: 'Server error' });
-  }
+
 };
 
 const cart= async(req,res)=>{
@@ -285,7 +282,7 @@ const cart= async(req,res)=>{
       const limit = 20; // عدد العناصر لكل صفحة
       const skip = (page - 1) * limit;
     
-      try {
+     
         const products = await Product.find().skip(skip).limit(limit);
         const total = await Product.countDocuments(); // إجمالي المنتجات
     
@@ -295,29 +292,24 @@ const cart= async(req,res)=>{
           totalPages: Math.ceil(total / limit),
           totalProducts: total,
         });
-      } catch (error) {
-        res.status(500).json({ error: "حدث خطأ أثناء استرجاع المنتجات" });
-      }
+    
     };
     
 
 const product = async (req, res) => {
   const  id  = req.query.id; // الحصول على معرف المنتج من المعاملات
-  try {
+  
     const product = await Product.findById(id); // البحث عن المنتج باستخدام المعرف
     if (!product) {
       return res.status(404).json({ message: 'Product not found' }); // إذا لم يتم العثور على المنتج
     } 
     res.status(200).json(product); // إرجاع خطأ الخادم
-  } catch (error) {
-    console.error('Error fetching product:', error); // تسجيل الخطأ
-    return res.status(500).json({ message: 'Server error' }); // إرجاع خطأ الخادم
-  }
+
 }
 
 
 const order = async (req, res) => {
-  try {
+ 
     const {  address,paymentMethod,products } = req.body;
     const userId=req.userId
   
@@ -369,10 +361,7 @@ const order = async (req, res) => {
       message: 'Order placed successfully',
     order:newOrder
     });
-  } catch (error) {
-    console.error('Order Error:', error);
-    return res.status(500).json({ message: 'Server error' });
-  }
+ 
 };
 const address = async (req, res) => {
   const { newAddress } = req.body;

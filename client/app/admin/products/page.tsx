@@ -1,10 +1,10 @@
 'use client'
-import EditProduct from '@/components/updateProduct';
-import ProductCard from '@/components/productCard';
+import EditProduct from '@/app/admin/products/[productId]/components/updateProduct';
+import ProductCard from '@/app/admin/products/components/productCard';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import AddProduct from '@/components/addProduct';
+import AddProduct from '@/app/admin/products/components/addProduct';
 import Auth from '@/components/auth';
 import Loading from '@/components/loading';
 export default function Products() {
@@ -94,7 +94,7 @@ export default function Products() {
           </div>
 
 
-          <div onClick={() => setClicked(true)} className='fixed z-20 bottom-7 right-7 bg-gray-900 rounded-lg  py-2 px-4 text-white flex flex-col items-center justify-center cursor-pointer '>
+          <div onClick={() => setClicked(true)} className='fixed z-10 bottom-7 right-7 bg-gray-900 rounded-lg  py-2 px-4 text-white flex flex-col items-center justify-center cursor-pointer '>
             <h1>+</h1>
 
         </div>
