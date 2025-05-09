@@ -129,10 +129,6 @@ const handleSubmit = async(e: React.FormEvent)=>{
     <>
     {clicked &&(
 
-
-
-
-
 <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
 <form onClick={(e) => e.stopPropagation()}  onSubmit={handleSubmit} className="absolute inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
 <div className=' overflow-y-auto p-4 '>

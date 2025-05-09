@@ -5,6 +5,22 @@ const Order = require('../models/order');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
+
+const getAddressById =async (req,res)=>{
+const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const addressId = req.params.addressId;
+    const address = user.addresses.find((addr) => addr._id.toString() === addressId);
+
+    if (!address) {
+      return res.status(404).json({ message: 'Address not found' });
+    }
+
+    return res.status(200).json({ message: 'Success get address', address });
+}
 const updateAddress = async (req, res) => {
   const {
     government,
@@ -15,9 +31,9 @@ const updateAddress = async (req, res) => {
     departmentNumber
   } = req.body.currentEditAddress;
 
-  const { selectedAddressIndex } = req.body;
+  const { addressId } = req.body;
 
-  if (selectedAddressIndex === undefined || selectedAddressIndex < 0) {
+  if (!addressId) {
     return res.status(400).json({ message: 'عنوان غير صالح' });
   }
 
@@ -27,52 +43,58 @@ const updateAddress = async (req, res) => {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
 
-  if (!user.addresses[selectedAddressIndex]) {
+  // البحث عن العنوان باستخدام الـ ID
+  const address = user.addresses.find((addr) => addr._id.toString() === addressId);
+
+  if (!address) {
     return res.status(404).json({ message: 'العنوان غير موجود' });
   }
 
-  // فقط تحديث الحقول المحددة بدون تغيير باقي البيانات
-  const current = user.addresses[selectedAddressIndex];
+  // تحديث الحقول المحددة فقط دون تغيير الـ _id
+  address.government = government || address.government;
+  address.city = city || address.city;
+  address.area = area || address.area;
+  address.street = street || address.street;
+  address.buildingNumber = buildingNumber || address.buildingNumber;
+  address.departmentNumber = departmentNumber || address.departmentNumber;
 
-  user.addresses[selectedAddressIndex] = {
-
-    government: government || current.government,
-    city: city || current.city,
-    area: area || current.area,
-    street: street || current.street,
-    buildingNumber: buildingNumber || current.buildingNumber,
-    departmentNumber: departmentNumber || current.departmentNumber,
-    _id: current._id
-  };
-
+  // حفظ التغييرات
   await user.save();
 
-  return res.status(200).json({ address: user.addresses[selectedAddressIndex] });
+  return res.status(200).json({ message: 'تم تحديث العنوان بنجاح', address });
 };
 
 
 
-const deleteAddress=  async (req,res)=>{
-  const {addressIndex}=req.body
-  if (addressIndex === undefined || addressIndex === null) {
-    return res.status(400).json({ message: 'wrong request' });
+
+
+const deleteAddress = async (req, res) => {
+  const { addressId } = req.body;
+
+  if (!addressId) {
+    return res.status(400).json({ message: 'الطلب غير صحيح، يجب تحديد عنوان' });
   }
-  const user = await User.findById(req.userId)
+
+  const user = await User.findById(req.userId);
   if (!user) {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
-  if (addressIndex < 0 || addressIndex >= user.addresses.length) {
-    return res.status(400).json({ message: 'رقم العنوان غير صالح' });
+
+  const addressIndex = user.addresses.findIndex((addr) => addr._id.toString() === addressId);
+
+  if (addressIndex === -1) {
+    return res.status(404).json({ message: 'العنوان غير موجود' });
   }
-    // حذف العنوان من المصفوفة
-    user.addresses.splice(addressIndex, 1);
 
-    // حفظ التغييرات
-    await user.save();
+  // حذف العنوان من المصفوفة
+  user.addresses.splice(addressIndex, 1);
 
-    return res.status(200).json({ message: 'تم حذف العنوان بنجاح', addresses: user.addresses });
+  // حفظ التغييرات
+  await user.save();
 
-}
+  return res.status(200).json({ message: 'تم حذف العنوان بنجاح', addresses: user.addresses });
+};
+
 const updateUserData = async (req,res)=>{
   const { username, email, name, phone } = req.body;
   const user = await User.findByIdAndUpdate(
@@ -392,4 +414,4 @@ const address = async (req, res) => {
   
 };
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}

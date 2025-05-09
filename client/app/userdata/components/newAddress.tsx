@@ -1,22 +1,13 @@
 'use client'
 
-
-// interface addressProps {
-//   government: string,
-//  city:string,
-//   area :string,
-//   street: string,
-//   buildingNumber: string,
-//   departmentNumber: string,
- 
-// }
-// {government,city,area,street,buildingNumber,departmentNumber}:addressProps
 import { useState } from 'react';
-interface NewAddressProps {
-  setAdd?: React.Dispatch<React.SetStateAction<boolean>>; // لاستقبال setAdd من الـ parent
-  getAddresses?: () => void; // لاستقبال دالة getAddresses من الـ parent
+interface newAddressProps {
+  setAdd?: React.Dispatch<React.SetStateAction<boolean>>;
+  getAddresses?: () => void; 
+  clicked:boolean
+  setClicked:(arg0:boolean)=> void
 }
-export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
+export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked }: newAddressProps) {
   const url = "http://localhost:3000";
 
   const [government, setGovernment] = useState<string>('');
@@ -28,7 +19,7 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
   const [departmentNumber, setDepartmentNumber] = useState<string>('');
  const [message, setMessage] = useState<string>('');
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // لمنع الإعادة التلقائية للصفحة عند إرسال النموذج
+    e.preventDefault(); 
 
     try {
       const res = await fetch(`${url}/address`, {
@@ -72,8 +63,15 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='bg-white text-black fixed z-70 inset-0 m-auto rounded-lg w-[80%] h-[80%] overflow-hidden flex flex-col gap-2'>
-      <div className='overflow-y-auto p-4'>
+    
+<>
+ 
+    {clicked && (
+    
+<div onClick={() => setClicked(false)} className="fixed inset-0  z-10 bg-slate-900/90">  
+
+      <form onSubmit={handleSubmit}  onClick={(e) => e.stopPropagation()} className="absolute  p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+        
         {/* Government */}
         <div className='p-1 w-full mb-4 flex flex-col gap-1'>
           <label className='w-fit'>Government:</label>
@@ -145,6 +143,7 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
             placeholder='Enter Department Number'
           />
         </div>
+        {/* error message */}
         <div>
           <h1 className='text-red-500 text-sm  '>{message}</h1>
         </div>
@@ -156,7 +155,18 @@ export default function NewAddress({ setAdd, getAddresses }: NewAddressProps) {
         >
           Add Address
         </button>
-      </div>
+        {/* exit button */}
+      <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">
+        ×</button>
+   
     </form>
-  );
+</div>
+      
+      
+    )}
+
+  </>
+  
+
+);
 }
