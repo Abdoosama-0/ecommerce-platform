@@ -27,8 +27,8 @@ const [editAddress,setEditAddress]=useState<boolean>(false)
                   <p>City: {address.city}</p>
                   <p>Area: {address.area}</p>
                   <p>Street: {address.street}</p>
-                  <p>Building Number: {address.buildingNumber}</p>
-                  <p>Department Number: {address.departmentNumber}</p>
+                  <p>Building Number: {address.buildingNumber.toString()}</p>
+                  <p>Department Number: {address.departmentNumber.toString()}</p>
                 </div>
               ))
               :

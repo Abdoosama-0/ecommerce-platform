@@ -16,3 +16,24 @@
     phone: string,
     addresses: address[]
   }
+
+    type CartItem = {
+      productId: {
+        _id: string,
+        imageUrls: [string],
+        title: string,
+        price: number
+      }
+      quantity: number;
+    }
+
+     type productDetails={
+        imageUrls: string[];
+        // حسب شكل المنتج في قاعدة البيانات
+        _id: string;
+        title: string;
+        details: string;
+        price: number;
+        category: string;
+        // ضيف باقي الخصائص لو فيه أكتر
+      }

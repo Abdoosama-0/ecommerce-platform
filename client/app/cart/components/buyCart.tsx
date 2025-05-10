@@ -8,12 +8,14 @@ interface BuyCartItem {
   }
   
   interface BuyCartProps {
-    items: BuyCartItem[]; // نضع مصفوفة العناصر في حقل باسم "items"
+    items: any; // نضع مصفوفة العناصر في حقل باسم "items"
     totalPrice:number
     products:number
     clearCart:()=>void
+    clicked:boolean
+    setClicked:(arg0:boolean)=>void
   }
-export default function  BuyCart({ items,totalPrice,products,clearCart }: BuyCartProps) {
+export default function  BuyCart({ items,totalPrice,products,clearCart ,clicked ,setClicked}: BuyCartProps) {
     const router = useRouter();
     // ======================type==========================
   type address={
@@ -123,12 +125,15 @@ const handleSubmit = async(e: React.FormEvent)=>{
     console.log(err)
   }
 }
-    
+    const [newAdd,setNewAdd]= useState<boolean>(false)
   return (
     <>
+  {clicked && (
     
-  <form onSubmit={handleSubmit}  className= '  bg-white text-black fixed z-50 inset-0 m-auto rounded-lg w-[80%] h-[85%] overflow-hidden  flex flex-col gap-2'>
-  <div className=' overflow-y-auto p-4 '>
+     <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
+      <form  onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+
+<div className=' overflow-y-auto p-4 '>
   
   <label className="block mb-2 text-sm font-medium text-gray-700">
           Payment Method
@@ -166,7 +171,7 @@ const handleSubmit = async(e: React.FormEvent)=>{
       </div>
     </div>
   ))}
-  <button onClick={(e)=>{e.preventDefault();setAdd(true) }} className="mx-auto py-1  hover:opacity-50  px-2 rounded-2xl bg-amber-600 cursor-pointer">add new address</button>
+  <button onClick={(e)=>{e.preventDefault();setNewAdd(true) }} className="mx-auto py-1  hover:opacity-50  px-2 rounded-2xl bg-amber-600 cursor-pointer">add new address</button>
 </div>
 
           
@@ -177,22 +182,27 @@ const handleSubmit = async(e: React.FormEvent)=>{
   </div>
 
 <button  type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
+        
+      <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
     </form>
+
+     <NewAddress clicked={newAdd} setClicked={setNewAdd} setAdd={setAdd} getAddresses={getAddresses} />
+</div>
+      
+      
+    )}
+
+
   
     
     
-    {add&&(
-  <>
-  <div onClick={()=>{setAdd(false)}} className=" fixed inset-0 bg-slate-900 opacity-90 z-[60] ">
-
-  </div>
+ 
   
-  <NewAddress setAdd={setAdd} getAddresses={getAddresses} />
+ 
 
 
 
-  </>
-  )}
+ 
     
     </>
 

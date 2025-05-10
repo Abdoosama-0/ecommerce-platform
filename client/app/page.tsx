@@ -5,6 +5,7 @@ import UserProductCard from "./components/userproductcard"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation'
+import ErrorMessage from "@/components/errorMessage";
   
   type Product = {
     imageUrls: string[];
@@ -48,7 +49,7 @@ const page = parseInt(searchParams.get('page') || '1')
      
    }
    catch (error) {
-    setMessage( 'حدث خطأ ما')
+    setMessage('something went wrong please try again later')
        console.error('Error fetching data:', error);
    }
  }
@@ -81,6 +82,9 @@ useEffect(() => {
   return (
     
 <>
+
+{message?(<><ErrorMessage message={message}/></>):(<>
+    {/**go to admin dashboard */}
    {auth &&(
 
         <Link href={"/admin"}>
@@ -89,7 +93,7 @@ useEffect(() => {
        </div>
        </Link>
    )}
-
+    {/**products */}
    <main className="p-2">
       <div>
             {data && <h2 className="mb-2 ">products: {data.totalProducts}</h2>}
@@ -110,7 +114,7 @@ useEffect(() => {
      
 
     </main>
-
+</>)}
 </>
    
   );

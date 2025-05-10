@@ -7,15 +7,6 @@ export default function Nav() {
   const url = "http://localhost:3000";
 
 
-  const [isLogged, setIsLogged] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsLogged(localStorage.getItem("isLogged") === "true");
-    }
-  }, []);
-
-
   const handleClick = async () => {
     try {
       const res = await fetch(`${url}/logout`, {
@@ -54,7 +45,7 @@ export default function Nav() {
           <h1>cart</h1>
         </Link>
 
-        {!isLogged ? (
+        {!(localStorage.getItem("isLogged") === "true") ? (
         <Link href={`/login`}>
           <h1>login</h1>
         </Link>

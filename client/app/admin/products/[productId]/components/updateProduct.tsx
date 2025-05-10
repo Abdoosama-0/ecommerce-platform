@@ -8,10 +8,11 @@ interface AddProps {
   currentDetails?: string;
   currentCategory?: string;
   currentImages?: string[];
-  
+  setEditClicked:(arg0:boolean)=> void
+  editClicked:boolean
 }
 
-export default function EditProduct({ currentPrice, currentTitle, currentDetails, currentCategory, currentImages }: AddProps) {
+export default function EditProduct({setEditClicked,editClicked ,currentPrice, currentTitle, currentDetails, currentCategory, currentImages }: AddProps) {
 
 
 
@@ -69,7 +70,15 @@ export default function EditProduct({ currentPrice, currentTitle, currentDetails
   };
 
   return (
-    <form onSubmit={handleSubmit} className= '  bg-white text-black fixed z-30 inset-0 m-auto rounded-lg w-[80%] h-[80%] overflow-hidden  flex flex-col gap-2'>
+
+    <>
+
+        {editClicked && (
+    
+     <div onClick={() => setEditClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
+      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+              
+    
       <div className=' overflow-y-auto p-4 '>
         {/* Title */}
         <div className='p-1 w-full mb-4 flex flex-col gap-1'>
@@ -192,6 +201,18 @@ export default function EditProduct({ currentPrice, currentTitle, currentDetails
          update Product
         </button>
       </div>
+ 
+
+
+        
+      <button onClick={() => setEditClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
     </form>
-  );
+</div>
+      
+      
+    )}
+
+
+
+ </> );
 }
