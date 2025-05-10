@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import NewAddress from "./newAddress";
-import EditAddress from "./editAddress";
+import EditAddress from "./chooseAddress";
+import ChooseAddress from "./chooseAddress";
 
 
 
@@ -43,7 +44,7 @@ const [editAddress,setEditAddress]=useState<boolean>(false)
               </div>
 
          <NewAddress clicked={addAddress} setClicked={setAddAddress}  />     
-         <EditAddress addresses={addresses} clicked={editAddress} setClicked={setEditAddress}  />     
+         <ChooseAddress addresses={addresses} clicked={editAddress} setClicked={setEditAddress}  />     
     
   </div>
 

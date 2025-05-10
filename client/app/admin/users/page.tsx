@@ -1,6 +1,6 @@
 'use client';
 import AddProduct from "@/app/admin/products/components/addProduct";
-import Auth from "@/components/auth";
+import Auth from "@/components/errorMessage";
 import Loading from "@/components/loading";
 import { useEffect, useState } from "react";
 

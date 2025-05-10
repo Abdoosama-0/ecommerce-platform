@@ -1,173 +1,225 @@
-'use client'
 
-import { useState } from "react";
-import EditChosenAddress from "./editChosenAddress";
+
+'use client'
 
 
 
 interface editAddressProps {
 clicked:boolean
 setClicked:(arg0:boolean)=> void
-addresses:address[]
-}
-
-export default function  EditAddress({clicked,setClicked,addresses}:editAddressProps) {
-const deleteAddress =async (selectedAddressId:string) => {
-
-  try {
-    const res = await fetch(`http://localhost:3000/deleteAddress`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ addressId: selectedAddressId }),
-    })
-    const data = await res.json()
-    
-
+currentEditAddress:address
+setCurrentEditAddress:(arg0:address)=>void
 
 
 }
-catch (error) {
 
-  console.log('Error fetching data:', error);
-  
-   
-}
-}
-
-const getAddressData = async (selectedAddressId: string) => {
-  try {
-    const res = await fetch(`http://localhost:3000/getAddressById/${selectedAddressId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include', // إذا كنت تستخدم الـ JWT أو الـ Cookies
-    });
-
-    if (!res.ok) {
-      alert('something went wrong')
-    }
-
-    const data = await res.json();
- 
-  setCurrentEditAddress(data.address)
-  console.log('======================================')
-  console.log(currentEditAddress)
-  console.log('======================================')
-
-    return data;
-  } catch (error) {
-    console.error('Error fetching address data:', error);
-    throw error;
+export default function  EditAddress({currentEditAddress,setCurrentEditAddress,setClicked,clicked }:editAddressProps) {
+  const updateAddress =async (e: React.MouseEvent<HTMLButtonElement>,currentEditAddress:address,selectedAddressID:string) => {
+ e.preventDefault();
+    try {
+      const res = await fetch(`http://localhost:3000/updateAddress/${selectedAddressID}`, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ currentEditAddress}),
+      })
+      const data = await res.json()
+      
+  if(!res.ok){
+    alert(data.message)
+    return
   }
-};
-
-
-
-
-
-const [currentEditAddress, setCurrentEditAddress] = useState<null | address>(null);
-const [selectedAddressId, setSelectedAddressId] = useState<null | string>(null);
-
-const [editChosenAddress,setEditChosenAddress]=useState<boolean>(false);
-  return (
+  alert('updated successfully')
+  window.location.reload()
+  
+  
+  }
+  catch (error) {
+  
+    console.log('Error fetching data:', error);
     
-<>
-
-
+     
+  }
+  }
+  
+  return (
+    <>
     {clicked && (
     
-     <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
-      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] h-fit  overflow-y-auto bg-white rounded">
-        
-  {addresses && addresses.length > 0 ? (
-        addresses.map((address) => (
-          <div
-            key={address._id}
-            className={`p-4 border-2 w-fit h-fit rounded-2xl border-gray-500 shadow-sm flex items-start gap-4 ${
-              selectedAddressId === address._id ? 'bg-gray-100' : ''
-            }`}
-          >
-            <input
-              type="radio"
-              name="selectedAddress"
-              checked={selectedAddressId === address._id}
-              onChange={() => setSelectedAddressId(address._id)}
-              className="mt-1"
-            />
+     <div onClick={() => setClicked(false)} className="fixed inset-0 z-30 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
+      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+                    {/* Government */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">Government:</label>
+    <input
+      value={currentEditAddress?.government || ""}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          government: e.target.value,
+          city: currentEditAddress?.city || "",
+          area: currentEditAddress?.area || "",
+          street: currentEditAddress?.street || "",
+          buildingNumber: currentEditAddress?.buildingNumber || 0,
+          departmentNumber: currentEditAddress?.departmentNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="text"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter Government"
+    />
+  </div>
 
-            <div>
-              <p><strong>Government:</strong> {address.government}</p>
-              <p><strong>City:</strong> {address.city}</p>
-              <p><strong>Area:</strong> {address.area}</p>
-              <p><strong>Street:</strong> {address.street}</p>
-              <p><strong>Building Number:</strong> {address.buildingNumber}</p>
-              <p><strong>Department Number:</strong> {address.departmentNumber}</p>
-            </div>
-          </div>
-        ))
-      ) : (
-        <h1>No addresses</h1>
-      )}
+  {/* City */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">City:</label>
+    <input
+      value={currentEditAddress?.city || ""}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          city: e.target.value,
+          government: currentEditAddress?.government || "",
+          area: currentEditAddress?.area || "",
+          street: currentEditAddress?.street || "",
+          buildingNumber: currentEditAddress?.buildingNumber || 0,
+          departmentNumber: currentEditAddress?.departmentNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="text"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter City"
+    />
+  </div>
 
-  <div className="w-full flex justify-center items-center gap-4">
-  <button
+  {/* Area */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">Area:</label>
+    <input
+      value={currentEditAddress?.area || ""}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          area: e.target.value,
+          government: currentEditAddress?.government || "",
+          city: currentEditAddress?.city || "",
+          street: currentEditAddress?.street || "",
+          buildingNumber: currentEditAddress?.buildingNumber || 0,
+          departmentNumber: currentEditAddress?.departmentNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="text"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter Area"
+    />
+  </div>
 
-    onClick={() => {
-      if (selectedAddressId !== null) deleteAddress(selectedAddressId);
-    }}
+  {/* Street */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">Street:</label>
+    <input
+      value={currentEditAddress?.street || ""}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          street: e.target.value,
+          government: currentEditAddress?.government || "",
+          city: currentEditAddress?.city || "",
+          area: currentEditAddress?.area || "",
+          buildingNumber: currentEditAddress?.buildingNumber || 0,
+          departmentNumber: currentEditAddress?.departmentNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="text"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter Street"
+    />
+  </div>
 
-    disabled={selectedAddressId === null }
-    className={`px-4 py-2 w-fit rounded-2xl transition${selectedAddressId !== null  ? 'cursor-pointer bg-red-600 hover:opacity-75' : 'cursor-not-allowed bg-slate-600 opacity-50 pointer-events-none'}`}
-  >
-    Delete
-  </button>
-  <button
+  {/* Building Number */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">Building Number:</label>
+    <input
+      value={Number(currentEditAddress?.buildingNumber) || ""}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          buildingNumber: Number(e.target.value),
+          government: currentEditAddress?.government || "",
+          city: currentEditAddress?.city || "",
+          area: currentEditAddress?.area || "",
+          street: currentEditAddress?.street || "",
+          departmentNumber: currentEditAddress?.departmentNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="number"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter Building Number"
+    />
+  </div>
 
-  onClick={async (e) => {e.preventDefault();
-  if (selectedAddressId !== null) {
-    await getAddressData(selectedAddressId);
-   
-      setEditChosenAddress(true)
-   
-  }
-}}
+  {/* Department Number */}
+  <div className="p-1 w-full mb-4 flex flex-col gap-1">
+    <label className="w-fit">Department Number:</label>
+    <input
+      value={Number(currentEditAddress?.departmentNumber) || 0}
+      onChange={(e) =>
+        setCurrentEditAddress({
+          ...currentEditAddress,
+          departmentNumber: Number(e.target.value),
+          government: currentEditAddress?.government || "",
+          city: currentEditAddress?.city || "",
+          area: currentEditAddress?.area || "",
+          street: currentEditAddress?.street || "",
+          buildingNumber: currentEditAddress?.buildingNumber || 0,
+          _id: currentEditAddress?._id || "",
+        })
+      }
+      type="number"
+      className="rounded-lg w-[100%] p-2 border-2"
+      placeholder="Enter Department Number"
+    />
+  </div>
 
+  {/* Submit Button */}
+  <div className="flex justify-center">
+    <button
+      onClick={(e) => {
+        // Call update address API or function here
 
-    disabled={selectedAddressId === null }
-    className={`px-4 py-2 w-fit rounded-2xl transition ${selectedAddressId !== null ? 'cursor-pointer bg-amber-600 hover:opacity-75' : 'cursor-not-allowed bg-slate-600 opacity-50 pointer-events-none'}`}
-  >
-    edit
-  </button>
-</div>
+        updateAddress(e,currentEditAddress ,currentEditAddress._id );
+      }}
+      className="w-[100%] py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
+    >
+      Update Address
+    </button>
+  </div>
 
         
       <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
     </form>
-    {currentEditAddress && (
-      <EditChosenAddress
-        clicked={editChosenAddress}
-        setClicked={setEditChosenAddress}
-        currentEditAddress={currentEditAddress}
-        setCurrentEditAddress={setCurrentEditAddress}
-      />
-    )}
 </div>
       
       
     )}
 
 
-  
 
+    </>
 
-
-       
-
-
-</>
   );
 }
+
+
+
+
+
+
+

@@ -3,8 +3,8 @@
     city: string,
     area: string,
     street: string,
-    buildingNumber: string,
-    departmentNumber: string,
+    buildingNumber: Number,
+    departmentNumber: Number,
     _id:string
   }
 

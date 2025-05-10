@@ -1,5 +1,5 @@
 'use client'
-import Auth from "@/components/auth";
+import Auth from "@/components/errorMessage";
 import Loading from "@/components/loading";
 import Link from "next/link";
 import { useEffect, useState } from "react";

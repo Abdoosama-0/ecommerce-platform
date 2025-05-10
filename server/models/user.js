@@ -7,9 +7,9 @@ const addressSchema = new mongoose.Schema({
     city: { type: String, required: true },
     area :{ type: String, required: true },
     street: { type: String },
-    buildingNumber: { type: String },
-    departmentNumber: { type: String },
-    // أضف المزيد من الحقول حسب الحاجة
+    buildingNumber: { type: Number },
+    departmentNumber: { type: Number },
+  
   });
 const userSchema=new Schema({
     googleId:{

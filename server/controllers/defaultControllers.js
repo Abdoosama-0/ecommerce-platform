@@ -6,6 +6,36 @@ const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
 
+
+const address = async (req, res) => {
+  const { newAddress } = req.body;
+
+  
+  if (
+    !newAddress ||
+    !newAddress.government ||
+    !newAddress.city|| !newAddress.area|| !newAddress.street|| !newAddress.departmentNumber
+  ) {
+    return res.status(400).json({ message: 'complete the data please' });
+  }
+
+  
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.addresses.push(newAddress);
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Address added successfully',
+      addresses: user.addresses,
+    });
+  
+};
+
 const getAddressById =async (req,res)=>{
 const user = await User.findById(req.userId);
     if (!user) {
@@ -31,7 +61,7 @@ const updateAddress = async (req, res) => {
     departmentNumber
   } = req.body.currentEditAddress;
 
-  const { addressId } = req.body;
+     const addressId = req.params.addressId;
 
   if (!addressId) {
     return res.status(400).json({ message: 'عنوان غير صالح' });
@@ -69,7 +99,7 @@ const updateAddress = async (req, res) => {
 
 
 const deleteAddress = async (req, res) => {
-  const { addressId } = req.body;
+     const addressId = req.params.addressId;
 
   if (!addressId) {
     return res.status(400).json({ message: 'الطلب غير صحيح، يجب تحديد عنوان' });
@@ -385,33 +415,6 @@ const order = async (req, res) => {
     });
  
 };
-const address = async (req, res) => {
-  const { newAddress } = req.body;
 
-  
-  if (
-    !newAddress ||
-    !newAddress.government ||
-    !newAddress.city|| !newAddress.area|| !newAddress.street|| !newAddress.departmentNumber
-  ) {
-    return res.status(400).json({ message: 'complete the data please' });
-  }
-
-  
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.addresses.push(newAddress);
-    await user.save();
-
-    return res.status(200).json({
-      message: 'Address added successfully',
-      addresses: user.addresses,
-    });
-  
-};
 
 module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}

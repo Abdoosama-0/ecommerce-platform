@@ -82,7 +82,7 @@ if(!validator.isStrongPassword(password)){
         
     })
     await newUser.save()
-    res.json({message:"done"})//res.redirect('/auth/login')
+    res.json({message:"done"})
 
 }
 module.exports={register,localLogin}

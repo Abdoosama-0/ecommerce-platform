@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AddProduct from '@/app/admin/products/components/addProduct';
-import Auth from '@/components/auth';
+import Auth from '@/components/errorMessage';
 import Loading from '@/components/loading';
 export default function Products() {
 

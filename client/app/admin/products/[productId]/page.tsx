@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import EditProduct from "@/app/admin/products/[productId]/components/updateProduct";
 import Loading from "@/components/loading";
-import Auth from "@/components/auth";
+import Auth from "@/components/errorMessage";
 import Images from "@/components/images";
 
 export default function Product() {

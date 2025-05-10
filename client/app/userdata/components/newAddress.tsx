@@ -12,12 +12,13 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
 
   const [government, setGovernment] = useState<string>('');
   const [city, setCity] = useState<string>('');
- 
   const [area, setArea] = useState<string>('');
   const [street, setStreet] = useState<string>('');
-  const [buildingNumber, setBuildingNumber] = useState<string>('');
-  const [departmentNumber, setDepartmentNumber] = useState<string>('');
+  const [buildingNumber, setBuildingNumber] = useState<number>(0);
+  const [departmentNumber, setDepartmentNumber] = useState<number>(0);
+
  const [message, setMessage] = useState<string>('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
 
@@ -44,8 +45,6 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
       const data = await res.json();
       
       if (res.ok) {
-        setMessage('')
-        console.log('Address added successfully');
        if (setAdd&&getAddresses){
         setAdd(false); 
         getAddresses();
@@ -55,9 +54,11 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
 }
       } else {
         setMessage(data.message)
-        console.log('Error adding address:', data);
+        
+     
       }
     } catch (error) {
+      setMessage('something went wrong please try again later')
       console.log('Error fetching data:', error);
     }
   };
@@ -65,6 +66,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
   return (
     
 <>
+
  
     {clicked && (
     
@@ -125,8 +127,8 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
           <label className='w-fit'>Building Number:</label>
           <input
             value={buildingNumber}
-            onChange={(e) => setBuildingNumber(e.target.value)}
-            type="text"
+            onChange={(e) => setBuildingNumber(Number(e.target.value))}
+            type="number"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='Enter Building Number'
           />
@@ -137,8 +139,8 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
           <label className='w-fit'>Department Number:</label>
           <input
             value={departmentNumber}
-            onChange={(e) => setDepartmentNumber(e.target.value)}
-            type="text"
+            onChange={(e) => setDepartmentNumber(Number(e.target.value))}
+            type="number"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='Enter Department Number'
           />
@@ -164,7 +166,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
       
       
     )}
-
+ 
   </>
   
 

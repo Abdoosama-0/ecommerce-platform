@@ -1,5 +1,5 @@
 'use client'
-import Auth from "@/components/auth";
+import Auth from "@/components/errorMessage";
 import Images from "@/components/images";
 import Loading from "@/components/loading";
 import UpdateStatus from "@/app/admin/orders/[orderId]/components/updateStatus";
