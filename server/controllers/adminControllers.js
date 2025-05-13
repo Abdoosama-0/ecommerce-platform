@@ -3,7 +3,7 @@ const Order = require('../models/order');
 const User = require('../models/user');
 
 const banUser = async (req, res) => {
-  const userId = req.query.id; // الحصول
+  const userId = req.query.id; 
 
   const user = await User.findById(userId);
   if (!user) {
@@ -17,11 +17,11 @@ return res.status(404).json({ message: 'User not found' });
 
 const getUsers = async (req, res) => {
 const users =await User.find()
- .select('_id name email phone address isAdmin isBanned') // تحديد الحقول التي تريد إرجاعها
+ .select('_id name email phone address isAdmin isBanned') 
 if (!users) {
   return res.status(404).json({ message: 'Users not found' });
 }
-const usersCount = await User.countDocuments(); // إجمالي المستخدمين
+const usersCount = await User.countDocuments(); 
 return res.status(200).json({ message: 'all Users', usersCount, users });
 
 
@@ -29,9 +29,9 @@ return res.status(200).json({ message: 'all Users', usersCount, users });
 
 
 const updateOrderStatus = async (req, res) => {
-  const orderId = req.query.id; // الحصول
+  const orderId = req.query.id; 
 
-  const { status } = req.body; // الحصول على الحالة الجديدة من الطلب
+  const { status } = req.body; 
     if(!status) {
       return res.status(400).json({ message: 'Status is required' });
     }
@@ -39,11 +39,11 @@ const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: 'Invalid status value' ,validValues:['pending', 'shipped', 'delivered', 'cancelled']}); 
     }
  
-    // تحديث حالة الطلب في قاعدة البيانات
+ 
     const updatedOrder = await Order.findByIdAndUpdate(
       orderId,
       { status },
-      { new: true }, // لإرجاع النسخة المحدثة من الطلب
+      { new: true }, 
 
     );
     if (!updatedOrder) {
@@ -58,10 +58,11 @@ const getOrder = async (req, res) => {
   const orderId = req.query.id; 
   const order = await Order.findById(orderId)
   .populate('userId', 'name email phone ') 
-  .populate('products.productId', 'title price imageUrls'); 
+  .populate('products.productId', 'title price imageUrls _id'); 
   if (!order) {
     return res.status(404).json({ message: 'Order not found' });
   }
+
   res.status(200).json({message:"order found",order} );
 
 
@@ -72,8 +73,8 @@ const getOrder = async (req, res) => {
 const getOrders = async (req, res) => {
  
     const orders = await Order.find()
-      .populate('userId', 'name email') // يعرض اسم وإيميل المستخدم
-      .populate('products.productId', 'title price'); // يعرض اسم وسعر كل منتج
+      .populate('userId', 'name email') 
+      .populate('products.productId', 'title price'); 
 
     res.status(200).json({message:"all orders",orders} );
 
@@ -91,11 +92,15 @@ const addProduct=async(req,res)=>{
         const { title, price, details, category } = req.body;
         let imageUrls = [];
     
-        // التحقق إذا كان في صور مرفوعة
+        
         if (req.files && req.files.length > 0) {
-          // إضافة الصور الجديدة للمصفوفة
+         
           imageUrls = req.files.map((file) => file.path);
         }
+        if(!title||!price ||!details ||!category ) {
+            res.status(400).json({ message: "please complete the data"});
+        }
+      
        
         const newProduct = new Product({
           title,
@@ -108,20 +113,20 @@ const addProduct=async(req,res)=>{
     
         await newProduct.save(); 
     
-        res.json({ message: "تم إضافة المنتج بنجاح", product: newProduct });
+        res.status(200).json({ message: "تم إضافة المنتج بنجاح", product: newProduct });
   
     }
     
     const getProducts = async (req, res) => {
-      const page = parseInt(req.query.page) || 1; // رقم الصفحة، افتراضي 1
-      const limit = 20; // عدد العناصر لكل صفحة
+      const page = parseInt(req.query.page) || 1; 
+      const limit = 20; 
       const skip = (page - 1) * limit;
     
       
         const products = await Product.find().skip(skip).limit(limit);
-        const total = await Product.countDocuments(); // إجمالي المنتجات
+        const total = await Product.countDocuments(); 
     
-        res.json({
+        res.status(200).json({
           products,
           currentPage: page,
           totalPages: Math.ceil(total / limit),
@@ -156,8 +161,8 @@ const addProduct=async(req,res)=>{
 
         if (req.body.existingImages) {
           try {
-            const existingImages = JSON.parse(req.body.existingImages); // فك الـ JSON للصور القديمة
-            imageUrls = [...existingImages, ...imageUrls]; // دمج الصور القديمة مع الجديدة
+            const existingImages = JSON.parse(req.body.existingImages);
+            imageUrls = [...existingImages, ...imageUrls]; 
           } catch (err) {
             return res.status(400).json({ error: 'existingImages not valid JSON' });
           }
@@ -165,13 +170,13 @@ const addProduct=async(req,res)=>{
     
         const { title, price, details, category } = req.body;
     
-        // التأكد من أن السعر قيمة صالحة
+     
         const numericPrice = parseFloat(price);
         if (isNaN(numericPrice)) {
           return res.status(400).json({ error: 'Invalid price value' });
         }
     
-        // تحديث المنتج في قاعدة البيانات
+   
         const product = await Product.findByIdAndUpdate(
           id,
           {
@@ -181,14 +186,14 @@ const addProduct=async(req,res)=>{
             category,
             imageUrls
           },
-          { new: true } // علشان يرجعلك النسخة الجديدة بعد التعديل
+          { new: true } 
         );
     
         if (!product) {
           return res.status(404).json({ error: "المنتج غير موجود" });
         }
     
-        res.json({ message: "تم تعديل المنتج بنجاح", product });
+        return res.status(404).json({ message: "تم تعديل المنتج بنجاح", product });
     
     };
     
@@ -201,7 +206,7 @@ const addProduct=async(req,res)=>{
         if (!product) {
           return res.status(404).json({ error: "المنتج غير موجود" });
         }
-        res.json({ message: "تم حذف المنتج بنجاح" });
+        return res.status(404).json({ message: "تم حذف المنتج بنجاح" });
     
     }
 

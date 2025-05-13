@@ -44,7 +44,7 @@ const register = async(req,res)=>{
       return res.status(400).json({message:"complete the data please"})
     }
 //===================================================================check email=============================================
-//is eil valid
+//is email valid
      if(!validator.isEmail(email)){
        return res.status(400).json({message:"this is not an email"})
      }

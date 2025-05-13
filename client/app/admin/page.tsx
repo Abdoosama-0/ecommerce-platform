@@ -1,16 +1,15 @@
 'use client';
-import Auth from "@/components/errorMessage";
-import Loading from "@/components/loading";
+import ErrorMessage from "@/components/errorMessage";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Admin() {
-  const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState<string>("");
-  const [auth, setAuth] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const [message, setMessage] = useState<string | null>(null);
+ 
+
+  const isAdmin = async () => {
       try {
         const res = await fetch("http://localhost:3000/admin/adminWelcome", {
           method: 'GET',
@@ -20,28 +19,31 @@ export default function Admin() {
           credentials: 'include',
         });
         const data = await res.json();
-        setMessage(data.message);
-        if (res.ok) {
-          setAuth(true);
+       
+        if (!res.ok) {
+          setMessage(data.message);
+          return
         }
-        setLoading(false);
+       
       } catch (error) {
-        setLoading(false);
+
         console.error('Error fetching data:', error);
       }
     };
+  useEffect(() => {
+    isAdmin();
 
-    fetchData();
   }, []);
 
   return (
     <>
-      {loading ? (<><Loading/></>) : (<>
-        {!auth &&
-          <Auth error={message}/>
-        }
+     
+        {!message &&
 
-        {auth && 
+
+      
+
+      
           <div className="flex flex-col bg-gray-100 min-h-screen gap-5">
             <h1 className="m-4 text-gray-800 text-3xl font-semibold">Welcome Admin</h1>
 
@@ -63,8 +65,12 @@ export default function Admin() {
               </Link>
             </div>
           </div>
-        }
-      </>)}
+      
+       } 
+      {message &&
+       <ErrorMessage message={message}/>
+       }
+      
     </>
   );
 }

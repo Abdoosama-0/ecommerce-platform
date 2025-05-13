@@ -1,57 +1,18 @@
 'use client'
 import Auth from "@/components/errorMessage";
-import Images from "@/components/images";
-import Loading from "@/components/loading";
+
+
 import UpdateStatus from "@/app/admin/orders/[orderId]/components/updateStatus";
 import { useEffect, useState } from "react";
 
 
 export default function OrderId() {
-  type address = {
-    government: string,
-    city: string,
-    area: string,
-    street: string,
-    buildingNumber: string,
-    departmentNumber: string,
-    _id:string
-  }
+ 
+    const [updateStatus, setUpdateStatus] = useState<boolean>(false)
+    const [message, setMessage] = useState<string >("");
 
-    type Order ={
-        _id: string;
-        userId: {
-          _id: string;
-          name: string;
-          email: string;
-          phone: string;
-        };
-        products: {
-          productId: {
-            _id: string;
-            title: string;
-            price: number;
-            imageUrls: string[];
-          };
-          quantity: number;
-          _id: string;
-        }[];
-        createdAt: string;
-        totalQuantity: number;
-        totalPrice: number; 
-        address:address;
-        status: string;
-      }
-      const [updateStatus, setUpdateStatus] = useState<boolean>(false)
-    const [loading, setLoading] = useState(true)
-    const [message, setMessage] = useState<string >("something went wrong");
-    const [auth, setAuth] = useState<boolean>(false);
     const [data, setData] = useState<Order |null>(null)
-    
-    useEffect(() => {
-        const path = window.location.pathname;
-        const segments = path.split('/');
-        const orderId = segments[3]; 
-        const fetchData = async () => {
+       const fetchData = async (orderId:string) => {
            try {
              const res = await fetch(`http://localhost:3000/admin/getOrder?id=${orderId}`, {
                  method: 'GET',
@@ -61,31 +22,40 @@ export default function OrderId() {
                  credentials: 'include',
              })
              const data = await res.json()
-             setMessage(data.message)
+           
 
-             if (res.ok) {
-               setAuth(true)
-               setData(data.order)
+             if (!res.ok) {
+               setMessage(data.message)
+               return
+              
              }
+              setData(data.order)
              
-             
-             setLoading(false)
+          
          }
          catch (error) {
-           setLoading(false)
+        setMessage('something went wrong please try again later')
            console.error('Error fetching data:', error);
            
             
          }
        }
-         fetchData()
+    useEffect(() => {
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const orderId = segments[3]; 
+     
+         fetchData(orderId)
      }
      , [])
     return (
 
         <>
-{loading ? (<><Loading/></>):(<>
-{!auth ? (<><Auth error={message}/></>) : (<>
+
+{message ? (<> 
+    {/**error message */}
+    <Auth message={message}/>
+    </>) : (<>
     <main className="min-h-screen  bg-gray-200 p-2 text-2xl font-bold ">
         <div className="">
           <h1 className="">orderId : <span>{data?._id}</span></h1>
@@ -107,7 +77,7 @@ export default function OrderId() {
                         <h1 className="">productPrice : <span>{product.productId.price}</span></h1>
                         <h1 className="">quantity : <span>{product.quantity}</span></h1>
                         <div>
-                              <Images imageUrls={product.productId.imageUrls}/>
+                              {/* <Images imageUrls={product.productId.imageUrls}/> */}
 
                         </div>
 
@@ -132,7 +102,7 @@ export default function OrderId() {
 
 </>) }
 
-</>)}
+
 </>
 
   

@@ -1,11 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 export default function LoginPage() {
 const url = "http://localhost:3000";
-const router = useRouter(); // ← داخل الدالة الرئيسية
+const router = useRouter(); 
 useEffect(() => {
   const value = localStorage.getItem('isLogged');
   if (value === 'true') {
@@ -14,10 +14,10 @@ useEffect(() => {
   }
 }, []);
 
-const [showPassword, setShowPassword] = useState(false); // 👈 حالة إظهار كلمة المرور
+const [showPassword, setShowPassword] = useState(false); 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState(''); // <-- هنا بنخزن رسالة الخطأ
+    const [errorMessage, setErrorMessage] = useState(''); 
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,18 +42,18 @@ const [showPassword, setShowPassword] = useState(false); // 👈 حالة إظه
        
             localStorage.removeItem('cart');
           
-        //  router.push('/')
+       
             if (typeof document !== 'undefined' && document.referrer.includes('/register')) {
               window.location.href = '/';
             } else {
-              window.location.href = document.referrer || '/'; // fallback إذا لم يوجد referrer
+              window.location.href = document.referrer || '/'; 
             }
             
             
             
-            // ممكن تحفظ التوكن هنا أو تنقل المستخدم
+
           } else {
-            setErrorMessage(data.message || 'Login failed'); // <-- عرض الخطأ للمستخدم
+            setErrorMessage(data.message || 'Login failed'); 
 
           }
         } catch (err) {
@@ -80,7 +80,7 @@ const [showPassword, setShowPassword] = useState(false); // 👈 حالة إظه
         <label htmlFor="password" className="text-black font-semibold mb-1">Password</label>
         <div className="relative">
           <input
-            type={showPassword ? "text" : "password"} // 👈 تبديل النوع
+            type={showPassword ? "text" : "password"} 
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}

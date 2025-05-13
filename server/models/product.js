@@ -2,18 +2,26 @@ require('../config/mongo')
 const mongoose =require('mongoose')
 const Schema=mongoose.Schema
 const productSchema = new Schema({
-    imageUrls: [{ type: String }],
+    imageUrls: { 
+        type: [String], 
+    required: true,
+
+    },
     title:{
-        type:String  
+        type:String  ,
+        required:true
     },
     price:{
-        type: Number
+        type: Number,
+        required:true
     },
     details:{
-        type:String  
+        type:String  ,
+        required:true
     },
     category:{
-        type:String  
+        type:String,
+        required:true  
     }
 })
 

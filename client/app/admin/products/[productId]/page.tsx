@@ -1,17 +1,16 @@
 'use client';
 import { useEffect, useState } from "react";
-import Image from "next/image";
+
 import EditProduct from "@/app/admin/products/[productId]/components/updateProduct";
-import Loading from "@/components/loading";
+
 import Auth from "@/components/errorMessage";
-import Images from "@/components/images";
-import ProductDetails from "@/app/[productId]/components/productDetails";
+
 import AdminProductDetails from "./components/adminProductDetails";
 
 export default function Product() {
-  const [loading, setLoading] = useState(true)
+
   const [message, setMessage] = useState<string >("");
-  const [auth, setAuth] = useState<boolean>(false);
+
  
 const [data, setData] = useState<productDetails | null>(null); 
 
@@ -26,18 +25,17 @@ const [data, setData] = useState<productDetails | null>(null);
       credentials: 'include',
     });
     const data = await res.json();
-    setMessage(data.message)
-    if (res.ok) {
-      console.log('Product data:', data); // هنا بنطبع البيانات في الكونسول
-      setData(data); // هنا بنخزن البيانات في الحالة
-      setAuth(true); 
+    
+    if (!res.ok) {
+      setMessage(data.message)
+      return
+    
+     
     } 
-    else {
-      console.error('Error fetching product data:', data.message);
-    }
-    setLoading(false)
+    setData(data); 
+ 
   }catch (error) {
-    setLoading(false)
+     setMessage('something went wrong please try again later')
     console.error('Error fetching data:', error);
   }}
 
@@ -57,16 +55,30 @@ const [editClicked,setEditClicked]=useState(false)
     return (
 <>
 
-  {loading ? (<><Loading/></>):(<>
+  
 
-    {!auth ? (<><Auth message={message}/></>) : (<>
-       {/* =============================part 1 (edit)=================================== */}
+
+    {message ? (<>
+    {/** error message */}
+    <Auth message={message}/>
+    </>) : (
+      <>
+
     {data?(<>
+      {/** about the product */}
       <AdminProductDetails data={data} setData={setData} />
+
+      {/** edit product button */}
       <div onClick={()=>{setEditClicked(true)}} className="fixed min-w-[80px] cursor-pointer hover:opacity-50 flex justify-center items-center bottom-4 left-4 rounded-2xl px-2 py-1 w-fit bg-sky-700 shadow-2xl  ">edit</div>
+
+      {/** edit product form */}
        <EditProduct setEditClicked={setEditClicked} editClicked={editClicked}  currentCategory={data?.category } currentDetails={data?.details} currentPrice={data?.price} currentTitle={data?.title} currentImages={data?.imageUrls}/>
       
-      </>):(<>
+      </>)
+      
+      :
+      (<>
+      {/** error message */}
       <h1>product not found</h1>
       </>)}
     
@@ -74,7 +86,7 @@ const [editClicked,setEditClicked]=useState(false)
         
        
 </>) }
-</>)}
+
 
 </>
   

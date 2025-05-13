@@ -12,4 +12,3 @@ console.log("✅ Connected to database ")
 }
 }
 connectDB(); 
-// module.exports=connectDB

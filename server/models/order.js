@@ -9,13 +9,12 @@ const addressSchema = new mongoose.Schema({
     street: { type: String },
     buildingNumber: { type: String },
     departmentNumber: { type: String },
-    // أضف المزيد من الحقول حسب الحاجة
   });
 const orderSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [
       {
-        _id: false, // <-- هذا يمنع إنشاء _id تلقائيًا لكل عنصر
+        _id: false, 
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         quantity: Number,
       }
@@ -28,5 +27,5 @@ const orderSchema = new Schema({
     paymentMethod:{ type: String, enum: ['cash on delivery'], default: 'cash on delivery' },
   });
 
-  const Order = mongoose.model('Order', orderSchema); // <-- لاحظ حرف الـ O الكبير
+  const Order = mongoose.model('Order', orderSchema); 
   module.exports = Order;

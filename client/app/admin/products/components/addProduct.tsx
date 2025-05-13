@@ -1,29 +1,37 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from "next/navigation";
+
+interface addProductProps{
+clicked:boolean
+setClicked:(arg0:boolean)=>void
+}
+
+export default function AddProduct({clicked,setClicked}:addProductProps) {
 
 
-export default function AddProduct() {
 
-
-
-  const router = useRouter();
   const url = "http://localhost:3000";
+  const [message, setMessage] = useState('')
 
-  const [price, setPrice] = useState<number>(0)
-  const [title, setTitle] = useState( '')
-  const [details, setDetails] = useState( '')
-  const [category, setCategory] = useState( '')
+
+  const [price, setPrice] = useState<number | null>(null)
+  const [title, setTitle] = useState('')
+  const [details, setDetails] = useState('')
+  const [category, setCategory] = useState('')
   const [images, setImages] = useState<File[]>([]);
  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> ) => {
     e.preventDefault();
-
+    if (!title.trim() || !details.trim() || !category.trim() || price === null || images.length === 0) {
+      setMessage("All fields are required.");
+      return;
+    }
     try {
+      
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("price", price?.toString() );
+      formData.append("price", price.toString() );
       formData.append("details", details);
       formData.append("category", category);
      
@@ -34,7 +42,7 @@ export default function AddProduct() {
         });
       }
 
-     
+    
 
       const res = await fetch(`${url}/admin/addProduct`, {
         method: 'POST',
@@ -44,21 +52,27 @@ export default function AddProduct() {
       const data = await res.json();
  
 
-      if (res.ok) {
-        alert(data?.message);
-        window.location.reload();
-      } else {
-        alert(data?.message);
-      }
+      if (!res.ok) {
+        setMessage(data.message)
+        
+        return
+      } 
+        alert("added successfully");
+      window.location.reload();
     } catch (err) {
+      setMessage("something went wrong please try again later")
       console.log(err);
       
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className= '  bg-white text-black fixed z-30 inset-0 m-auto rounded-lg w-[80%] h-[80%] overflow-hidden  flex flex-col gap-2'>
-      <div className=' overflow-y-auto p-4 '>
+    <>
+{clicked && (
+    
+     <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
+      <form  onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+                   
         {/* Title */}
         <div className='p-1 w-full mb-4 flex flex-col gap-1'>
           <label className='w-fit'>title:</label>
@@ -75,9 +89,9 @@ export default function AddProduct() {
         <div className='p-1 w-full mb-4 flex flex-col gap-1'>
           <label className='w-fit'>price:</label>
           <input
-            value={price}
-            onChange={(e) => setPrice(parseInt(e.target.value))}
-            type="text"
+            value={price ?? ''}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            type="number"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='price'
           />
@@ -150,6 +164,12 @@ export default function AddProduct() {
           />
 
         </div>
+        {message&&   
+         
+          <h1 className='text-sm text-red-600'>{message}</h1>
+      
+        }
+    
 {/* ============================================================================================= */}
         {/* Submit */}
         <button
@@ -158,7 +178,21 @@ export default function AddProduct() {
         >
          add Product
         </button>
-      </div>
+     
+
+        
+      <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
     </form>
+</div>
+      
+      
+    )}
+
+
+
+
+
+</>
+
   );
 }

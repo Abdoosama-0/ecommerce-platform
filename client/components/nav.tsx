@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
 
 export default function Nav() {
   const url = "http://localhost:3000";
@@ -16,6 +16,7 @@ export default function Nav() {
         },
         credentials: 'include',
       });
+      const data =await res.json()
 
       if (res.ok) {
         localStorage.setItem('isLogged', 'false');
@@ -23,7 +24,7 @@ export default function Nav() {
         window.location.reload()
        
       } else {
-        alert('Logout failed');
+        alert(data.message);
       }
     } catch (err) {
       console.log(err);
@@ -45,7 +46,7 @@ export default function Nav() {
           <h1>cart</h1>
         </Link>
 
-        {!(localStorage.getItem("isLogged") === "true") ? (
+        {localStorage.getItem("isLogged") === "false"? (
         <Link href={`/login`}>
           <h1>login</h1>
         </Link>

@@ -9,12 +9,12 @@ import ErrorMessage from "@/components/errorMessage";
   
   type Product = {
     imageUrls: string[];
-    // حسب شكل المنتج في قاعدة البيانات
+   
     _id: string;
     title: string;
     details: string;
     price: number;
-    // ضيف باقي الخصائص لو فيه أكتر
+   
   };
   
   type ProductResponse = {

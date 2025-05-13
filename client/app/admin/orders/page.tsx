@@ -77,7 +77,7 @@ export default function Orders() {
     
 <>
 {loading ? (<><Loading/></>):(<>
-{!auth ? (<><Auth error={message}/></>) : (<>
+{!auth ? (<><Auth message={message}/></>) : (<>
 
 <main className="min-h-screen bg-gray-100 p-4 ">
   <div className=" flex flex-col gap-2">

@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from "next/navigation";
+
 
 interface AddProps {
   currentPrice?: number;
@@ -16,11 +16,12 @@ export default function EditProduct({setEditClicked,editClicked ,currentPrice, c
 
 
 
-  const router = useRouter();
-  const url = "http://localhost:3000";
 
+  const url = "http://localhost:3000";
+const [message, setMessage] = useState('')
   const [price, setPrice] = useState<number>(currentPrice || 0)
   const [title, setTitle] = useState(currentTitle || '')
+  
   const [details, setDetails] = useState(currentDetails || '')
   const [category, setCategory] = useState(currentCategory || '')
   const [images, setImages] = useState<File[]>([]);
@@ -57,12 +58,13 @@ export default function EditProduct({setEditClicked,editClicked ,currentPrice, c
       const data = await res.json();
  
 
-      if (res.ok) {
-        alert(data?.message);
-        window.location.reload();
-      } else {
-        alert(data?.message);
-      }
+      if (!res.ok) {
+      
+        setMessage(data.message)
+        
+      } 
+        alert("updated successfully");
+      window.location.reload();
     } catch (err) {
       console.log(err);
       
@@ -76,7 +78,7 @@ export default function EditProduct({setEditClicked,editClicked ,currentPrice, c
         {editClicked && (
     
      <div onClick={() => setEditClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
-      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+      <form onSubmit={handleSubmit}  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
               
     
       <div className=' overflow-y-auto p-4 '>
@@ -192,7 +194,12 @@ export default function EditProduct({setEditClicked,editClicked ,currentPrice, c
           />
 
         </div>
-{/* ============================================================================================= */}
+
+
+        {/**error message */}
+        {message&&
+        <h1 className='text-red-600 text-sm'>{message}</h1>
+        }
         {/* Submit */}
         <button
           type="submit"

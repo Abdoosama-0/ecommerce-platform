@@ -13,7 +13,7 @@ export default function  AddToCartButton({productId,price,name,imageUrl}:AddToCa
   
   const [loading, setLoading] = useState(true)
 
-  const [cartRefreshFlag, setCartRefreshFlag] = useState(0); // لتحديث useEffect
+  const [cartRefreshFlag, setCartRefreshFlag] = useState(0); 
 const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
   const [cart, setCart] = useState<CartItem[]>([]);
 
@@ -34,7 +34,7 @@ const handleIncrease = async (productId:string) => {
           method: 'PATCH',
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json', // تأكد من إرسال البيانات بصيغة JSON
+            'Content-Type': 'application/json', 
           },
           body: JSON.stringify({ productId }),
          
@@ -61,11 +61,10 @@ const handleIncrease = async (productId:string) => {
             price: number
         }, quantity: number }[];
       
-        // البحث عن العنصر داخل العربة
         const existingItem = cart.find(item => item.productId._id === productId);
       
         if (existingItem) {
-          // إذا كان المنتج موجود، زيادة الكمية
+        
           existingItem.quantity += 1;
         }
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -81,7 +80,7 @@ const handleIncrease = async (productId:string) => {
           method: 'PATCH',
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json', // تأكد من إرسال البيانات بصيغة JSON
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ productId }),
         });
@@ -104,7 +103,7 @@ const handleIncrease = async (productId:string) => {
             price: number
         }, quantity: number }[];
       
-        // البحث عن العنصر داخل العربة
+   
         const existingItem = cart.find(item => item.productId._id === productId);
       
         if (existingItem) {
@@ -150,7 +149,7 @@ const handleIncrease = async (productId:string) => {
 
     }
     else{
-    // الحصول على العربة الحالية أو إنشاء واحدة جديدة
+
     const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: {
         _id: string,
         imageUrls: string[],
@@ -158,19 +157,18 @@ const handleIncrease = async (productId:string) => {
         price: number
     }, quantity: number }[];
   
-    // البحث عن العنصر داخل العربة
+
     const existingItem = cart.find(item => item.productId._id === productId);
   
     if (existingItem) {
-      // إذا كان المنتج موجود، زيادة الكمية
+ 
       existingItem.quantity += 1;
     } else {
         const imageUrls =[imageUrl]
-      // إذا لم يكن موجود، إضافته مع كمية 1
+
       cart.push({ productId :{ _id:productId,imageUrls:imageUrls ,title:name,price:price },quantity: 1 });
     }
-  
-    // حفظ التحديث في localStorage
+
     localStorage.setItem('cart', JSON.stringify(cart));
   
     refreshCart();
@@ -221,9 +219,9 @@ const handleIncrease = async (productId:string) => {
   return (
     <>
 
-  {//code js
-      (// start
-        () => {//fun
+  {
+      (
+        () => {
             const itemIndex = cart.findIndex((item) => item.productId?._id === productId);
             if (itemIndex !== -1 ) {
              
@@ -244,7 +242,7 @@ const handleIncrease = async (productId:string) => {
             }
           }
         )
-        ()//call fun
+        ()
           }
           
           </>

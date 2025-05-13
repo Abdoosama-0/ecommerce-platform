@@ -1,15 +1,6 @@
 'use client'
 
-import { useState } from "react";
-type CartItem = {
-    productId: {
-      _id: string,
-      imageUrls: [string],
-      title: string,
-      price: number
-    }
-    quantity: number;
-  };
+
 interface AddProps{
 productId:string
 quantity:number

@@ -73,14 +73,14 @@ const updateAddress = async (req, res) => {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
 
-  // البحث عن العنوان باستخدام الـ ID
+
   const address = user.addresses.find((addr) => addr._id.toString() === addressId);
 
   if (!address) {
     return res.status(404).json({ message: 'العنوان غير موجود' });
   }
 
-  // تحديث الحقول المحددة فقط دون تغيير الـ _id
+
   address.government = government || address.government;
   address.city = city || address.city;
   address.area = area || address.area;
@@ -88,7 +88,7 @@ const updateAddress = async (req, res) => {
   address.buildingNumber = buildingNumber || address.buildingNumber;
   address.departmentNumber = departmentNumber || address.departmentNumber;
 
-  // حفظ التغييرات
+
   await user.save();
 
   return res.status(200).json({ message: 'تم تحديث العنوان بنجاح', address });
@@ -136,8 +136,8 @@ const updateUserData = async (req,res)=>{
       phone
     },
     {
-      new: true,           // يرجع النسخة المحدّثة من المستخدم
-      runValidators: true  // يتأكد من صحة البيانات حسب الـ Schema
+      new: true,           
+      runValidators: true
     }
   );
 
@@ -173,17 +173,17 @@ const deleteFromCart = async (req, res) => {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
 
-  // التأكد من وجود المنتج في السلة
+
   const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
 
   if (productIndex === -1) {
     return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
   }
 
-  // حذف المنتج من السلة
+  
   user.cart.splice(productIndex, 1);
 
-  // حفظ التغييرات
+ 
   await user.save();
 
   return res.status(200).json({ message: 'تم حذف المنتج من السلة بنجاح' });
@@ -199,7 +199,7 @@ const decreaseQuantity = async (req, res) => {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
 
-  // البحث عن المنتج داخل سلة التسوق
+ 
   const product = user.cart.find(item => item.productId.toString() === productId);
   
   if (!product) {
@@ -207,12 +207,12 @@ const decreaseQuantity = async (req, res) => {
   }
 
  
-  // تقليل الكمية
+
   if (product.quantity > 1) {
     product.quantity--;
     await user.save();
   } else {
-    // إذا كانت الكمية 1، نقوم بحذف المنتج من السلة
+    
     const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
     if (productIndex !== -1) {
       user.cart.splice(productIndex, 1);
@@ -220,7 +220,7 @@ const decreaseQuantity = async (req, res) => {
       return res.status(200).json({ message: 'تم حذف العنصر' });
     }
   }
-  // حفظ التغييرات
+ 
 
 
   return res.status(200).json({ message: 'تمت النقصان بنجاح', quantity: product.quantity });
@@ -233,17 +233,17 @@ const increaseQuantity = async (req, res) => {
     return res.status(404).json({ message: 'المستخدم غير موجود' });
   }
 
-  // البحث عن المنتج داخل سلة التسوق
+
   const product = user.cart.find(item => item.productId.toString() === productId);
   
   if (!product) {
     return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
   }
 
-  // زيادة الكمية
+
   product.quantity++;
 
-  // حفظ التغييرات
+
   await user.save();
 
   return res.status(200).json({ message: 'تمت الزيادة بنجاح', quantity: product.quantity });
@@ -330,13 +330,13 @@ const cart= async(req,res)=>{
 
  
     const products = async (req, res) => {
-      const page = parseInt(req.query.page) || 1; // رقم الصفحة، افتراضي 1
-      const limit = 20; // عدد العناصر لكل صفحة
+      const page = parseInt(req.query.page) || 1; 
+      const limit = 20; 
       const skip = (page - 1) * limit;
     
      
         const products = await Product.find().skip(skip).limit(limit);
-        const total = await Product.countDocuments(); // إجمالي المنتجات
+        const total = await Product.countDocuments(); 
     
         res.json({
           products,
@@ -349,13 +349,13 @@ const cart= async(req,res)=>{
     
 
 const product = async (req, res) => {
-  const  id  = req.query.id; // الحصول على معرف المنتج من المعاملات
+  const  id  = req.query.id;
   
-    const product = await Product.findById(id); // البحث عن المنتج باستخدام المعرف
+    const product = await Product.findById(id); 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' }); // إذا لم يتم العثور على المنتج
+      return res.status(404).json({ message: 'Product not found' });
     } 
-    res.status(200).json(product); // إرجاع خطأ الخادم
+    res.status(200).json(product);
 
 }
 
@@ -379,11 +379,11 @@ const order = async (req, res) => {
       return res.status(400).json({ message: 'the paymentMethods that allowed is [cash on delivery]' });
     }
 
-    // تحقق من وجود المستخدم
+   
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // حساب totalQuantity و totalPrice
+
     let totalQuantity = 0;
     let totalPrice = 0;
 
@@ -397,7 +397,7 @@ const order = async (req, res) => {
       totalPrice += item.quantity * product.price;
     }
 
-    // إنشاء الأوردر
+
     const newOrder = new Order({
       userId,
       products,

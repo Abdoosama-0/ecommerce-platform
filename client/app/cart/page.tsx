@@ -10,7 +10,7 @@ import ErrorMessage from "@/components/errorMessage";
 export default function  Cart() {
 const [loading, setLoading] = useState(true)
 const [message, setMessage] = useState('')
-const [cartRefreshFlag, setCartRefreshFlag] = useState(0); // لتحديث useEffect
+const [cartRefreshFlag, setCartRefreshFlag] = useState(0); 
 const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
 const [cart, setCart] = useState<CartItem[] | null >(null);
 const [totalPrice,setTotalPrice]=useState<number>(0)
@@ -23,7 +23,7 @@ try{
       method: 'DELETE',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json', // تأكد من إرسال البيانات بصيغة JSON
+        'Content-Type': 'application/json', 
       },
       body: JSON.stringify({ productId }),
     });
@@ -157,7 +157,7 @@ let totalPrice = 0;
                                     >
                                       Delete
                                     </button>
-
+                            
                                     <Add 
                                       productId={item?.productId?._id} 
                                       quantity={item?.quantity ?? 1} 
