@@ -34,6 +34,7 @@
         details: string;
         price: number;
         category: string;
+        quantity:number
        
       }
            type adminProductResponse = {

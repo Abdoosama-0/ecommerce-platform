@@ -19,18 +19,20 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
   const [details, setDetails] = useState('')
   const [category, setCategory] = useState('')
   const [images, setImages] = useState<File[]>([]);
+  const [quantity, setQuantity] = useState<number | null>(null)
  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> ) => {
     e.preventDefault();
-    if (!title.trim() || !details.trim() || !category.trim() || price === null || images.length === 0) {
-      setMessage("All fields are required.");
+    if (!title.trim() || !category.trim() || price === null ||quantity=== null || images.length === 0) {
+      setMessage("All fields are required unless details .");
       return;
     }
     try {
       
       const formData = new FormData();
       formData.append("title", title);
+      formData.append("quantity", quantity.toString());
       formData.append("price", price.toString() );
       formData.append("details", details);
       formData.append("category", category);
@@ -117,6 +119,17 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
             type="text"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='category'
+          />
+        </div>
+          {/* quantity */}
+        <div className='p-1 w-full mb-4 flex flex-col gap-1'>
+          <label className='w-fit'>quantity:</label>
+          <input
+            value={quantity  ?? ''}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            type="number"
+            className='rounded-lg w-[100%] p-2 border-2'
+            placeholder='quantity'
           />
         </div>
 {/* ============================================================================================= */}

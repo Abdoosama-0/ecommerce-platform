@@ -9,10 +9,11 @@ interface ProductCardProps {
   title?: string;
   price?: number;
   productId?: string;
+  quantity:number
 }
 
 
-const UserProductCard = ({ image, title, price, productId }: ProductCardProps) => {
+const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCardProps) => {
 
 
 
@@ -35,7 +36,7 @@ const UserProductCard = ({ image, title, price, productId }: ProductCardProps) =
 
       <div className='flex flex-row w-full flex-wrap justify-between pr-4 items-center text-xl'>
         <span>{price} EGP</span>
-
+         <span>quantity: {quantity}</span>
   
       </div> 
      {productId && <AddToCart productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}

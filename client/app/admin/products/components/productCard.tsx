@@ -1,16 +1,40 @@
 import React from 'react'
 import Image from 'next/image'
-import deleteProduct from '@/utils/deleteProduct';
+
 import Link from 'next/link';
 
 interface ProductCardProps {
   image?: string;
   title?: string;
-  price?: string;
+  price?: number;
   productId?: string;
+  quantity?: number;
 }
 
-const ProductCard = ({ image, title, price, productId }: ProductCardProps) => {
+const ProductCard = ({ image, title, price, productId ,quantity}: ProductCardProps) => {
+
+    const deleteProduct = async (productId :string ) => {
+    try {
+        const res = await fetch(`http://localhost:3000/admin/deleteProduct/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.message)
+
+            
+        } 
+        alert('Product deleted successfully');
+        window.location.reload(); 
+    } catch (error) {
+      alert('something went wrong please try again later')
+        console.log('Error deleting product:', error);
+    }
+}
 
   return (
     <Link  href={`/admin/products/${productId}/`}>
@@ -30,6 +54,7 @@ const ProductCard = ({ image, title, price, productId }: ProductCardProps) => {
 
       <div className='flex flex-row w-full flex-wrap justify-between pr-4 items-center text-xl'>
         <span>{price} EGP</span>
+        <span>quantity: {quantity}</span>
 
         <span
           onClick={(e) => {
@@ -39,7 +64,7 @@ const ProductCard = ({ image, title, price, productId }: ProductCardProps) => {
           
               
           }}
-          className='bg-red-600 text-white rounded-xl  px-2 cursor-default'
+          className='bg-red-600 text-white rounded-xl py-1 px-4 cursor-default'
         >
           del
         </span>

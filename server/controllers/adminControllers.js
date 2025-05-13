@@ -2,6 +2,8 @@ const Product=require('../models/product')
 const Order = require('../models/order');
 const User = require('../models/user');
 
+
+
 const banUser = async (req, res) => {
   const userId = req.query.id; 
 
@@ -89,7 +91,7 @@ const adminWelcome= async(req,res)=>{
 
 const addProduct=async(req,res)=>{
     
-        const { title, price, details, category } = req.body;
+        const { title, price, details, category,quantity } = req.body;
         let imageUrls = [];
     
         
@@ -97,7 +99,7 @@ const addProduct=async(req,res)=>{
          
           imageUrls = req.files.map((file) => file.path);
         }
-        if(!title||!price ||!details ||!category ) {
+        if(!title||!price  ||!category || !quantity ||imageUrls.length<1  ) {
             res.status(400).json({ message: "please complete the data"});
         }
       
@@ -108,6 +110,7 @@ const addProduct=async(req,res)=>{
           details,
           category,
           imageUrls,
+          quantity
     
         });
     
@@ -116,15 +119,42 @@ const addProduct=async(req,res)=>{
         res.status(200).json({ message: "تم إضافة المنتج بنجاح", product: newProduct });
   
     }
+
+const getDeletedProducts = async (req, res) => {
+ 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+
+    const query = {
+      isDeleted: true
+    };
+
+
+    const products = await Product.find(query).skip(skip).limit(limit);
+    const total = await Product.countDocuments(query);
+
+    res.status(200).json({
+      products,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalProducts: total,
+    });
+
+};
+
     
     const getProducts = async (req, res) => {
       const page = parseInt(req.query.page) || 1; 
       const limit = 20; 
       const skip = (page - 1) * limit;
+      const query = {
+        isDeleted:false
+      }
     
       
-        const products = await Product.find().skip(skip).limit(limit);
-        const total = await Product.countDocuments(); 
+        const products = await Product.find(query).skip(skip).limit(limit);
+      const total = await Product.countDocuments(query);
     
         res.status(200).json({
           products,
@@ -199,15 +229,21 @@ const addProduct=async(req,res)=>{
     
 
     const deleteProduct = async (req, res) => {
-      const id = req.query.id;
-    
-      
-        const product = await Product.findByIdAndDelete(id);
+      const { productId}= req.params;
+
+       console.log(productId)
+
+        const product = await Product.findById(productId);
+
+     
         if (!product) {
-          return res.status(404).json({ error: "المنتج غير موجود" });
-        }
-        return res.status(404).json({ message: "تم حذف المنتج بنجاح" });
+          return res.status(404).json({ message: "Product not available" });
+        }       
+        product.quantity=0
+        product.isDeleted=true 
+        await product.save()
+        return res.status(200).json({ message: "The product has been successfully deleted." });
     
     }
 
-module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser}
+module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts}

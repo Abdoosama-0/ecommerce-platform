@@ -1,7 +1,7 @@
 'use client'
 
 import ProductCard from '@/app/admin/products/components/productCard';
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AddProduct from '@/app/admin/products/components/addProduct';
 import ErrorMessage from '@/components/errorMessage';
@@ -9,7 +9,7 @@ export default function Products() {
 
 
       
- 
+   const router = useRouter();
  
       const [clicked,setClicked] = useState(false)
     const searchParams = useSearchParams()
@@ -55,18 +55,30 @@ export default function Products() {
 
         {!message ?(
           <>
-          <div>
+          <div className='m-1'>
             {/**products count */}
-            {data && <h2>عدد المنتجات: {data.totalProducts}</h2>}
+            {data && 
+            <div className=' flex justify-between w-full items-center px-2 '>
+            <h2>products:  {data.totalProducts}</h2>
+            <button 
+            onClick={()=>{
+              router.push('/admin/products/deletedProducts')
+            }}
+            className="px-4 py-2 w-fit text-white font-bold rounded-xl hover:opacity-50 cursor-pointer bg-slate-600">deleted products</button>
+            </div>
+            }
             {/**products*/}
-            <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
+            <div className=' w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
               {data?.products.map((el, index) => (
               
                   <ProductCard key={el._id}
                     title={el.title}
                     image={el.imageUrls[0]}
                     productId={el._id}
-                    price={el.price.toString()}
+                    price={el.price}
+                    quantity={el.quantity}
+
+                    
                   />
       
             ))}

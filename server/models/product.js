@@ -17,12 +17,21 @@ const productSchema = new Schema({
     },
     details:{
         type:String  ,
-        required:true
+        required:false
     },
     category:{
         type:String,
         required:true  
+    },
+    quantity:{
+        type:Number,
+        required:true
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
     }
+
 })
 
 const Product =mongoose.model('Product',productSchema)

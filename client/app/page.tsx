@@ -7,22 +7,16 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation'
 import ErrorMessage from "@/components/errorMessage";
   
-  type Product = {
-    imageUrls: string[];
-   
-    _id: string;
-    title: string;
-    details: string;
-    price: number;
-   
-  };
+
+
   
   type ProductResponse = {
     message: string;
-    products: Product[];
+    products: productDetails[];
     currentPage: number;
     totalPages: number;
     totalProducts: number;
+  
   };
 export default function Home() {
 const [message, setMessage] = useState<string >("");
@@ -106,6 +100,7 @@ useEffect(() => {
                     image={el.imageUrls[0]}
                     productId={el._id}
                     price={el.price}
+                    quantity={el.quantity}
                   />
       
             ))}

@@ -328,25 +328,30 @@ const cart= async(req,res)=>{
 
 }
 
+const products = async (req, res) => {
  
-    const products = async (req, res) => {
-      const page = parseInt(req.query.page) || 1; 
-      const limit = 20; 
-      const skip = (page - 1) * limit;
-    
-     
-        const products = await Product.find().skip(skip).limit(limit);
-        const total = await Product.countDocuments(); 
-    
-        res.json({
-          products,
-          currentPage: page,
-          totalPages: Math.ceil(total / limit),
-          totalProducts: total,
-        });
-    
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+
+
+    const query = {
+      isDeleted: false,
+      quantity: { $gt: 0 },
     };
-    
+
+    const products = await Product.find(query).skip(skip).limit(limit);
+    const total = await Product.countDocuments(query);
+
+    res.status(200).json({
+      products,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalProducts: total,
+    });
+ 
+};
+
 
 const product = async (req, res) => {
   const  id  = req.query.id;
