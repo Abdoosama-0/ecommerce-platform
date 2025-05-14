@@ -9,6 +9,7 @@ import React from 'react'
 import Image from 'next/image'
 
 import Link from 'next/link';
+import RestoreButton from "./restoreButton"
 
 
 
@@ -86,12 +87,14 @@ getDeletedProducts()
 
       <div className='flex flex-row w-full flex-wrap justify-between pr-4 items-center text-xl'>
         <span>{el.price} EGP</span>
-        <span>quantity: {el.quantity}</span>
+        
+        <RestoreButton  productId={el._id}/>
 
      
       </div>
       
-    </div></Link>
+    </div>
+    </Link>
 
 
 

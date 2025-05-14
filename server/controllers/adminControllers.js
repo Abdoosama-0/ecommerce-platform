@@ -246,4 +246,27 @@ const getDeletedProducts = async (req, res) => {
     
     }
 
-module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts}
+    
+    const restoreProduct = async (req, res) => {
+      const { productId}= req.params;
+      const {quantity}=req.body
+    if(!quantity){
+       return res.status(400).json({ message: "you must choose quantity " });
+    }
+
+    
+
+        const product = await Product.findById(productId);
+
+     
+        if (!product) {
+          return res.status(404).json({ message: "Product not available" });
+        }       
+
+        product.isDeleted=false 
+        product.quantity=quantity
+        await product.save()
+        return res.status(200).json({ message: "The product has been successfully restored." });
+    
+    }
+module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct}
