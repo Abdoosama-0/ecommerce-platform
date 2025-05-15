@@ -6,6 +6,27 @@ const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
 
+const getProductQuantity = async (req, res) => {
+ 
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).json({ message: 'Product ID is required' });
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    return res.status(200).json({ 
+      message: 'Product quantity retrieved successfully', 
+      quantity: product.quantity 
+    });
+
+};
+
 
 const address = async (req, res) => {
   const { newAddress } = req.body;
@@ -226,27 +247,36 @@ const decreaseQuantity = async (req, res) => {
   return res.status(200).json({ message: 'تمت النقصان بنجاح', quantity: product.quantity });
 };
 const increaseQuantity = async (req, res) => {
-  const user = await User.findById(req.userId);
-  const { productId } = req.body;
-
-  if (!user) {
-    return res.status(404).json({ message: 'المستخدم غير موجود' });
-  }
-
-
-  const product = user.cart.find(item => item.productId.toString() === productId);
   
-  if (!product) {
-    return res.status(404).json({ message: 'المنتج غير موجود في السلة' });
-  }
+    const user = await User.findById(req.userId);
+    const { productId } = req.body;
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-  product.quantity++;
+    const productInCart = user.cart.find(item => item.productId.toString() === productId);
 
+    if (!productInCart) {
+      return res.status(404).json({ message: 'Product not found in cart' });
+    }
 
-  await user.save();
+    const productInStock = await Product.findById(productId);
 
-  return res.status(200).json({ message: 'تمت الزيادة بنجاح', quantity: product.quantity });
+    if (!productInStock) {
+      return res.status(404).json({ message: 'Product not found in stock' });
+    }
+
+    if (productInStock.quantity < productInCart.quantity + 1) {
+      return res.status(400).json({ message: `You can only buy: ${productInStock.quantity} items` });
+    }
+
+    // Increase quantity in cart
+    productInCart.quantity++;
+    await user.save();
+
+    return res.status(200).json({ message: 'Quantity increased successfully', quantity: productInCart.quantity });
+
 };
 
 
@@ -369,6 +399,7 @@ const order = async (req, res) => {
  
     const {  address,paymentMethod,products } = req.body;
     const userId=req.userId
+
   
     if (
       !address ||
@@ -397,10 +428,17 @@ const order = async (req, res) => {
       if (!product) {
         return res.status(404).json({ message: `Product not found: ${item.productId}` });
       }
-
       totalQuantity += item.quantity;
       totalPrice += item.quantity * product.price;
+      if(product.quantity < item.quantity  ){
+        return res.status(400).json({ message: `you can just buy : ${ product.quantity}` });
+      }
+      product.quantity-=item.quantity
+      await product.save();
+    
     }
+
+   
 
 
     const newOrder = new Order({
@@ -422,4 +460,4 @@ const order = async (req, res) => {
 };
 
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}

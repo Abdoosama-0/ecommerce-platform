@@ -51,9 +51,7 @@ const getAddresses = async()=>{
     })
     const data = await res.json();
     if (res.ok) {
-        console.log('=================================================')
-        console.log(data.addresses)
-        console.log('=================================================')
+   
       setAddresses(data.addresses);
     }
 
@@ -71,7 +69,7 @@ useEffect(()=>{
   useEffect(() => {
     
     if (addresses.length > 0) {
-      setSelectedAddress(addresses[addresses.length - 1]); // تعيين آخر عنوان كـ "راديو" افتراضي
+      setSelectedAddress(addresses[addresses.length - 1]);
     }
   }, [addresses]);
 
@@ -94,7 +92,7 @@ useEffect(()=>{
       buildingNumber: "",
       departmentNumber: ""
     },
-    paymentMethod: paymentMethod // استخدام paymentMethod المدخل
+    paymentMethod: paymentMethod 
   };
 const handleSubmit = async(e: React.FormEvent)=>{
   e.preventDefault();
@@ -159,9 +157,9 @@ const handleSubmit = async(e: React.FormEvent)=>{
       <input
               type="radio"
               name="address"
-              value={address._id} // يمكن استخدام `address.id` أو أي قيمة فريدة
-              onChange={() => setSelectedAddress(address)} // تعيين العنوان المحدد
-              checked={selectedAddress?._id === address._id} // تحقق من العنوان المحدد
+              value={address._id} 
+              onChange={() => setSelectedAddress(address)}
+              checked={selectedAddress?._id === address._id} 
             />
             <label className="ml-2">
               <p>City: {address.city}, Government: {address.government}</p>

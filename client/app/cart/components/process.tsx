@@ -48,8 +48,8 @@ const [clicked,setClicked]= useState<boolean>(false)
     const router = useRouter();
   return (
     <>
-            <div className="w-[25%] flex flex-col gap-2 min-w-[25%] border-2 p-2 rounded-2xl h-fit">
-              <div className="mt-2 flex justify-around items-center bg-amber-300 rounded-2xl py-1 px-2">
+            <div className="w-full md:w-[25%]  flex flex-col gap-2 min-w-[25%] border-2 p-2 rounded-2xl h-fit">
+              <div className="mt-2 flex flex-col break-words md:flex-row justify-around items-center bg-amber-300 rounded-2xl py-1 px-2">
                 <p>products:{productsCount}</p>
                 <p>total price: {totalPrice} </p>
               </div>

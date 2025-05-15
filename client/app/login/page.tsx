@@ -24,6 +24,7 @@ const [showPassword, setShowPassword] = useState(false);
         e.preventDefault();
     
         try {
+        
           const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: string, quantity: number }[];
         
           const res = await fetch(`${url}/auth/localLogin`, {

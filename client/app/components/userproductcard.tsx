@@ -39,7 +39,7 @@ const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCar
          <span>quantity: {quantity}</span>
   
       </div> 
-     {productId && <AddToCart productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
+     {productId && <AddToCart productQuantity={quantity}  productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
       
     </div></Link>
   )

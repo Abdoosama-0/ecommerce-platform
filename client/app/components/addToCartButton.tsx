@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 interface AddToCartProps {
     productId:string
     name:string
-
+    productQuantity:number
     price:number
     imageUrl:string
 }
-export default function  AddToCartButton({productId,price,name,imageUrl}:AddToCartProps) {
+export default function  AddToCartButton({ productQuantity,productId,price,name,imageUrl}:AddToCartProps) {
   
   const [loading, setLoading] = useState(true)
 
@@ -39,14 +39,14 @@ const handleIncrease = async (productId:string) => {
           body: JSON.stringify({ productId }),
          
         });
-        
+        const data =await res.json()
     
     
         if (res.ok) {
           refreshCart();
    
         } else {
-          alert('failed');
+          alert(data.message);
         }
       } catch (err) {
         console.log(err);
@@ -60,11 +60,14 @@ const handleIncrease = async (productId:string) => {
             title: string,
             price: number
         }, quantity: number }[];
-      
+          console.log(cart)
         const existingItem = cart.find(item => item.productId._id === productId);
       
         if (existingItem) {
-        
+        if(productQuantity < existingItem.quantity+1){
+          alert(`you can just buy ${productQuantity}  items`)
+          return
+        }
           existingItem.quantity += 1;
         }
         localStorage.setItem('cart', JSON.stringify(cart));

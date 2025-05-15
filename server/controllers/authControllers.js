@@ -21,8 +21,21 @@ const localLogin = (req, res, next) => {
       
       const editUser =await User.findById(user._id)
       if (!editUser) return res.status(401).json({ message: "User not found" })
-        editUser.cart=[...cart,...editUser.cart]
-      await editUser.save()
+const mergedCart = [...editUser.cart, ...cart];
+const uniqueCart = Array.from(
+  new Map(
+    mergedCart.map((item) => [
+      typeof item.productId === 'object' ? item.productId._id.toString() : item.productId.toString(),
+      { 
+        productId: typeof item.productId === 'object' ? item.productId._id : item.productId,
+        quantity: item.quantity 
+      }
+    ])
+  ).values()
+);
+
+editUser.cart = uniqueCart;
+await editUser.save();
 
        const Payload={userID:user._id.toString(),isAdmin:user.isAdmin}
       

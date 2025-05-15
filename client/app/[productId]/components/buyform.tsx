@@ -97,6 +97,7 @@ useEffect(()=>{
     },
     paymentMethod: paymentMethod // استخدام paymentMethod المدخل
   };
+  const [message,setMessage]= useState('')
 const handleSubmit = async(e: React.FormEvent)=>{
   e.preventDefault();
 
@@ -111,13 +112,14 @@ const handleSubmit = async(e: React.FormEvent)=>{
       body:JSON.stringify(orderData),
     
     })
-    if(res.ok){
+    const data = await res.json()
+    if(!res.ok){
+      setMessage(data.message)
+      
+    }
+    
       alert('success')
       window.location.reload()
-    }
-    else{
-      alert('failed')
-    }
 
   }
   catch(err){
@@ -135,17 +137,13 @@ const handleSubmit = async(e: React.FormEvent)=>{
 <label className="block mb-2 text-sm font-medium text-gray-700">
 Quantity
 </label>
-<select
+<input 
+type="number"
 value={quantity}
 onChange={(e) => setQuantity(Number(e.target.value))}
-className="w-full p-2 border rounded-lg text-black mb-2"
->
-{Array.from({ length: 10 }, (_, i) => (
-<option key={i + 1} value={i + 1}>
- {i + 1}
-</option>
-))}
-</select>
+className=" p-2 border rounded-lg text-black mb-2 w-fit"
+
+/>
 
 <label className="block mb-2 text-sm font-medium text-gray-700">
      Payment Method
@@ -189,6 +187,9 @@ className="w-full p-2 border rounded-lg text-black mb-2"
      
 </div>
 <h1>totalPrice : {totalPrice}</h1>
+{message&&
+<h1>{message}</h1>
+}
 <button  type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
 
 <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-1 right-2 text-gray-700 hover:opacity-70 text-2xl ">X</button>
@@ -204,18 +205,14 @@ className="w-full p-2 border rounded-lg text-black mb-2"
 )
 }
 
-{add&&(
-<>
-<div onClick={()=>{setAdd(false)}} className=" fixed inset-0 bg-slate-900 opacity-90 z-[60] ">
-
-</div>
-
-<NewAddress setAdd={setAdd} getAddresses={getAddresses} />
 
 
 
-</>
-)}
+<NewAddress clicked={add} setClicked={setAdd} setAdd={setAdd} getAddresses={getAddresses} />
+
+
+
+
 
     </>
 

@@ -13,7 +13,34 @@ loading2?:boolean
 
 export default function  Add({productId,quantity,refreshCart,cart,setCart,loading2}:AddProps) {
     const url = "http://localhost:3000";
+ const getQuantity=async()=>{
+ try{
 
+        const res = await fetch(`${url}/getProductQuantity/${productId}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+
+      
+         
+        });
+        const data =await res.json()
+       
+    
+    
+        if (!res.ok) {
+          return
+        } 
+
+      const availableQuantity = data.quantity;
+      return availableQuantity
+      } catch (err) {
+        console.log(err);
+        
+      }
+ }
   const handleIncrease = async (productId:string) => {
     if(localStorage.getItem('isLogged')==='true'){
     try{
@@ -27,6 +54,7 @@ export default function  Add({productId,quantity,refreshCart,cart,setCart,loadin
           body: JSON.stringify({ productId }),
          
         });
+        const data =await res.json()
         
     
     
@@ -34,7 +62,7 @@ export default function  Add({productId,quantity,refreshCart,cart,setCart,loadin
           refreshCart()
    
         } else {
-          alert('failed');
+          alert(data.message);
         }
       } catch (err) {
         console.log(err);
@@ -42,15 +70,21 @@ export default function  Add({productId,quantity,refreshCart,cart,setCart,loadin
       }
     }
     else{
-
-  
+ 
 
     const existingItem = cart.find(item => item.productId._id === productId);
-  
+        const availableQuantity = await getQuantity()
+       if(!availableQuantity){
+        alert('something went wrong try again later')
+        return
+       }
     if (existingItem) {
-    
+    if(availableQuantity < existingItem.quantity + 1){
+      alert(`you can just add ${availableQuantity} items`)
+    return}
       existingItem.quantity += 1;
     }
+  
     localStorage.setItem('cart', JSON.stringify(cart));
 
 

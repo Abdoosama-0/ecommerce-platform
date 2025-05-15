@@ -130,19 +130,19 @@ let totalPrice = 0;
       
       
      
-      <main className="flex justify-between ">
+      <main className="md:flex md:justify-between  ">
             {/**products */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 max-w-[75%]">
+            <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4 w-full md:w-[75%] mb-3  md:mr-2">
                             {cart?.map((item, index) => (
-                                <div key={index} className="p-2 flex flex-col  gap-2 relative w-full max-w-[220px]  h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
+                                <div key={index} className="p-2  flex flex-col    gap-2 relative w-full     h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
                                   <Link href={`/${item?.productId?._id ?? '#'}`} className="hover:opacity-80 transition">
-                                  
+                                  <div className="bg-white rounded-2xl">
                                       <img 
                                         src={item?.productId?.imageUrls?.[0] || 'https://www.naftomar.gr/wp-content/uploads/2023/11/Image_not_available.png'} 
                                         alt={item?.productId?.title ?? "No title available"} 
-                                        className="w-full h-64 object-cover object-center rounded-2xl"
+                                        className=" h-[300px] w-full object-contain object-center  "
                                       />
-                                  
+                                  </div>
                                     <p className="font-semibold mt-2">{item?.productId?.title ?? "No title available"}</p>
                                     <p className="text-gray-500">{item?.productId?.price ?? "No price available"}</p>
                                   </Link>
