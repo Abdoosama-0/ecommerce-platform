@@ -20,7 +20,7 @@ import ErrorMessage from "@/components/errorMessage";
   };
 export default function Home() {
 const [message, setMessage] = useState<string >("");
-const [auth, setAuth] = useState<boolean>(false);
+
 const [data, setData] = useState<ProductResponse | null>(null);
 const searchParams = useSearchParams()
 const page = parseInt(searchParams.get('page') || '1')
@@ -48,26 +48,9 @@ const page = parseInt(searchParams.get('page') || '1')
    }
  }
 
-    const isAdmin = async () => {
-           try {
-             const res = await fetch(`http://localhost:3000/admin/adminWelcome`, {
-                 method: 'GET',
-                 headers: {
-                     'Content-Type': 'application/json',
-                 },
-                 credentials: 'include',
-             })
-             const data = await res.json()
-             if (res.ok) {
-               setAuth(true)
-             }  
-         }
-         catch (error) {
-           console.log('Error fetching data:', error); 
-         }
-       }
+
 useEffect(() => {
-   isAdmin()
+   
    getProducts()
   
 }
@@ -78,15 +61,7 @@ useEffect(() => {
 <>
 
 {message?(<><ErrorMessage message={message}/></>):(<>
-    {/**go to admin dashboard */}
-   {auth &&(
 
-        <Link href={"/admin"}>
-       <div className="fixed bottom-12 right-12 rounded-lg bg-sky-950 text-white px-3 py-1 cursor-pointer">
-        <h1 className="text-2xl font-bold text-center">go to Admin Dashboard</h1>
-       </div>
-       </Link>
-   )}
     {/**products */}
    <main className="p-2">
       <div>

@@ -1,15 +1,42 @@
 'use client'
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import MobNav from "./mobNav";
 
 
 export default function Nav() {
-  const url = "http://localhost:3000";
+  
 
+const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const admin = async () => {
+           try {
+             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
+                 method: 'GET',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 credentials: 'include',
+             })
+             const data = await res.json()
+             if (res.ok) {
+               setIsAdmin(true)
+             }  
+         }
+         catch (error) {
+           console.log('Error fetching data:', error); 
+         }
+       }
+useEffect(() => {
+
+  admin()
+}
+, [])
 
   const handleClick = async () => {
     try {
-      const res = await fetch(`${url}/logout`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,13 +62,13 @@ export default function Nav() {
 
   return (
     <main className="absolute top-0 left-0 w-full h-[64px] bg-slate-950 shadow-md z-10 flex items-center text-2xl text-white font-bold justify-between">
-      <div className="ml-10 w-full">
+      <div className="ml-10 w-fit ">
         <Link href={`/`}>
           <h1>store</h1>
         </Link>
       </div>
 
-      <div className="mr-10 flex justify-end items-center w-full gap-8">
+      <div className="hidden md:flex pointer-events-none md:pointer-events-auto mr-10 justify-end items-center w-full gap-8">
         <Link href={`/cart`}>
           <h1>cart</h1>
         </Link>
@@ -56,9 +83,17 @@ export default function Nav() {
             logout
           </h1>
           <Link href={`/userdata`}>userData</Link>
-        </>
+          {isAdmin &&
+              <Link href={'/admin'}>
+        <h1>dashboard</h1>
+        </Link>
+          }
+           </>
+       
       )}
       </div>
+      <MobNav isAdmin={isAdmin} logout={handleClick}/>
     </main>
+
   );
 }

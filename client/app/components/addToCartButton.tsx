@@ -139,14 +139,15 @@ const handleIncrease = async (productId:string) => {
           credentials: 'include',
           body:JSON.stringify({ product: { productId, quantity: 1 } }),
         })
-        if (res.ok) {
-          refreshCart();
-        }
-        else {
-          alert('فشل إضافة المنتج إلى السلة');
+        const data = await res.json()
+        if (!res.ok) {
+          alert(data.message)
+          return
         }
        
+       refreshCart();
       }catch(err){
+        alert('some thing went wrong please try again later');
         console.log(err)
       }
 

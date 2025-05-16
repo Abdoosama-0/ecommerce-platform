@@ -58,7 +58,7 @@ const getUserData = async () => {
  
          {data ? (
         
-           <div className=" p-4 mx-auto space-y-4 rounded-2xl border-4 border-slate-600 m-2 max-w-[75%] shadow-2xl shadow-gray-500  ">
+           <div className=" p-4 mx-auto space-y-4 rounded-2xl border-4 border-slate-600 m-2 w-[97%] md:w-[75%] shadow-2xl shadow-gray-500  ">
             <UserMainData data={data} setData={setData}/>
             <UserAddresses addresses={data.addresses}/>
            </div>

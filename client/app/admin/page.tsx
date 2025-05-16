@@ -44,7 +44,7 @@ export default function Admin() {
       
 
       
-          <div className="flex flex-col bg-gray-100 min-h-screen gap-5">
+          <div className="flex flex-col bg-gray-100 min-h-screen  gap-5">
             <h1 className="m-4 text-gray-800 text-3xl font-semibold">Welcome Admin</h1>
 
             <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 justify-around items-center bg-white rounded-xl p-6 w-[80%] flex-wrap m-auto shadow-md">

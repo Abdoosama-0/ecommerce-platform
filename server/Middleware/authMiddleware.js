@@ -49,7 +49,7 @@ const isUser =async(req,res,next)=>{
   const decodedPayload = jwt.verify(token, process.env.SECRET_TOKEN );
   
 
-  if(!decodedPayload) {
+  if (!decodedPayload) {
     return res.status(401).json({ message: "wrong access token" });
   }
 
@@ -57,6 +57,9 @@ const isUser =async(req,res,next)=>{
   if (!user){
     return res.status(404).json({ message: "user not found" });
   }
+  if(user.isBanned){
+    return res.status(401).json({ message: "sorry your account has been banded by admin" });
+  } 
 
 req.userId =decodedPayload.userID
 

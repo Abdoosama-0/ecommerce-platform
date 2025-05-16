@@ -77,11 +77,12 @@ export default function Orders() {
     
 <>
 {loading ? (<><Loading/></>):(<>
-{!auth ? (<><Auth message={message}/></>) : (<>
+{!auth ? (<><Auth message={message}/></>) : ( <>
 
 <main className="min-h-screen bg-gray-100 p-4 ">
+  {data.length>0 ?(
   <div className=" flex flex-col gap-2">
-{data.map((order,index) => (
+{[...data].reverse().map((order,index) => (
 <Link href={`/admin/orders/${order._id}/`}>
 <div key={index} className="flex flex-col gap-1  text-xl font-bold bg-blue-400 rounded-lg p-4 ">
  
@@ -103,6 +104,7 @@ export default function Orders() {
 ))}
 
 </div>
+):(<><h1>there is no orders yet</h1></>)}
 </main>
 
 

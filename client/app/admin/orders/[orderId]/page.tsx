@@ -68,16 +68,23 @@ export default function OrderId() {
             <h1>Status: <span>{data?.status}</span></h1>
         </div>
         <div className="mt-10 border-t-4 mb-5">
-            <h1 className="">products:</h1>
-                    <div className="flex flex-col gap-4">
+            <h1 className="mb-2">products:</h1>
+                    <div className="grid grid-cols-1 md:grid-cols-3  gap-4">
                 {data?.products.map((product) => (
-                    <div className=" p-2 border-2  rounded-lg w-[70%] h-[70%] " key={product._id}>
+                    <div className=" space-y-2 p-2 border-2  rounded-lg w-full bg-gray-300 border-gray-400 shadow-2xl shadow-gray-300 " key={product._id}>
                         <h1 className="">productId : <span>{product.productId._id}</span></h1>
                         <h1 className="">productTitle : <span>{product.productId.title}</span></h1>
                         <h1 className="">productPrice : <span>{product.productId.price}</span></h1>
                         <h1 className="">quantity : <span>{product.quantity}</span></h1>
                         <div>
-                              {/* <Images imageUrls={product.productId.imageUrls}/> */}
+                                 <div className="bg-white rounded-2xl ">
+                                      <img 
+                                        src={product.productId.imageUrls[0] || 'https://www.naftomar.gr/wp-content/uploads/2023/11/Image_not_available.png'} 
+                                        alt={product.productId.title ?? "No title available"} 
+                                        className=" h-[300px] w-full  object-contain object-center  "
+                                      />
+                                  </div>
+
 
                         </div>
 

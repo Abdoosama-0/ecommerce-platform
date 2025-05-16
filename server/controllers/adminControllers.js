@@ -18,12 +18,15 @@ return res.status(404).json({ message: 'User not found' });
 }
 
 const getUsers = async (req, res) => {
-const users =await User.find()
+  const query={
+    isAdmin:false
+  }
+const users =await User.find(query)
  .select('_id name email phone address isAdmin isBanned') 
 if (!users) {
   return res.status(404).json({ message: 'Users not found' });
 }
-const usersCount = await User.countDocuments(); 
+const usersCount = await User.countDocuments(query); 
 return res.status(200).json({ message: 'all Users', usersCount, users });
 
 

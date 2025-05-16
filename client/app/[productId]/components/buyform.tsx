@@ -115,6 +115,7 @@ const handleSubmit = async(e: React.FormEvent)=>{
     const data = await res.json()
     if(!res.ok){
       setMessage(data.message)
+      return
       
     }
     
@@ -188,7 +189,7 @@ className=" p-2 border rounded-lg text-black mb-2 w-fit"
 </div>
 <h1>totalPrice : {totalPrice}</h1>
 {message&&
-<h1>{message}</h1>
+<h1 className="text-sm text-red-500">{message}</h1>
 }
 <button  type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
 
