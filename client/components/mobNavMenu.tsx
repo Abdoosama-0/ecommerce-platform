@@ -6,13 +6,13 @@ import { AiOutlineMenu } from "react-icons/ai";
 
 interface MobNavProps{
 isAdmin:boolean
-logout:()=>void
+logout:(e: React.MouseEvent<HTMLElement>)=>void
 }
 export default function MobNav({isAdmin,logout}:MobNavProps) {
   const [clicked, setClicked] = useState(false);
 
   return (
-    <div className="relative cursor-pointer mr-10 text-white md:hidden flex pointer-events-auto  justify-end items-center w-full gap-8">
+    <div className="relative cursor-pointer mr-10 text-white md:hidden flex pointer-events-auto  justify-end items-center w-fit gap-8 ">
       <div onClick={() => setClicked(!clicked)}>
         {clicked ?(<h1 className="font-light">X</h1>):(<AiOutlineMenu />)}
        

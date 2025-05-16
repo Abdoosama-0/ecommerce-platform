@@ -17,20 +17,12 @@ export default function  AddToCartButton({ productQuantity,productId,price,name,
 const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
   const [cart, setCart] = useState<CartItem[]>([]);
 
-const url = "http://localhost:3000";
-type CartItem = {
-  productId: {
-    _id: string,
-    imageUrls: [string],
-    title: string,
-    price: number
-  }
-  quantity: number;
-};
+
+
 const handleIncrease = async (productId:string) => {
     if(localStorage.getItem('isLogged')==='true'){
     try{
-        const res = await fetch(`${url}/increaseQuantity`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/increaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
@@ -79,7 +71,7 @@ const handleIncrease = async (productId:string) => {
   const handleDecrease=async(productId:string)=>{    
     if(localStorage.getItem('isLogged')==='true'){
     try{
-        const res = await fetch(`${url}/decreaseQuantity`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decreaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
@@ -124,13 +116,13 @@ const handleIncrease = async (productId:string) => {
     }
 
       }
-  const handleClick = async(productId: string) => {
+  const handleAdd = async(productId: string) => {
 
 
     if(localStorage.getItem('isLogged')==='true'){
               
       try{
-        const res= await fetch(`${url}/addToCart`,{
+        const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addToCart`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -180,13 +172,14 @@ const handleIncrease = async (productId:string) => {
 
 
   };
+
   useEffect(()=>{
     setLoading(true)
   
     if(localStorage.getItem('isLogged') ==='true'){
       const getCart= async()=>{
       try{
-        const res= await fetch(`${url}/cart`,{
+        const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`,{
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -232,15 +225,17 @@ const handleIncrease = async (productId:string) => {
               return <div  onClick={(e) => {  e.preventDefault()}} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
                 <button onClick={(e)=>{e.preventDefault();handleIncrease(cart[itemIndex].productId._id)}} className="cursor-pointer">+ </button>
                 <p>  
-                {loading ? (<> <h1 onClick={(e) => {  e.preventDefault()}} className=" "> loading...</h1></>):(
-        < > {cart[itemIndex].quantity}</>)}
+                {
+                loading ? (<> <h1 onClick={(e) => {  e.preventDefault()}} className=" "> loading...</h1></>):(
+        < > {cart[itemIndex].quantity}</>)
+        }
                   
                  </p>
                 <button onClick={(e)=>{e.preventDefault();handleDecrease(cart[itemIndex].productId._id)}} className="cursor-pointer">- </button>
               </div>
      
             }else{
-            return   <div  onClick={(e) => { e.preventDefault();productId && handleClick(productId)}} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
+            return   <div  onClick={(e) => { e.preventDefault();productId && handleAdd(productId)}} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
             <h1>add to cart</h1>
             </div>
             }

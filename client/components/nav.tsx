@@ -3,14 +3,22 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import MobNav from "./mobNav";
+import MobNav from "./mobNavMenu";
 
 
 export default function Nav() {
   
 
 const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const admin = async () => {
+const [isLogged, setIsLogged] = useState<boolean | null>(null);
+
+const checkLoginStatus = ()=>{
+      if (typeof window !== "undefined") {
+      const loggedStatus = localStorage.getItem("isLogged");
+      setIsLogged(loggedStatus === "true");
+    }
+}
+const checkAdminPrivileges  = async () => {
            try {
              const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
                  method: 'GET',
@@ -28,13 +36,17 @@ const [isAdmin, setIsAdmin] = useState<boolean>(false);
            console.log('Error fetching data:', error); 
          }
        }
-useEffect(() => {
 
-  admin()
+
+useEffect(() => {
+  checkLoginStatus()
+  checkAdminPrivileges()
 }
 , [])
 
-  const handleClick = async () => {
+
+  const handleLogout = async (e: React.MouseEvent<HTMLElement>) => {
+ e.preventDefault();
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
         method: 'POST',
@@ -45,19 +57,21 @@ useEffect(() => {
       });
       const data =await res.json()
 
-      if (res.ok) {
-        localStorage.setItem('isLogged', 'false');
-        alert('Logged out successfully');
-        window.location.reload()
-       
-      } else {
-        alert(data.message);
-      }
+      if (!res.ok) {
+       alert(data.message);
+       return
+      } 
+      localStorage.setItem('isLogged', 'false');
+      alert('Logged out successfully');
+      window.location.reload() 
     } catch (err) {
+      alert('something went wrong please try again later')
       console.log(err);
     }
   };
 
+
+ 
 
 
   return (
@@ -73,13 +87,16 @@ useEffect(() => {
           <h1>cart</h1>
         </Link>
 
-        {localStorage.getItem("isLogged") === "false"? (
+           {isLogged === null ? (
+        <p></p>
+      ) :(<>
+        {!isLogged ? (
         <Link href={`/login`}>
           <h1>login</h1>
         </Link>
       ) : (
         <>
-          <h1 className="cursor-pointer" onClick={handleClick}>
+          <h1 className="cursor-pointer" onClick={handleLogout}>
             logout
           </h1>
           <Link href={`/userdata`}>userData</Link>
@@ -91,8 +108,9 @@ useEffect(() => {
            </>
        
       )}
+</>)}
       </div>
-      <MobNav isAdmin={isAdmin} logout={handleClick}/>
+      <MobNav isAdmin={isAdmin} logout={handleLogout}/>
     </main>
 
   );

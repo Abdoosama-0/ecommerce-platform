@@ -2,10 +2,11 @@
 
 
 import UserProductCard from "./components/userproductcard"
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import ErrorMessage from "@/components/errorMessage";
+import Loading from "@/components/loading";
   
 
 
@@ -20,50 +21,69 @@ import ErrorMessage from "@/components/errorMessage";
   };
 export default function Home() {
 const [message, setMessage] = useState<string >("");
-
-const [data, setData] = useState<ProductResponse | null>(null);
+const [loading, setLoading] = useState(true);
+const [data, setData] = useState<ProductResponse >();
 const searchParams = useSearchParams()
+const router = useRouter()
 const page = parseInt(searchParams.get('page') || '1')
 
+
+const handleNext =()=>{
+  const nextPage = page + 1
+  const params = new URLSearchParams(searchParams.toString())
+  params.set('page', nextPage.toString())
+  router.push(`?${params.toString()}`)
+}
+const handlePrevious =()=>{
+  const nextPage = page - 1
+  const params = new URLSearchParams(searchParams.toString())
+  params.set('page', nextPage.toString())
+  router.push(`?${params.toString()}`)
+}
   const getProducts = async () => {
      try {
-       const res = await fetch(`http://localhost:3000/products?page=${page}`, {
+       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?page=${page}`, {
            method: 'GET',
            headers: {
                'Content-Type': 'application/json',
            },
            credentials: 'include',
+           
        })
        const data = await res.json()
        if (!res.ok) {
-        setMessage(data.message)
-         
+        setMessage(data.message)  
+         return
        }
         setData(data)
-     
+       
    }
    catch (error) {
     setMessage('something went wrong please try again later')
+    
        console.error('Error fetching data:', error);
+   }finally{
+    setLoading(false)
    }
  }
 
 
 useEffect(() => {
-   
-   getProducts()
+  getProducts()
   
 }
-, [])
+, [page])
+
 
   return (
     
 <>
+{loading ? (<><Loading/></>) : (<>
+{!data?(<><ErrorMessage message={message}/></>):(<>
 
-{message?(<><ErrorMessage message={message}/></>):(<>
-
+    
+   <main className="p-2 border-2 m-2 rounded-lg border-slate-950 shadow-2xl shadow-slate-600">
     {/**products */}
-   <main className="p-2">
       <div>
             {data && <h2 className="mb-2 ">products: {data.totalProducts}</h2>}
     
@@ -81,9 +101,22 @@ useEffect(() => {
             ))}
             </div>
       </div>
+
+    {/**next and previous buttons  */}
+      <div className="flex justify-center gap-4 w-full  ">
+            {data&& data?.currentPage>1 &&
+              <button onClick={handlePrevious} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg cursor-pointer ">previous</button>
+
+            }
+      
+        {data && data?.totalPages - data?.currentPage >0 &&
+        <button onClick={handleNext} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">next</button>
+      }
+      </div>
      
 
     </main>
+</>)}
 </>)}
 </>
    

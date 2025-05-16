@@ -1,7 +1,7 @@
 'use client'
 
 
-interface AddProps{
+interface QuantityButtonProps{
 productId:string
 quantity:number
 refreshCart: ()=>void
@@ -11,12 +11,12 @@ loading2?:boolean
 }
 
 
-export default function  Add({productId,quantity,refreshCart,cart,setCart,loading2}:AddProps) {
-    const url = "http://localhost:3000";
+export default function  QuantityButton({productId,quantity,refreshCart,cart,setCart,loading2}:QuantityButtonProps) {
+    
  const getQuantity=async()=>{
  try{
 
-        const res = await fetch(`${url}/getProductQuantity/${productId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getProductQuantity/${productId}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -45,11 +45,11 @@ export default function  Add({productId,quantity,refreshCart,cart,setCart,loadin
     if(localStorage.getItem('isLogged')==='true'){
     try{
 
-        const res = await fetch(`${url}/increaseQuantity`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/increaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json', // تأكد من إرسال البيانات بصيغة JSON
+            'Content-Type': 'application/json', 
           },
           body: JSON.stringify({ productId }),
          
@@ -96,11 +96,11 @@ export default function  Add({productId,quantity,refreshCart,cart,setCart,loadin
    
     if(localStorage.getItem('isLogged')==='true'){ 
     try{
-        const res = await fetch(`${url}/decreaseQuantity`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decreaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json', // تأكد من إرسال البيانات بصيغة JSON
+            'Content-Type': 'application/json', 
           },
           body: JSON.stringify({ productId }),
         });

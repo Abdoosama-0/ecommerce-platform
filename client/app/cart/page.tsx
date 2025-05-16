@@ -3,12 +3,12 @@
 import Loading from "@/components/loading";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Add from "@/app/cart/components/add";
 import Process from "./components/process";
 import ErrorMessage from "@/components/errorMessage";
+import QuantityButton from "@/app/cart/components/quantityButton";
 
 export default function  Cart() {
-const [loading, setLoading] = useState(true)
+
 const [message, setMessage] = useState('')
 const [cartRefreshFlag, setCartRefreshFlag] = useState(0); 
 const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
@@ -62,7 +62,7 @@ setCart(newCart)
 const getCartItems= async()=>{
 if(localStorage.getItem('isLogged') ==='true'){
   try{
-    const res= await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/cart`,{
+    const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`,{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -79,9 +79,9 @@ if(localStorage.getItem('isLogged') ==='true'){
 
     setCart(data.cart)
   }catch(err){
-      setMessage('something went wrong please try again later')
+    setMessage('something went wrong please try again later ')
 
-    console.log('error fetching data: ',err)
+    console.log(err)
   }
 }
 else{
@@ -89,13 +89,9 @@ else{
 }
 }
  
+
 useEffect(()=>{ 
 getCartItems()
-  setLoading(false)
-
-
-  
-  
 },[cartRefreshFlag])
  
 useEffect(()=>{ 
@@ -119,7 +115,6 @@ let totalPrice = 0;
     
 <>
 {message?(<><ErrorMessage message={message}/></>):(<>
-{loading ? (<><Loading/></>):(<>
   <div className="p-4 min-h-screen bg-gray-100">
     <h1 className="text-2xl font-bold mb-4">Cart</h1>
 
@@ -158,7 +153,7 @@ let totalPrice = 0;
                                       Delete
                                     </button>
                             
-                                    <Add 
+                                    <QuantityButton 
                                       productId={item?.productId?._id} 
                                       quantity={item?.quantity ?? 1} 
                                       refreshCart={refreshCart} 
@@ -185,7 +180,7 @@ let totalPrice = 0;
 
 </>
 )}
-</>)}
+
 </>
     
   );

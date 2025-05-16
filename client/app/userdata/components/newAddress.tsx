@@ -8,7 +8,7 @@ interface newAddressProps {
   setClicked:(arg0:boolean)=> void
 }
 export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked }: newAddressProps) {
-  const url = "http://localhost:3000";
+
 
   const [government, setGovernment] = useState<string>('');
   const [city, setCity] = useState<string>('');
@@ -23,7 +23,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
     e.preventDefault(); 
 
     try {
-      const res = await fetch(`${url}/address`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ export default function  EditAddress({currentEditAddress,setCurrentEditAddress,s
   const updateAddress =async (e: React.MouseEvent<HTMLButtonElement>,currentEditAddress:address,selectedAddressID:string) => {
  e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3000/updateAddress/${selectedAddressID}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/updateAddress/${selectedAddressID}`, {
           method: 'PATCH',
           headers: {
               'Content-Type': 'application/json',

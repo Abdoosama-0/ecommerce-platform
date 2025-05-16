@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import BuyCart from "./buyCart";
+import BuyCartForm from "./buyCartForm";
 
 
 interface ProcessProps {
@@ -41,7 +41,7 @@ export default function  Process({productsCount,totalPrice,cart,setCart}:Process
     }
     else{
     localStorage.removeItem('cart');
-    setCart([]); // تحديث الحالة لتفريغ العرض أيضًا
+    setCart([]);
  } }
 
 const [clicked,setClicked]= useState<boolean>(false)
@@ -66,14 +66,14 @@ const [clicked,setClicked]= useState<boolean>(false)
                   router.push('/login');
                 } else {
                   setClicked(true);
-                  // استدعاء الدالة عند الضغط إذا لم يكن مسجلاً الدخول
+                  
                 }
               }} 
               className="bg-gray-600 text-white px-4 py-2 rounded-2xl hover:bg-gray-700 transition cursor-pointer"
             >
              Continue the purchase process
             </button>
-            <BuyCart setClicked={setClicked} clicked={clicked} items={cart||[]} clearCart={clearCart}  products={productsCount} totalPrice={totalPrice}/>
+            <BuyCartForm setClicked={setClicked} clicked={clicked} items={cart||[]} clearCart={clearCart}  products={productsCount} totalPrice={totalPrice}/>
     </div>
     
     

@@ -6,7 +6,18 @@ import { useEffect, useState } from 'react'
 import AddProduct from '@/app/admin/products/components/addProduct';
 import ErrorMessage from '@/components/errorMessage';
 export default function Products() {
-
+const handleNext =()=>{
+  const nextPage = page + 1
+  const params = new URLSearchParams(searchParams.toString())
+  params.set('page', nextPage.toString())
+  router.push(`?${params.toString()}`)
+}
+const handlePrevious =()=>{
+  const nextPage = page - 1
+  const params = new URLSearchParams(searchParams.toString())
+  params.set('page', nextPage.toString())
+  router.push(`?${params.toString()}`)
+}
 
       
    const router = useRouter();
@@ -46,7 +57,7 @@ export default function Products() {
         getProducts()
    
     }
-    , [])
+    , [page])
     return (
       <>
      
@@ -54,8 +65,8 @@ export default function Products() {
       
 
         {!message ?(
-          <>
-          <div className='m-1'>
+          <main className='p-2 border-2 m-2 rounded-lg  border-slate-950 shadow-2xl shadow-slate-600'>
+          <div className=''>
             {/**products count */}
             {data && 
             <div className=' flex justify-between w-full items-center px-2 '>
@@ -68,7 +79,7 @@ export default function Products() {
             </div>
             }
             {/**products*/}
-            <div className=' w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
+            <div className=' mt-2 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
               {data?.products.map((el, index) => (
               
                   <ProductCard key={el._id}
@@ -88,20 +99,27 @@ export default function Products() {
               {/**add product */}
           <div onClick={() => setClicked(true)} className='fixed z-10 bottom-7 right-7 bg-gray-900 rounded-lg  py-2 px-4 text-white flex flex-col items-center justify-center cursor-pointer '>
             <h1>+</h1>
+          </div>
 
-        </div>
-   
-   
-     
-    
-            {/**add product button */}
-            <AddProduct clicked={clicked} setClicked={setClicked} /> 
-    
+            {/**add product form */}
+            <AddProduct clicked={clicked} setClicked={setClicked} />
+            
+        
+      <div className="flex justify-center gap-4 w-full  ">
+            {data&& data?.currentPage>1 &&
+              <button onClick={handlePrevious} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg cursor-pointer ">previous</button>
+
+            }
+      
+        {data && data?.totalPages - data?.currentPage >0 &&
+        <button onClick={handleNext} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">next</button>
+      }
+      </div>
 
        
 
           
-         </> ):
+         </main> ):
         
          (<>
           {/**error message */}

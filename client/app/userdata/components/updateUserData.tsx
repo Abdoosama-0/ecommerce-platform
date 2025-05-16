@@ -20,7 +20,7 @@ export default function  UpdateUserData({setClicked,clicked,data,setData}:UserMa
     const updateData = async () => {
 
       try {
-        const response = await fetch(`http://localhost:3000/UpdateUserData`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/UpdateUserData`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

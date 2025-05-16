@@ -20,7 +20,7 @@ const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCar
   
   return (
     <Link  href={`/${productId}/`}>
-    <div className=' flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2 rounded-xl border-gray-200 bg-gray-100'>
+    <div className='p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-4  rounded-xl border-gray-200 bg-gray-100'>
       
       <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
         <Image

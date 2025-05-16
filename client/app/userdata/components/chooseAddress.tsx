@@ -16,7 +16,7 @@ export default function  ChooseAddress({clicked,setClicked,addresses}:chooseAddr
 const deleteAddress =async (e: React.MouseEvent<HTMLButtonElement>,selectedAddressId:string) => {
  e.preventDefault();
   try {
-    const res = await fetch(`http://localhost:3000/deleteAddress/${selectedAddressId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/deleteAddress/${selectedAddressId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ catch (error) {
 
 const getAddressData = async (selectedAddressId: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/getAddressById/${selectedAddressId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getAddressById/${selectedAddressId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

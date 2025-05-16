@@ -11,25 +11,12 @@ type ImagesProps = {
     title:string
     price:number
     productID:string
+    quantity:number
   };
   
 
-export default function  ProductDetails({imageUrls ,  title ,price,productID }: ImagesProps) {
-    const goToNextImage = () => {
-        if (imageUrls && currentImageIndex < imageUrls.length - 1) {
-          setCurrentImageIndex(currentImageIndex + 1);
-        } else {
-          setCurrentImageIndex(0);
-        }
-      };
-
-      const goToPreviousImage = () => {
-        if (currentImageIndex > 0) {
-          setCurrentImageIndex(currentImageIndex - 1);
-        } else {
-          setCurrentImageIndex(imageUrls ? imageUrls.length - 1 : 0);
-        }
-      };
+export default function  ProductDetails({imageUrls ,  title ,price,productID ,quantity}: ImagesProps) {
+ 
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [buyClicked,setBuyClicked]=useState<boolean>(false)
@@ -47,11 +34,12 @@ export default function  ProductDetails({imageUrls ,  title ,price,productID }: 
   </div>  
   <div className="relative w-full sm:w-[30%] flex flex-col gap-2 ">
    <p className="">{title}</p>
+   <p>available quantity : just {quantity}</p>
    <p className="text-sm"> <strong className="text-xl">{Number(price).toLocaleString()}</strong> EGP</p>
    
    <div className="sm:absolute bottom-2  right-2 left-2 flex flex-col gap-2  p-2">
    <button onClick={()=>{setBuyClicked(true)}}  className="bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out"> buy </button>
-  <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} />
+  <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} productQuantity={quantity}  />
   
    </div>
   </div>
