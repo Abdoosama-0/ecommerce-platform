@@ -7,46 +7,19 @@ import MobNav from "./mobNavMenu";
 
 
 export default function Nav() {
-  
-
-const [isAdmin, setIsAdmin] = useState<boolean>(false);
-const [isLogged, setIsLogged] = useState<boolean | null>(null);
-
-const checkLoginStatus = ()=>{
-      if (typeof window !== "undefined") {
-      const loggedStatus = localStorage.getItem("isLogged");
-      setIsLogged(loggedStatus === "true");
-    }
-}
-const checkAdminPrivileges  = async () => {
-           try {
-             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
-                 method: 'GET',
-                 headers: {
-                     'Content-Type': 'application/json',
-                 },
-                 credentials: 'include',
-             })
-             const data = await res.json()
-             if (res.ok) {
-               setIsAdmin(true)
-             }  
-         }
-         catch (error) {
-           console.log('Error fetching data:', error); 
-         }
-       }
 
 
-useEffect(() => {
-  checkLoginStatus()
-  checkAdminPrivileges()
-}
-, [])
+const [isLogged,setIsLogged]= useState<boolean>(false)
+const [isAdmin,setIsAdmin]= useState<boolean>(false)
 
+useEffect(()=>{
+
+setIsLogged(JSON.parse(localStorage.getItem("isLogged")|| "false"))
+setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
+},[])
 
   const handleLogout = async (e: React.MouseEvent<HTMLElement>) => {
- e.preventDefault();
+    e.preventDefault();
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
         method: 'POST',
@@ -55,15 +28,15 @@ useEffect(() => {
         },
         credentials: 'include',
       });
-      const data =await res.json()
+      const data = await res.json()
 
       if (!res.ok) {
-       alert(data.message);
-       return
-      } 
+        alert(data.message);
+        return
+      }
       localStorage.setItem('isLogged', 'false');
       alert('Logged out successfully');
-      window.location.reload() 
+      window.location.reload()
     } catch (err) {
       alert('something went wrong please try again later')
       console.log(err);
@@ -71,7 +44,7 @@ useEffect(() => {
   };
 
 
- 
+
 
 
   return (
@@ -87,30 +60,29 @@ useEffect(() => {
           <h1>cart</h1>
         </Link>
 
-           {isLogged === null ? (
-        <p></p>
-      ) :(<>
-        {!isLogged ? (
-        <Link href={`/login`}>
-          <h1>login</h1>
-        </Link>
-      ) : (
         <>
-          <h1 className="cursor-pointer" onClick={handleLogout}>
-            logout
-          </h1>
-          <Link href={`/userdata`}>userData</Link>
-          {isAdmin &&
-              <Link href={'/admin'}>
-        <h1>dashboard</h1>
-        </Link>
-          }
-           </>
-       
-      )}
-</>)}
+          {!isLogged ? (
+            <Link href={`/login`}>
+              <h1>login</h1>
+            </Link>
+          ) : (
+            <>
+              <h1 className="cursor-pointer" onClick={handleLogout}>
+                logout
+              </h1>
+              <Link href={`/userdata`}>userData</Link>
+              {isAdmin &&
+                <Link href={'/admin'}>
+                  <h1>dashboard</h1>
+                </Link>
+              }
+            </>
+
+          )}
+        </>
       </div>
-      <MobNav isAdmin={isAdmin} logout={handleLogout}/>
+    
+      <MobNav logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
     </main>
 
   );

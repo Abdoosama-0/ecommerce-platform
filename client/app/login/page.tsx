@@ -45,6 +45,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem('isLogged', 'true')
+      localStorage.setItem('isAdmin', data.isAdmin.toString())
       localStorage.removeItem('cart');
 
       if (typeof document !== 'undefined' && document.referrer.includes('/register')) {
