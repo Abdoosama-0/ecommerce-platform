@@ -46,7 +46,7 @@ export default function LoginPage() {
       } else {
         window.location.href = document.referrer || '/';
       }
-      
+
     } catch (err) {
       setMessage('something went wrong please try again later')
       console.log(err)
@@ -101,7 +101,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <h1 onClick={() => { router.push("/register") }} className="text-gray-950  cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">don't have account </h1>
+        <p
+          onClick={() => {
+            router.push("/register");
+          }}
+          className="text-gray-950 cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">
+          don&apos;t have an account
+        </p>
+
       </div>
     </div>
 
