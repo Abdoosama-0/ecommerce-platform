@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from "react";
+
+import Image from "next/image";
 
 
 
@@ -8,41 +9,28 @@ import { useState } from "react";
 
 type adminProductDetailsProps = {
    data:productDetails
-setData:(arg0:productDetails)=>void
+
   };
   
 
-export default function  AdminProductDetails({data , setData }: adminProductDetailsProps) {
-    const goToNextImage = () => {
-        if (data.imageUrls && currentImageIndex < data.imageUrls.length - 1) {
-          setCurrentImageIndex(currentImageIndex + 1);
-        } else {
-          setCurrentImageIndex(0);
-        }
-      };
+export default function  AdminProductDetails({data  }: adminProductDetailsProps) {
 
-      const goToPreviousImage = () => {
-        if (currentImageIndex > 0) {
-          setCurrentImageIndex(currentImageIndex - 1);
-        } else {
-          setCurrentImageIndex(data.imageUrls ? data.imageUrls.length - 1 : 0);
-        }
-      };
 
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+ 
    
     return(
         
 <div className="border-4 border-gray-300 shadow-2xl bg-gray-50 rounded-2xl p-4   flex flex-col sm:flex-row  justify-center items-center sm:justify-center  sm:items-stretch   gap-4 h-fit w-full  ">
 
-<div className="flex flex-col h-96  gap-2 relative w-full max-w-[280px] sm:w-[70%] rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
-    <img 
-      src= {data.imageUrls[currentImageIndex] || "https://thumbs.dreamstime.com/b/web-324671699.jpg"} 
-      alt="img" 
-      className="w-full h-full   object-cover object-center" 
-    />
-    
-  </div>  
+    <div className="w-full h-auto aspect-[1/1]   sm:aspect-[13/9]  sm:max-w-[60%] lg:max-w-[40%]  bg-white relative overflow-hidden     gap-2    rounded-2xl shadow-lg border-2 border-gray-300">
+                        <Image
+                          src={data.imageUrls[0] || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
+                          alt={data.title || 'No title available'}
+                          fill
+                          priority
+                          className="   object-contain "
+                        />
+                      </div>
   <div className="relative w-full sm:w-[30%] flex flex-col gap-2 ">
    <p className="">{data.title}</p>
    <p className="text-sm"> <strong className="text-xl">{Number(data.price).toLocaleString()}</strong> EGP</p>

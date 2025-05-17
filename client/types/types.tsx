@@ -72,4 +72,34 @@
                     address:address;
                     status: string;
                   }
+            type userType = {
           
+              _id: string;
+              name: string;
+              email: string;
+              phone: string;
+              address: string;
+              isBanned: boolean;
+             
+              isAdmin: boolean;
+            };
+          
+            type responseType = {
+              message: string;
+              usersCount: number;
+              users: userType[];
+            };
+
+            // interface BuyCartItem {
+            //   productId: string;
+            //   quantity: number;
+            // }
+            
+            interface BuyCartFormProps {
+              items: any;//BuyCartItem[]
+              totalPrice: number
+              products: number
+              clearCart: () => void
+              clicked: boolean
+              setClicked: (arg0: boolean) => void
+            }

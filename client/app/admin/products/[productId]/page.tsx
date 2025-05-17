@@ -17,7 +17,7 @@ const [data, setData] = useState<productDetails | null>(null);
 
   const getProduct = async (productId:string) => {
     try {
-    const res = await fetch(`http://localhost:3000/admin/getProductById?id=${productId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getProductById?id=${productId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const [editClicked,setEditClicked]=useState(false)
 
     {data?(<>
       {/** about the product */}
-      <AdminProductDetails data={data} setData={setData} />
+      <AdminProductDetails data={data}  />
 
       {/** edit product button */}
       <div onClick={()=>{setEditClicked(true)}} className="fixed min-w-[80px] cursor-pointer hover:opacity-50 flex justify-center items-center bottom-4 left-4 rounded-2xl px-2 py-1 w-fit bg-sky-700 shadow-2xl  ">edit</div>

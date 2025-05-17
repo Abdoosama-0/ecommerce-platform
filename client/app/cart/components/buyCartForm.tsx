@@ -1,22 +1,10 @@
 'use client'
-import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import NewAddress from "@/app/userdata/components/newAddress";
-interface BuyCartItem {
-  productId: string;
-  quantity: number;
-}
 
-interface BuyCartFormProps {
-  items: any;
-  totalPrice: number
-  products: number
-  clearCart: () => void
-  clicked: boolean
-  setClicked: (arg0: boolean) => void
-}
 export default function BuyCartForm({ items, totalPrice, products, clearCart, clicked, setClicked }: BuyCartFormProps) {
-  const router = useRouter();
+
   
 
   const [message,setMessage]=useState('')

@@ -15,7 +15,7 @@ const ProductCard = ({ image, title, price, productId ,quantity}: ProductCardPro
 
     const deleteProduct = async (productId :string ) => {
     try {
-        const res = await fetch(`http://localhost:3000/admin/deleteProduct/${productId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/deleteProduct/${productId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,8 @@ const ProductCard = ({ image, title, price, productId ,quantity}: ProductCardPro
         <span
           onClick={(e) => {
             e.preventDefault();
-            {productId && deleteProduct(productId);}
+            if(productId){ deleteProduct(productId)}
+            
              
           
               

@@ -30,7 +30,7 @@ const handlePrevious =()=>{
     const page = parseInt(searchParams.get('page') || '1')
       const getProducts = async () => {
           try {
-            const res = await fetch(`http://localhost:3000/admin/getProducts?page=${page}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getProducts?page=${page}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,9 +47,8 @@ const handlePrevious =()=>{
             
         }
         catch (error) {
-          
-         
             setMessage("something went wrong please try again later")
+            console.log(error)
            
         }
       }
@@ -58,6 +57,7 @@ const handlePrevious =()=>{
    
     }
     , [page])
+
     return (
       <>
      
@@ -80,7 +80,7 @@ const handlePrevious =()=>{
             }
             {/**products*/}
             <div className=' mt-2 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
-              {data?.products.map((el, index) => (
+              {data?.products.map((el) => (
               
                   <ProductCard key={el._id}
                     title={el.title}

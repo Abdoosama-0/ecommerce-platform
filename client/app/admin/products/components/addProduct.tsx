@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-
+import React, {  useState } from 'react'
+import Image from 'next/image'
 interface addProductProps{
 clicked:boolean
 setClicked:(arg0:boolean)=>void
@@ -10,7 +10,7 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
 
 
 
-  const url = "http://localhost:3000";
+
   const [message, setMessage] = useState('')
 
 
@@ -46,7 +46,7 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
 
     
 
-      const res = await fetch(`${url}/admin/addProduct`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/addProduct`, {
         method: 'POST',
         credentials: 'include',
         body: formData,
@@ -132,38 +132,48 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
             placeholder='quantity'
           />
         </div>
-{/* ============================================================================================= */}
+
         {/* Images */}
         <div className="p-1 w-full mb-4 flex flex-col gap-2">
-          <label>اختر الصور:</label>
-      {/* كل الصور*/}
+          <label> add photos</label>
+      {/* all images*/}
           <div className="flex flex-wrap gap-2">
           
-            {/* صور جديدة */}
+            {/* new images  */}
             {images.map((img, index) => (
-              <div key={`new-${index}`} className="relative w-24 h-24 border rounded overflow-hidden">
-                <img src={URL.createObjectURL(img)} alt={`new ${index}`} className="w-full h-full object-cover" />
-                <button
+             
+                    <div key={index} className=" h-auto aspect-[1/1] w-[100%] sm:w-[20%] max-w-[40%] border-2 border-gray-300 bg-white relative rounded-xl overflow-hidden">
+                        <Image
+                          src={URL.createObjectURL(img) || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
+                          alt={index.toString() || 'No title available'}
+                          fill
+                          priority
+                          className="   object-contain "
+                        />
+                            <button
                   type="button"
                   onClick={() => {
                     const updated = [...images];
                     updated.splice(index, 1);
                     setImages(updated);
                   }}
-                  className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 py-0.5 rounded-bl"
+                  className="absolute top-0 right-0 bg-red-600 hover:bg-red-800 cursor-pointer text-white text-xs px-1 py-0.5 rounded-bl"
                 >
                   ×
                 </button>
-              </div>
+                      </div>
+            
+            
+             
             ))}
           </div>
-{/* ============================================================================================= */}
 
-          {/* زر اختيار الصور */}
+
+          {/* add images button*/}
           <label
             htmlFor="file-upload"
             className="cursor-pointer bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-fit"
-          >اضافة صور </label>
+          >add images </label>
 
           <input
             id="file-upload"
@@ -183,7 +193,7 @@ export default function AddProduct({clicked,setClicked}:addProductProps) {
       
         }
     
-{/* ============================================================================================= */}
+
         {/* Submit */}
         <button
           type="submit"

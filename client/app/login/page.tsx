@@ -1,18 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 
 export default function LoginPage() {
 
   const router = useRouter();
-  useEffect(() => {
-    const value = localStorage.getItem('isLogged');
-    if (value === 'true') {
-      router.push('/');
-      alert('you are already logged in')
-    }
-  }, []);
 
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
@@ -108,7 +101,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <h1 onClick={() => { router.push('register') }} className="text-gray-950  cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">don't have account </h1>
+        <h1 onClick={() => { router.push("/register") }} className="text-gray-950  cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">don't have account </h1>
       </div>
     </div>
 

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import NewAddress from "./newAddress";
-import EditAddress from "./chooseAddress";
 import ChooseAddress from "./chooseAddress";
 
 

@@ -223,10 +223,10 @@ const getDeletedProducts = async (req, res) => {
         );
     
         if (!product) {
-          return res.status(404).json({ error: "المنتج غير موجود" });
+          return res.status(404).json({ error: " product doesn't exists " });
         }
     
-        return res.status(404).json({ message: "تم تعديل المنتج بنجاح", product });
+        return res.status(200).json({  product });
     
     };
     

@@ -11,7 +11,7 @@ export default function Admin() {
 
   const isAdmin = async () => {
       try {
-        const res = await fetch("http://localhost:3000/admin/adminWelcome", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export default function Admin() {
         }
        
       } catch (error) {
-
+        setMessage('something went wrong please try again later')
         console.error('Error fetching data:', error);
       }
     };

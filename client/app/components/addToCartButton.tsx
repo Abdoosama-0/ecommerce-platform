@@ -3,74 +3,76 @@
 import { useEffect, useState } from "react";
 
 interface AddToCartProps {
-    productId:string
-    name:string
-    productQuantity:number
-    price:number
-    imageUrl:string
+  productId: string
+  name: string
+  productQuantity: number
+  price: number
+  imageUrl: string
 }
-export default function  AddToCartButton({ productQuantity,productId,price,name,imageUrl}:AddToCartProps) {
-  
+export default function AddToCartButton({ productQuantity, productId, price, name, imageUrl }: AddToCartProps) {
+
   const [loading, setLoading] = useState(true)
 
-  const [cartRefreshFlag, setCartRefreshFlag] = useState(0); 
-const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
+  const [cartRefreshFlag, setCartRefreshFlag] = useState(0);
+  const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
   const [cart, setCart] = useState<CartItem[]>([]);
 
 
 
-const handleIncrease = async (productId:string) => {
-    if(localStorage.getItem('isLogged')==='true'){
-    try{
+  const handleIncrease = async (productId: string) => {
+    if (localStorage.getItem('isLogged') === 'true') {
+      try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/increaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json', 
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ productId }),
-         
+
         });
-        const data =await res.json()
-    
-    
+        const data = await res.json()
+
+
         if (res.ok) {
           refreshCart();
-   
+
         } else {
           alert(data.message);
         }
       } catch (err) {
         console.log(err);
-        
+
       }
     }
-    else{
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: {
-            _id: string,
-            imageUrls: string[],
-            title: string,
-            price: number
-        }, quantity: number }[];
-          console.log(cart)
-        const existingItem = cart.find(item => item.productId._id === productId);
-      
-        if (existingItem) {
-        if(productQuantity < existingItem.quantity+1){
+    else {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]') as {
+        productId: {
+          _id: string,
+          imageUrls: string[],
+          title: string,
+          price: number
+        }, quantity: number
+      }[];
+      console.log(cart)
+      const existingItem = cart.find(item => item.productId._id === productId);
+
+      if (existingItem) {
+        if (productQuantity < existingItem.quantity + 1) {
           alert(`you can just buy ${productQuantity}  items`)
           return
         }
-          existingItem.quantity += 1;
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        refreshCart();
-        console.log(JSON.parse(localStorage.getItem('cart') || '[]')) 
-    }
+        existingItem.quantity += 1;
       }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      refreshCart();
+      console.log(JSON.parse(localStorage.getItem('cart') || '[]'))
+    }
+  }
 
-  const handleDecrease=async(productId:string)=>{    
-    if(localStorage.getItem('isLogged')==='true'){
-    try{
+  const handleDecrease = async (productId: string) => {
+    if (localStorage.getItem('isLogged') === 'true') {
+      try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decreaseQuantity`, {
           method: 'PATCH',
           credentials: 'include',
@@ -79,7 +81,7 @@ const handleIncrease = async (productId:string) => {
           },
           body: JSON.stringify({ productId }),
         });
-      
+
 
         if (res.ok) {
           refreshCart();
@@ -88,163 +90,171 @@ const handleIncrease = async (productId:string) => {
         }
       } catch (err) {
         console.log(err);
-        
-      }}
-      else{
-       let cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: {
-            _id: string,
-            imageUrls: string[],
-            title: string,
-            price: number
-        }, quantity: number }[];
-      
-   
-        const existingItem = cart.find(item => item.productId._id === productId);
-      
-        if (existingItem) {
-            if(existingItem.quantity>1){
-                
-          existingItem.quantity -= 1;
-        }
-        else{
-            cart = cart.filter(item => item.productId._id !== productId);
-        }
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        refreshCart();
-   
-    }
 
       }
-  const handleAdd = async(productId: string) => {
+    }
+    else {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]') as {
+        productId: {
+          _id: string,
+          imageUrls: string[],
+          title: string,
+          price: number
+        }, quantity: number
+      }[];
 
 
-    if(localStorage.getItem('isLogged')==='true'){
-              
-      try{
-        const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addToCart`,{
+      const existingItem = cart.find(item => item.productId._id === productId);
+
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+
+          existingItem.quantity -= 1;
+        }
+        else {
+          cart = cart.filter(item => item.productId._id !== productId);
+        }
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      refreshCart();
+
+    }
+
+  }
+  const handleAdd = async (productId: string) => {
+
+
+    if (localStorage.getItem('isLogged') === 'true') {
+
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addToCart`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-         
+
           credentials: 'include',
-          body:JSON.stringify({ product: { productId, quantity: 1 } }),
+          body: JSON.stringify({ product: { productId, quantity: 1 } }),
         })
         const data = await res.json()
         if (!res.ok) {
           alert(data.message)
           return
         }
-       
-       refreshCart();
-      }catch(err){
+
+        refreshCart();
+      } catch (err) {
         alert('some thing went wrong please try again later');
         console.log(err)
       }
 
     }
-    else{
+    else {
 
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: {
-        _id: string,
-        imageUrls: string[],
-        title: string,
-        price: number
-    }, quantity: number }[];
-  
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]') as {
+        productId: {
+          _id: string,
+          imageUrls: string[],
+          title: string,
+          price: number
+        }, quantity: number
+      }[];
 
-    const existingItem = cart.find(item => item.productId._id === productId);
-  
-    if (existingItem) {
- 
-      existingItem.quantity += 1;
-    } else {
-        const imageUrls =[imageUrl]
 
-      cart.push({ productId :{ _id:productId,imageUrls:imageUrls ,title:name,price:price },quantity: 1 });
+      const existingItem = cart.find(item => item.productId._id === productId);
+
+      if (existingItem) {
+
+        existingItem.quantity += 1;
+      } else {
+        const imageUrls = [imageUrl]
+
+        cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price }, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      refreshCart();
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-  
-    refreshCart();
-  }
 
 
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(true)
-  
-    if(localStorage.getItem('isLogged') ==='true'){
-      const getCart= async()=>{
-      try{
-        const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`,{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-         
-          credentials: 'include',
-       
-        })
-        const data = await res.json(); 
-        if(res.ok){
-          setCart(data.cart)
-          setLoading(false)
+
+    if (localStorage.getItem('isLogged') === 'true') {
+      const getCart = async () => {
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+
+            credentials: 'include',
+
+          })
+          const data = await res.json();
+          if (res.ok) {
+            setCart(data.cart)
+            setLoading(false)
+          }
+
+        } catch (err) {
+
+          console.log(err)
         }
-       
-      }catch(err){
-        
-        console.log(err)
       }
+      getCart()
     }
-    getCart()
-    }
-    
-    else{
+
+    else {
       console.log('get cart from local storage :')
       setCart(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[]);
       console.log(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[])
       setLoading(false)
-    
+
     }
-    
-    
-    },[cartRefreshFlag])
-    
+
+
+  }, [cartRefreshFlag])
+
   return (
     <>
 
-  {
-      (
-        () => {
+      {
+        (
+          () => {
             const itemIndex = cart.findIndex((item) => item.productId?._id === productId);
-            if (itemIndex !== -1 ) {
-             
-              return <div  onClick={(e) => {  e.preventDefault()}} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
-                <button onClick={(e)=>{e.preventDefault();handleIncrease(cart[itemIndex].productId._id)}} className="cursor-pointer">+ </button>
-                <p>  
-                {
-                loading ? (<> <h1 onClick={(e) => {  e.preventDefault()}} className=" "> loading...</h1></>):(
-        < > {cart[itemIndex].quantity}</>)
-        }
-                  
-                 </p>
-                <button onClick={(e)=>{e.preventDefault();handleDecrease(cart[itemIndex].productId._id)}} className="cursor-pointer">- </button>
-              </div>
-     
-            }else{
-            return   <div  onClick={(e) => { e.preventDefault();productId && handleAdd(productId)}} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
-            <h1>add to cart</h1>
-            </div>
+            if (itemIndex !== -1) {
+
+              return (
+                <div onClick={(e) => { e.preventDefault() }} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
+                  <button onClick={(e) => { e.preventDefault(); handleIncrease(cart[itemIndex].productId._id) }} className="cursor-pointer">+ </button>
+                  <p>
+                    {
+                      loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "> loading...</h1></>) : (
+                        < > {cart[itemIndex].quantity}</>)
+                    }
+
+                  </p>
+                  <button onClick={(e) => { e.preventDefault(); handleDecrease(cart[itemIndex].productId._id) }} className="cursor-pointer">- </button>
+                </div>
+              )
+            } else {
+              return(
+              <div onClick={(e) => { e.preventDefault(); productId && handleAdd(productId) }} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
+                <h1>add to cart</h1>
+              </div>)
+
             }
           }
         )
-        ()
-          }
-          
-          </>
+          ()
+      }
+
+    </>
   );
 
 }

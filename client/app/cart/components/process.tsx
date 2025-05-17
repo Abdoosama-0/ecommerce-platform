@@ -29,7 +29,7 @@ export default function Process({ productsCount, totalPrice, cart, setCart }: Pr
         })
         const data = await res.json();
         if (!res.ok) {
-          alert('clear cart failed')
+          alert(data.message)
           return
 
 
@@ -62,7 +62,7 @@ export default function Process({ productsCount, totalPrice, cart, setCart }: Pr
           onClick={clearCart}
           className="bg-red-600 text-white px-4 py-2 rounded-2xl hover:bg-red-700 transition cursor-pointer"
         >
-          حذف جميع العناصر
+          clear cart
         </button>
         <button
           onClick={() => {
