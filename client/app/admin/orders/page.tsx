@@ -65,16 +65,16 @@ export default function Orders() {
             <div className=" flex flex-col gap-2">
               {[...data].reverse().map((order, index) => (
                 <Link key={index} href={`/admin/orders/${order._id}/`}>
-                  <div className="flex flex-col gap-1  text-xl font-bold bg-blue-400 rounded-lg p-4 ">
+                  <div className="flex flex-col gap-1  text-xl font-bold bg-blue-400 rounded-lg p-4 overflow-y-auto ">
 
-                    <div className="flex flex-row gap-10 ">
-                      <span>name: {order.userId.name} </span>
-                      <span>email: {order.userId.email}</span>
+                    <div className="flex flex-row flex-wrap gap-2">
+                      <span>| name:  {order.userId.name} </span>
+                      <span>| email:  {order.userId.email}</span>
                     </div>
-                    <div className="flex flex-row gap-10 ">
-                      <span>Number of products: {order.totalQuantity}</span>
-                      <span>total price: {order.totalPrice}</span>
-                      <span>status: {order.status}</span>
+                    <div className="flex flex-row flex-wrap gap-2 ">
+                      <span>| Number of products:  {order.totalQuantity}</span>
+                      <span>| total price:  {order.totalPrice}</span>
+                      <span>| status:  {order.status}</span>
                     </div>
                     <span>time: {new Date(order.createdAt).toLocaleString('en-GB', options)}</span>
 
