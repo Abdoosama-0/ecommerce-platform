@@ -72,4 +72,4 @@
                     address:address;
                     status: string;
                   }
-              
+          

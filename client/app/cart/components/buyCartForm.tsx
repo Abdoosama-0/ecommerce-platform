@@ -19,7 +19,7 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
   const router = useRouter();
   
 
-
+  const [message,setMessage]=useState('')
   const [selectedAddress, setSelectedAddress] = useState<address | null>(null)
   const [paymentMethod, setPaymentMethod] = useState<string>("cash on delivery")
   const [addresses, setAddresses] = useState<address[]>([])
@@ -98,24 +98,23 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
         body: JSON.stringify(orderData),
 
       })
-      if (res.ok) {
-
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage(data.message)
+        return
+      }
         alert('success your order done successfully')
         clearCart()
-        router.push('/')
-      }
-      else {
-        alert('failed')
-      }
-
     }
     catch (err) {
+      setMessage('something went wrong please try again later')
       console.log(err)
     }
   }
  
   return (
     <>
+
       {clicked && (
 
         <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
@@ -168,6 +167,10 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
               <p>totalPrice:  {totalPrice}</p>
               <p>products:  {products}</p>
             </div>
+            {message&& (
+            <p className="text-red-500 text-sm">{message}</p>
+
+            )}
 
             <button type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
 

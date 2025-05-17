@@ -4,6 +4,7 @@ import Auth from "@/components/errorMessage";
 
 import UpdateStatus from "@/app/admin/orders/[orderId]/components/updateStatus";
 import { useEffect, useState } from "react";
+import ErrorMessage from "@/components/errorMessage";
 
 
 export default function OrderId() {
@@ -14,7 +15,7 @@ export default function OrderId() {
     const [data, setData] = useState<Order |null>(null)
        const fetchData = async (orderId:string) => {
            try {
-             const res = await fetch(`http://localhost:3000/admin/getOrder?id=${orderId}`, {
+             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getOrder?id=${orderId}`, {
                  method: 'GET',
                  headers: {
                      'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ export default function OrderId() {
 
 {message ? (<> 
     {/**error message */}
-    <Auth message={message}/>
+    <ErrorMessage message={message}/>
     </>) : (<>
     <main className="min-h-screen  bg-gray-200 p-2 text-2xl font-bold ">
         <div className="">
