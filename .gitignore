@@ -30,6 +30,7 @@
 /client.pnpm-debug.log*
 
 # env files 
+/client/.env.*
 /client/.env.local
 
 # vercel
