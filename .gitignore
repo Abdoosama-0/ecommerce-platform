@@ -7,7 +7,7 @@
 /client/.yarn/plugins/
 /client/.yarn/releases/
 /client/.yarn/versions/
-/client/.env.local/
+
 
 # testing
 /client/coverage/
@@ -31,6 +31,7 @@
 
 # env files (can opt-in for committing if needed)
 /client.env*
+/client/.env.local
 
 # vercel
 /client.vercel/
