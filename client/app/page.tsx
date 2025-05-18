@@ -3,7 +3,7 @@
 
 import UserProductCard from "./components/userproductcard"
 
-import { useEffect, useState } from "react";
+import { Suspense,useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation'
 import ErrorMessage from "@/components/errorMessage";
 import Loading from "@/components/loading";
@@ -18,29 +18,33 @@ import Loading from "@/components/loading";
     totalPages: number;
     totalProducts: number;
   
-  };
+  };  
+  function SearchParamsHandler({ onPageChange }: { onPageChange: (page: number) => void }) {
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
+
+  useEffect(() => {
+    onPageChange(page);
+  }, [page, onPageChange]);
+
+  return null; 
+}
 export default function Home() {
+const router = useRouter()
 const [message, setMessage] = useState<string >("");
 const [loading, setLoading] = useState(true);
 const [data, setData] = useState<ProductResponse >();
-const searchParams = useSearchParams()
-const router = useRouter()
-const page = parseInt(searchParams.get('page') || '1')
 
 
-const handleNext =()=>{
-  const nextPage = page + 1
-  const params = new URLSearchParams(searchParams.toString())
-  params.set('page', nextPage.toString())
-  router.push(`?${params.toString()}`)
-}
-const handlePrevious =()=>{
-  const nextPage = page - 1
-  const params = new URLSearchParams(searchParams.toString())
-  params.set('page', nextPage.toString())
-  router.push(`?${params.toString()}`)
-}
-  const getProducts = async () => {
+const [page, setPage] = useState(1);
+  const changePage = (newPage: number) => {
+    router.push(`?page=${newPage}`, { scroll: false });
+    
+  };
+
+
+
+  const getProducts = async (page:number) => {
      try {
        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?page=${page}`, {
            method: 'GET',
@@ -69,8 +73,7 @@ const handlePrevious =()=>{
 
 
 useEffect(() => {
-  getProducts()
-  
+  getProducts(page)
 }
 , [page])
 
@@ -78,9 +81,13 @@ useEffect(() => {
   return (
     
 <>
+
+
 {loading ? (<><Loading/></>) : (<>
 {!data?(<><ErrorMessage message={message}/></>):(<>
-
+       <Suspense fallback={<div className="text-white font-bold text-4xl mx-auto mt-5">Loading...</div>}>
+          <SearchParamsHandler onPageChange={setPage} />
+        </Suspense>
     
    <main className="p-2 border-2 m-2 rounded-lg border-slate-950 shadow-2xl shadow-slate-600">
     {/**products */}
@@ -91,6 +98,7 @@ useEffect(() => {
               {data?.products.map((el) => (
               
                   <UserProductCard key={el._id}
+              
                     title={el.title}
                     image={el.imageUrls[0]}
                     productId={el._id}
@@ -105,12 +113,12 @@ useEffect(() => {
     {/**next and previous buttons  */}
       <div className="flex justify-center gap-4 w-full  ">
             {data&& data?.currentPage>1 &&
-              <button onClick={handlePrevious} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg cursor-pointer ">previous</button>
+              <button onClick={()=>{changePage(page - 1);}} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg cursor-pointer ">previous</button>
 
             }
       
         {data && data?.totalPages - data?.currentPage >0 &&
-        <button onClick={handleNext} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">next</button>
+        <button onClick={()=>{changePage(page + 1);}} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">next</button>
       }
       </div>
      

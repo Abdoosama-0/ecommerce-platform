@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface AddToCartProps {
   productId: string
@@ -8,6 +8,7 @@ interface AddToCartProps {
   productQuantity: number
   price: number
   imageUrl: string
+ 
 }
 export default function AddToCartButton({ productQuantity, productId, price, name, imageUrl }: AddToCartProps) {
 
@@ -210,49 +211,43 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
     }
 
     else {
+      
       console.log('get cart from local storage :')
       setCart(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[]);
       console.log(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[])
       setLoading(false)
 
     }
+    
 
 
   }, [cartRefreshFlag])
+const itemIndex = useMemo(() => {
+  return cart.findIndex((item) => item.productId?._id === productId);
+}, [cart, productId]);
+
 
   return (
     <>
-
-      {
-        (
-          () => {
-            const itemIndex = cart.findIndex((item) => item.productId?._id === productId);
-            if (itemIndex !== -1) {
-
-              return (
-                <div onClick={(e) => { e.preventDefault() }} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
-                  <button onClick={(e) => { e.preventDefault(); handleIncrease(cart[itemIndex].productId._id) }} className="cursor-pointer">+ </button>
-                  <p>
-                    {
-                      loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "> loading...</h1></>) : (
-                        < > {cart[itemIndex].quantity}</>)
-                    }
-
-                  </p>
-                  <button onClick={(e) => { e.preventDefault(); handleDecrease(cart[itemIndex].productId._id) }} className="cursor-pointer">- </button>
-                </div>
-              )
-            } else {
-              return(
-              <div onClick={(e) => { e.preventDefault(); productId && handleAdd(productId) }} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
-                <h1>add to cart</h1>
-              </div>)
-
+      {itemIndex !== -1 ? (
+        <div onClick={(e) => { e.preventDefault() }} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
+          <button onClick={(e) => { e.preventDefault(); handleIncrease(cart[itemIndex].productId._id) }} className="cursor-pointer">+ </button>
+          <div>
+            {
+              loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "> loading...</h1></>) : (
+                < > {cart[itemIndex].quantity}</>)
             }
-          }
-        )
-          ()
-      }
+
+          </div>
+          <button onClick={(e) => { e.preventDefault(); handleDecrease(cart[itemIndex].productId._id) }} className="cursor-pointer">- </button>
+        </div>
+      ) : (
+        <div onClick={(e) => { e.preventDefault();  handleAdd(productId) }} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
+          <h1>add to cart</h1>
+        </div>
+      )}
+
+
 
     </>
   );
