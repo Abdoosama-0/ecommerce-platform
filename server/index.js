@@ -50,7 +50,7 @@ app.get('/error', (req, res,next) => {
 //================================ error handler middleware=============================
 require('./Middleware/errorMiddleware')(app)
 // ==================== Start Server ====================
-const PORT = process.env.Server_PORT || 3000;
+const PORT = process.env.Server_PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Express server running at http://localhost:${PORT}/`);
 });
