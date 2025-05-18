@@ -222,6 +222,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
 
   }, [cartRefreshFlag])
+  
 const itemIndex = useMemo(() => {
   return cart.findIndex((item) => item.productId?._id === productId);
 }, [cart, productId]);
