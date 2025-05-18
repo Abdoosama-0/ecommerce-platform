@@ -7,6 +7,7 @@
 /client/.yarn/plugins/
 /client/.yarn/releases/
 /client/.yarn/versions/
+/client.env.local/
 
 # testing
 /client/coverage/
