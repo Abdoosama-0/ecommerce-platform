@@ -31,7 +31,7 @@
 
 # env files (can opt-in for committing if needed)
 /client.env.*
-/client/.env.local
+
 # vercel
 /client.vercel/
 
