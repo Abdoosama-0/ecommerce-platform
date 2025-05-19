@@ -6,9 +6,10 @@ import UpdateStatus from "@/app/admin/orders/[orderId]/components/updateStatus";
 import { useEffect, useState } from "react";
 import ErrorMessage from "@/components/errorMessage";
 import Image from "next/image";
+import Loading from "@/components/loading";
 
 export default function OrderId() {
-
+  const [loading, setLoading] = useState(true);
   const [updateStatus, setUpdateStatus] = useState<boolean>(false)
   const [message, setMessage] = useState<string>("");
 
@@ -39,7 +40,9 @@ export default function OrderId() {
       console.error('Error fetching data:', error);
 
 
-    }
+    }finally{
+    setLoading(false)
+   }
   }
   useEffect(() => {
     const path = window.location.pathname;
@@ -52,8 +55,8 @@ export default function OrderId() {
   return (
 
     <>
-
-      {message ? (<>
+{loading ? (<><Loading/></>) : (<>
+      {!data ? (<>
         {/**error message */}
         <ErrorMessage message={message} />
       </>) : (<>
@@ -113,7 +116,7 @@ export default function OrderId() {
 
       </>)}
 
-
+</>)}
     </>
 
 

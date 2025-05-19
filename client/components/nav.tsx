@@ -45,7 +45,7 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
 
 
 
-
+const [clicked,setClicked]=useState(false)
 
   return (<>
     <main className="relative top-0 left-0 w-full h-[64px] bg-slate-950 shadow-md z-20 flex items-center text-2xl text-white font-bold justify-between">
@@ -54,7 +54,10 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
     
     
       <div className="ml-10 w-fit ">
-        <Link href={`/`}>
+        <Link onClick={()=>{
+          if(clicked){
+          setClicked(false)}
+          }}  href={`/`}>
           <h1>store</h1>
         </Link>
       </div>
@@ -86,7 +89,7 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
         </>
       </div>
     
-      <MobNav logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
+      <MobNav clicked={clicked} setClicked={setClicked} logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
     </main>
      
   </>);

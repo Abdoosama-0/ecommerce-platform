@@ -1,12 +1,17 @@
 'use client';
 
 import ErrorMessage from "@/components/errorMessage";
+import Loading from "@/components/loading";
 
 
 import { useEffect, useState } from "react";
 
 
 export default function Users() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<responseType | null>(null)
+
+  const [message, setMessage] = useState<string>("");
   const handleClick = async (id: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/banUser?id=${id}`, {
@@ -32,48 +37,46 @@ export default function Users() {
 
     } catch (error) {
       alert('something went wrong please try again later');
-      console.log( error);
+      console.log(error);
     }
 
 
   }
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getUsers`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        })
-        const data = await res.json()
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getUsers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      })
+      const data = await res.json()
 
 
-        if (res.ok) {
-          setAuth(true)
-          setData(data)
-        }
-        else {
-          setMessage(data.message)
-        }
-
-
-
+      if (!res.ok) {
+        setMessage(data.message)
+        return
       }
-      catch (error) {
-     
-        console.error('Error fetching data:', error);
 
 
-      }
+      setData(data)
+
     }
+    catch (error) {
+      setMessage('something went wrong please try again later')
+      console.error('Error fetching data:', error);
+
+
+    } finally {
+      setLoading(false)
+    }
+  }
 
 
 
-  const [data, setData] = useState<responseType | null>(null)
 
-  const [message, setMessage] = useState<string>("");
-  const [auth, setAuth] = useState<boolean>(false);
+
 
   useEffect(() => {
 
@@ -84,13 +87,13 @@ export default function Users() {
 
   return (
     <>
-     
-        {!auth ? (<><ErrorMessage message={message} /></>) : (<>
+      {loading ? (<><Loading /></>) : (<>
+        {!data ? (<><ErrorMessage message={message} /></>) : (<>
           <main className=" bg-gray-100 min-h-screen ">
             <div className="flex flex-col">
-              <h1 className="m-4 text-gray-800 text-3xl font-semibold">Users Count: {data?.usersCount} </h1>
+              <h1 className="m-4 text-gray-800 text-3xl font-semibold">Users Count: {data.usersCount} </h1>
               <div className="flex flex-col   gap-3 p-1">
-                {data && data.users.length > 0 ? (
+                { data.users.length > 0 ? (
                   <>
                     {data.users.map((user) => (
                       <div key={user._id} className="relative p-2  text-sm md:text-xl flex flex-row gap-8 break-words overflow-x-auto  justify-start items-center bg-white rounded-xl  w-full flex-wrap  shadow-md ">
@@ -98,9 +101,9 @@ export default function Users() {
 
                           <h1>userId:{user._id}  </h1>
                           <h1>Name:{user.name}  </h1>
-                          <h1>email:{user.email || 'nan'}  </h1>
-                          <h1>Phone:{user.phone || 'nan'}  </h1>
-                          <h1>isBanned:{`${user.isBanned}` || 'nan'}  </h1>
+                          <h1>email:{user.email}  </h1>
+                          <h1>Phone:{user.phone}  </h1>
+                          <h1>isBanned:{`${user.isBanned}`}  </h1>
                         </div>
 
                         <div onClick={() => handleClick(user._id.toString())}
@@ -126,7 +129,7 @@ export default function Users() {
 
         </>)}
 
-  
+      </>)}
     </>
   );
 }

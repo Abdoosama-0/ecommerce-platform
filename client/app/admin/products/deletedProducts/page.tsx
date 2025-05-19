@@ -10,11 +10,13 @@ import Image from 'next/image'
 
 import Link from 'next/link';
 import RestoreButton from "./restoreButton"
+import Loading from "@/components/loading"
 
 
 
 
 export default function DeletedProducts() {
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('')
   const [data, setData] = useState<adminProductResponse>()
   const getDeletedProducts = async () => {
@@ -43,6 +45,8 @@ export default function DeletedProducts() {
       console.log('Error fetching data:', error);
 
 
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -53,24 +57,25 @@ export default function DeletedProducts() {
 
   return (
     <>
-      {message ? (<>
-        <ErrorMessage message={message} />
+      {loading ? (<><Loading /></>) : (<>
+        {!data ? (<>
+          <ErrorMessage message={message} />
 
 
 
 
 
-      </>) : (<>
-        <div>
-          {data && <h2 className="mb-2 ">products: {data.totalProducts}</h2>}
+        </>) : (<>
+          <div>
+            {<h2 className="mb-2 ">products: {data.totalProducts}</h2>}
 
-          <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
+            <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
 
-            {data?.products.map((el, index) => (
+              {data.products.map((el, index) => (
 
-              
 
-              <Link key={index}  href = {`/admin/products/${el._id}/`}>
+
+                <Link key={index} href={`/admin/products/${el._id}/`}>
                   <div className=' p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2  rounded-xl border-gray-200 bg-gray-100'>
 
                     <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
@@ -94,21 +99,21 @@ export default function DeletedProducts() {
                     </div>
 
                   </div>
-              </Link>
-
-
-      
-            ))}
-
-        </div>
-      </div>
+                </Link>
 
 
 
-    </>)
-}
+              ))}
+
+            </div>
+          </div>
 
 
+
+        </>)
+        }
+
+      </>)}
     </>
 
   );

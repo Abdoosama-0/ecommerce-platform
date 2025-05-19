@@ -47,7 +47,7 @@ export default function ProductPage() {
   return (
     <>
       {loading ? (<><Loading /></>) : (<>
-        {data && (
+        {!data ?(<ErrorMessage message={message} />)  : (
           <main className="p-4 flex flex-col   gap-4">
             {/**main details */}
             <ProductDetails
@@ -67,9 +67,7 @@ export default function ProductPage() {
             }
           </main>
         )}
-        {message && <>
-          <ErrorMessage message={message} />
-        </>}
+
 
       </>)}
     </>

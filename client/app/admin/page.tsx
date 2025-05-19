@@ -1,5 +1,6 @@
 'use client';
 import ErrorMessage from "@/components/errorMessage";
+import Loading from "@/components/loading";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -7,29 +8,31 @@ import { useEffect, useState } from "react";
 export default function Admin() {
 
   const [message, setMessage] = useState<string | null>(null);
- 
+  const [loading, setLoading] = useState(true);
 
   const isAdmin = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        const data = await res.json();
-       
-        if (!res.ok) {
-          setMessage(data.message);
-          return
-        }
-       
-      } catch (error) {
-        setMessage('something went wrong please try again later')
-        console.error('Error fetching data:', error);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/adminWelcome`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(data.message);
+        return
       }
-    };
+
+    } catch (error) {
+      setMessage('something went wrong please try again later')
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false)
+    }
+  };
   useEffect(() => {
     isAdmin();
 
@@ -37,13 +40,13 @@ export default function Admin() {
 
   return (
     <>
-     
-        {!message &&
+      {loading ? (<><Loading /></>) : (<>
+        {message ? (<ErrorMessage message={message} />) : (
 
 
-      
 
-      
+
+
           <div className="flex flex-col bg-gray-100 min-h-screen  gap-5">
             <h1 className="m-4 text-gray-800 text-3xl font-semibold">Welcome Admin</h1>
 
@@ -65,12 +68,12 @@ export default function Admin() {
               </Link>
             </div>
           </div>
-      
-       } 
-      {message &&
-       <ErrorMessage message={message}/>
-       }
-      
+        )
+
+
+        }
+
+      </>)}
     </>
   );
 }

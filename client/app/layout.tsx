@@ -17,13 +17,13 @@ export default function RootLayout({
 }>) {
 
 
-  
+
   return (
     <html lang="en">
-      <body 
-        className={` antialiased    `}
+      <body
+        className={` antialiased `}
       >
-        <Nav/>
+        <Nav />
         {children}
       </body>
     </html>

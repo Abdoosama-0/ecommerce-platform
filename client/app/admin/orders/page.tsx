@@ -1,12 +1,13 @@
 'use client'
 import ErrorMessage from "@/components/errorMessage";
+import Loading from "@/components/loading";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 
 export default function Orders() {
 
-
+const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Order[]>([])
 
   const [message, setMessage] = useState<string>("");
@@ -37,7 +38,9 @@ export default function Orders() {
       console.error('Error fetching data:', error);
 
 
-    }
+    }finally{
+    setLoading(false)
+   }
   }
   useEffect(() => {
 
@@ -56,8 +59,8 @@ export default function Orders() {
   return (
 
     <>
-
-      {message ? (<><ErrorMessage message={message} /></>) : (<>
+{loading ? (<><Loading/></>) : (<>
+      {!data ? (<><ErrorMessage message={message} /></>) : (<>
 
         <main className="min-h-screen bg-gray-100 p-4 ">
           {/**Check if there are any orders. */}
@@ -99,7 +102,7 @@ export default function Orders() {
 
       </>)}
 
-
+</>)}
     </>
 
   );
