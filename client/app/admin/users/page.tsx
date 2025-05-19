@@ -2,7 +2,7 @@
 
 import ErrorMessage from "@/components/errorMessage";
 
-import Loading from "@/components/loading";
+
 import { useEffect, useState } from "react";
 
 
@@ -37,20 +37,9 @@ export default function Users() {
 
 
   }
-
-
-
-
-  const [data, setData] = useState<responseType | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState<string>("");
-  const [auth, setAuth] = useState<boolean>(false);
-
-  useEffect(() => {
-
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/admin/getUsers`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getUsers`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -70,22 +59,32 @@ export default function Users() {
 
 
 
-        setLoading(false)
       }
       catch (error) {
-        setLoading(false)
+     
         console.error('Error fetching data:', error);
 
 
       }
     }
+
+
+
+  const [data, setData] = useState<responseType | null>(null)
+
+  const [message, setMessage] = useState<string>("");
+  const [auth, setAuth] = useState<boolean>(false);
+
+  useEffect(() => {
+
+
     fetchData()
   }
     , [])
 
   return (
     <>
-      {loading ? (<><Loading /></>) : (<>
+     
         {!auth ? (<><ErrorMessage message={message} /></>) : (<>
           <main className=" bg-gray-100 min-h-screen ">
             <div className="flex flex-col">
@@ -127,7 +126,7 @@ export default function Users() {
 
         </>)}
 
-      </>)}
+  
     </>
   );
 }
