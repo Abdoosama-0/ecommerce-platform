@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import animationData from "@/animations/Animation - 1747617713528.json";
+import animationData from "@/animations/Animation - 1747621949578.json";
 
 export default function Loading() {
   return (
