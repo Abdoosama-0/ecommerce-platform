@@ -76,12 +76,16 @@ const getOrder = async (req, res) => {
 
 
 const getOrders = async (req, res) => {
- 
-    const orders = await Order.find()
+ const {status}=req.params
+ const validStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
+if (!validStatuses.includes(status)) {
+  return res.status(400).json({ message: "status must be one of: 'pending', 'shipped', 'delivered', 'cancelled'" });
+}
+    const orders = await Order.find({ status })
       .populate('userId', 'name email') 
       .populate('products.productId', 'title price'); 
 
-    res.status(200).json({message:"all orders",orders} );
+    return res.status(200).json({message:"all orders",orders} );
 
 };
 

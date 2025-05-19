@@ -14,6 +14,7 @@ export default function OrderId() {
   const [message, setMessage] = useState<string>("");
 
   const [data, setData] = useState<Order | null>(null)
+
   const fetchData = async (orderId: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getOrder?id=${orderId}`, {

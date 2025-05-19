@@ -48,7 +48,7 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
 const [clicked,setClicked]=useState(false)
 
   return (<>
-    <main className="relative top-0 left-0 w-full h-[64px] bg-slate-950 shadow-md z-20 flex items-center text-2xl text-white font-bold justify-between">
+    <main className="relative top-0 left-0 w-full h-[64px] bg-slate-950 shadow-md z-10 flex items-center text-2xl text-white font-bold justify-between">
     
     
     

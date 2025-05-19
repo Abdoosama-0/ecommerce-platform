@@ -77,7 +77,7 @@ export default function Products() {
             <main className='p-2 border-2 m-2 rounded-lg  border-slate-950 shadow-2xl shadow-slate-600'>
               <div className=''>
                 {/**products count */}
-                {data &&
+               
                   <div className=' flex justify-between w-full items-center px-2 '>
                     <h2>products:  {data.totalProducts}</h2>
                     <button
@@ -86,7 +86,7 @@ export default function Products() {
                       }}
                       className="px-4 py-2 w-fit text-white font-bold rounded-xl hover:opacity-50 cursor-pointer bg-slate-600">deleted products</button>
                   </div>
-                }
+              
                 {/**products*/}
                 <div className=' mt-2 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
                   {data?.products.map((el) => (
