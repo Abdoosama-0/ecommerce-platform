@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 
 
@@ -11,8 +11,19 @@ isLogged:boolean
 }
 export default function MobNav({ logout,isAdmin,isLogged }: MobNavProps) {
   const [clicked, setClicked] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setClicked(false);
+    };
 
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
+    <>
     <div className="relative cursor-pointer mr-10 text-white md:hidden flex pointer-events-auto  justify-end items-center w-fit gap-8 ">
       <div onClick={() => setClicked(!clicked)}>
         {clicked ? (<h1 className="font-light">X</h1>) : (<AiOutlineMenu />)}
@@ -24,7 +35,12 @@ export default function MobNav({ logout,isAdmin,isLogged }: MobNavProps) {
 
 
 
-          <div className=" font-light flex flex-col  gap-5 w-full fixed right-0 top-[64px] z-20 bg-slate-200 p-2  rounded-sm shadow-lg ">
+       
+        </div>
+      )}
+    </div>
+    {clicked && (
+   <div className=" font-light flex flex-col  gap-5 w-full absolute right-0 top-full z-20 bg-slate-200 p-2  rounded-sm shadow-lg ">
             {! isLogged ? (
               <Link href={`/login`}>
                 <h1 className="cursor-pointer  border-b-2 text-black border-gray-400  hover:bg-slate-400 rounded-sm p-2 ">login</h1>
@@ -47,8 +63,7 @@ export default function MobNav({ logout,isAdmin,isLogged }: MobNavProps) {
               <h1 className="cursor-pointer  border-b-2 text-black border-gray-400 hover:bg-slate-400 rounded-sm p-2" >cart</h1>
             </Link>
           </div>
-        </div>
-      )}
-    </div>
-  );
+
+    )}
+  </>);
 }

@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body 
-        className={` antialiased  relative  pt-[64px] `}
+        className={` antialiased    `}
       >
         <Nav/>
         {children}
