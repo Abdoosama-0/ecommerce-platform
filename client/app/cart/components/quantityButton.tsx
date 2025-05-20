@@ -9,12 +9,13 @@ interface QuantityButtonProps {
   refreshCart: () => void
   setCart: (cart: CartItem[]) => void
   cart: CartItem[]
-
+handleDeleteProduct: (productId: string) => void
   availableQuantity: number
+
 }
 
 
-export default function QuantityButton({ productId, quantity, refreshCart, availableQuantity, cart, setCart }: QuantityButtonProps) {
+export default function QuantityButton({ productId,handleDeleteProduct, quantity, refreshCart, availableQuantity, cart, setCart }: QuantityButtonProps) {
   const [loading, setLoading] = useState(false);
   const [currentQuantity, setCurrentQuantity] = useState<number>(quantity);
 
@@ -79,6 +80,10 @@ export default function QuantityButton({ productId, quantity, refreshCart, avail
   const handleDecrease = async (productId: string) => {
 
     if (localStorage.getItem('isLogged') === 'true') {
+      if (currentQuantity === 1) {
+        handleDeleteProduct(productId)
+        return
+      }
       try {
         setLoading(true)
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decreaseQuantity`, {
@@ -92,8 +97,10 @@ export default function QuantityButton({ productId, quantity, refreshCart, avail
 
 
         if (res.ok) {
+          if (currentQuantity > 1) {
           setCurrentQuantity(prev => prev - 1)
-          refreshCart();
+          refreshCart();}
+      
 
         } else {
           alert('failed');
@@ -132,7 +139,7 @@ export default function QuantityButton({ productId, quantity, refreshCart, avail
   }
 
   return (
-
+<>
     <div className="w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-sky-600  ">
 
       <button onClick={() => { handleIncrease(productId) }} className="cursor-pointer">+</button>
@@ -145,6 +152,7 @@ export default function QuantityButton({ productId, quantity, refreshCart, avail
       </div>
       <button onClick={() => { handleDecrease(productId) }} className="cursor-pointer">-</button>
     </div>
-
+       
+</>
   );
 }

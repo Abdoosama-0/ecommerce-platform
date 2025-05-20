@@ -19,8 +19,10 @@ export default function Cart() {
   const [products, setProducts] = useState<number>(0)
   const [loading, setLoading] = useState(true);
 
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const handleDeleteProduct = async (productId: string) => {
     if (localStorage.getItem('isLogged') === 'true') {
+      setDeleteLoading(productId);
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/deleteFromCart`, {
           method: 'DELETE',
@@ -36,15 +38,16 @@ export default function Cart() {
         if (!res.ok) {
           alert(data.message);
           return
-        } 
-          refreshCart();
-          
-        
+        }
+        refreshCart();
+
+
       } catch (err) {
         alert('something went wrong please try again later')
         console.log(err);
 
       }
+   
     }
 
     else {
@@ -138,8 +141,26 @@ export default function Cart() {
               <main className="md:flex md:justify-between  ">
                 {/**products */}
                 <div className=" grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3  gap-4 w-full md:max-w-[75%] mb-3  md:mr-2">
-                  {cart?.map((item, index) => (
-                    <div key={index} className="p-2  flex flex-col    gap-2 relative w-full     h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
+                  {cart?.map((item, index) => (<>
+
+                    <div key={index} className="p-2 relative  flex flex-col    gap-2  w-full     h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
+
+                      {deleteLoading === item?.productId?._id && (
+                        <div className="absolute inset-0 w-full h-full bg-gray-500/50 z-20 text-white font-[fantasy] text-4xl flex justify-center items-center">
+                          loading...
+                        </div>
+                      )}
+
+
+
+
+
+
+
+
+
+
+
                       <Link href={`/${item?.productId?._id ?? '#'}`} className="hover:opacity-80 transition">
                         <div className="w-full h-auto sm:aspect-[13/9]  aspect-[1/1] bg-white relative rounded-xl overflow-hidden">
                           <Image
@@ -166,16 +187,18 @@ export default function Cart() {
                         </button>
 
                         <QuantityButton
+
                           productId={item?.productId?._id}
                           quantity={item?.quantity ?? 1}
                           refreshCart={refreshCart}
                           setCart={setCart}
+                          handleDeleteProduct={handleDeleteProduct}
                           availableQuantity={item?.productId?.quantity}
                           cart={cart}
                         />
                       </div>
                     </div>
-
+                  </>
                   ))}
                 </div>
                 {/**process */}
