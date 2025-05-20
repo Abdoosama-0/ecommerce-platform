@@ -2,7 +2,7 @@
 import Image from 'next/image'
 
 // import Link from 'next/link';
-import AddToCart from '@/app/components/addToCartButton'
+// import AddToCart from '@/app/components/addToCartButton'
 
 interface ProductCardProps {
   image?: string;
@@ -14,7 +14,7 @@ interface ProductCardProps {
 }
 
 
-const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCardProps) => {
+const UserProductCard = ({ image, title, price ,quantity}: ProductCardProps) => {
 
 
 
@@ -40,11 +40,11 @@ const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCar
          <span>quantity: {quantity}</span>
   
       </div> 
-     {productId && <AddToCart productQuantity={quantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
-      
+     
+      <button className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">add to cart</button>
     </div>
     // </Link>
   )
 }
-
+//  <AddToCart productQuantity={quantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />
 export default UserProductCard
