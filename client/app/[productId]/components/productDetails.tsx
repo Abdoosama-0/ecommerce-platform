@@ -71,7 +71,7 @@ export default function ProductDetails({ imageUrls, title, price, productID, qua
 
 
           }} className="bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out"> buy </button>
-          <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} productQuantity={quantity} />
+          <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} availableQuantity={quantity} />
 
         </div>
       </div>

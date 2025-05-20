@@ -39,7 +39,7 @@ await editUser.save();
 
        const Payload={userID:user._id.toString(),isAdmin:user.isAdmin}
       
-      const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN, { expiresIn: "72h" });
+      const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
       
    
       res.cookie("access_token", accessToken, { httpOnly: true, secure: false, maxAge: 100 * 365 * 24 * 60 * 60 * 1000 }); // 100 years

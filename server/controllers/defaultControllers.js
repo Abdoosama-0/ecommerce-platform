@@ -324,23 +324,37 @@ const addToCart = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'user not found' });
     }
+    const productInStock = await Product.findById(product.productId);
 
-    // التحقق إذا كان المنتج موجود مسبقاً في الكارت
+    if (!productInStock) {
+      return res.status(404).json({ message: 'Product not found in stock' });
+    }
+
+    if (productInStock.quantity < product.quantity + 1) {
+      return res.status(400).json({ message: `You can only buy: ${productInStock.quantity} items` });
+    }
+
+   
     const existingItem = user.cart.find(item =>
       item.productId.toString() === product.productId
     );
 
     if (existingItem) {
-      // إذا موجود، زوّد الكمية فقط
+
       existingItem.quantity += product.quantity;
+       await user.save();
+
+    return res.status(200).json({ message: 'quantity increased successfully', art: user.cart,quantity:   existingItem.quantity  });
+
     } else {
-      // إذا غير موجود، أضفه جديد
+    
       user.cart.push(product);
+      await user.save();
+
+    return res.status(200).json({ message: 'Added to cart successfully', cart: user.cart, quantity: product.quantity });
     }
 
-    await user.save();
 
-    return res.status(200).json({ message: 'Added to cart successfully', cart: user.cart });
 
 };
 
@@ -349,7 +363,7 @@ const cart= async(req,res)=>{
   if (!userId){
     return res.status(404).json({message:'userId not found'})
   }
-  const user = await User.findById(userId).populate('cart.productId', 'title price imageUrls');
+  const user = await User.findById(userId).populate('cart.productId', 'title price imageUrls quantity');
   if (!user){
     return res.status(404).json({message:'user not found'})
   }

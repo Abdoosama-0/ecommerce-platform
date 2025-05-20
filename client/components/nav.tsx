@@ -4,12 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import MobNav from "./mobNavMenu";
-import { useRouter } from "next/navigation";
+
 
 
 
 export default function Nav() {
-  const router = useRouter();
+  
 
 const [isLogged,setIsLogged]= useState<boolean>(false)
 const [isAdmin,setIsAdmin]= useState<boolean>(false)
@@ -38,7 +38,7 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
       }
       localStorage.setItem('isLogged', 'false');
       alert('Logged out successfully');
-      router.push('/')
+      window.location.href = '/'; 
     } catch (err) {
       alert('something went wrong please try again later')
       console.log(err);

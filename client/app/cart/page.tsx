@@ -18,10 +18,11 @@ export default function Cart() {
   const [totalPrice, setTotalPrice] = useState<number>(0)
   const [products, setProducts] = useState<number>(0)
   const [loading, setLoading] = useState(true);
+
   const handleDeleteProduct = async (productId: string) => {
     if (localStorage.getItem('isLogged') === 'true') {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/deleteFromCart`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/deleteFromCart`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -31,13 +32,16 @@ export default function Cart() {
         });
 
 
-
-        if (res.ok) {
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.message);
+          return
+        } 
           refreshCart();
-        } else {
-          alert('failed');
-        }
+          
+        
       } catch (err) {
+        alert('something went wrong please try again later')
         console.log(err);
 
       }
@@ -156,7 +160,7 @@ export default function Cart() {
                             e.preventDefault();
                             if (item?.productId?._id) handleDeleteProduct(item.productId._id);
                           }}
-                          className="w-full py-1 px-2 rounded-2xl bg-red-600 text-white hover:opacity-80 transition"
+                          className="w-full cursor-pointer py-1 px-2 rounded-2xl bg-red-600 text-white hover:opacity-80 transition"
                         >
                           Delete
                         </button>
@@ -166,6 +170,7 @@ export default function Cart() {
                           quantity={item?.quantity ?? 1}
                           refreshCart={refreshCart}
                           setCart={setCart}
+                          availableQuantity={item?.productId?.quantity}
                           cart={cart}
                         />
                       </div>

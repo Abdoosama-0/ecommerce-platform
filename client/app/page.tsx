@@ -104,7 +104,7 @@ export default function Home() {
                     image={el.imageUrls[0]}
                     productId={el._id}
                     price={el.price}
-                    quantity={el.quantity}
+                    availableQuantity={el.quantity}
                   />
 
                 ))}

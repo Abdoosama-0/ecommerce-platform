@@ -1,25 +1,22 @@
 'use client'
 
 
-import { useEffect, useMemo, useState } from "react";
+import {  useState } from "react";
 
 interface AddToCartProps {
   productId: string
   name: string
-  productQuantity: number
+  availableQuantity: number
   price: number
   imageUrl: string
- 
+
 }
-export default function AddToCartButton({ productQuantity, productId, price, name, imageUrl }: AddToCartProps) {
-
-  const [loading, setLoading] = useState(true)
-
-  const [cartRefreshFlag, setCartRefreshFlag] = useState(0);
-  const refreshCart = () => setCartRefreshFlag(prev => prev + 1);
-  const [cart, setCart] = useState<CartItem[]>([]);
+export default function AddToCartButton({ availableQuantity, productId, price, name, imageUrl }: AddToCartProps) {
+  const [loading, setLoading] = useState(false)
+  const [addClicked, setAddClicked] = useState(false);
 
 
+  const [quantityInCart, setQuantityInCart] = useState<number>(0);
 
   const handleIncrease = async (productId: string) => {
     if (localStorage.getItem('isLogged') === 'true') {
@@ -38,7 +35,8 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
 
         if (res.ok) {
-          refreshCart();
+      
+          setQuantityInCart(prev => prev + 1)
 
         } else {
           alert(data.message);
@@ -47,6 +45,8 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
       } catch (err) {
         console.log(err);
 
+      } finally {
+        setLoading(false)
       }
     }
     else {
@@ -62,14 +62,15 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
       const existingItem = cart.find(item => item.productId._id === productId);
 
       if (existingItem) {
-        if (productQuantity < existingItem.quantity + 1) {
-          alert(`you can just buy ${productQuantity}  items`)
+        if (availableQuantity < existingItem.quantity + 1) {
+          alert(`you can just buy ${availableQuantity}  items`)
           return
         }
+        setQuantityInCart(prev => prev + 1)
         existingItem.quantity += 1;
       }
       localStorage.setItem('cart', JSON.stringify(cart));
-      refreshCart();
+
       console.log(JSON.parse(localStorage.getItem('cart') || '[]'))
     }
   }
@@ -89,7 +90,12 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
 
         if (res.ok) {
-          refreshCart();
+          if (quantityInCart === 1) {
+            setAddClicked(false)
+          }
+          setQuantityInCart(prev => prev - 1)
+    
+
         } else {
           alert('failed');
           setLoading(false)
@@ -97,6 +103,8 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
       } catch (err) {
         console.log(err);
 
+      } finally {
+        setLoading(false)
       }
     }
     else {
@@ -114,24 +122,27 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
       if (existingItem) {
         if (existingItem.quantity > 1) {
-
+          setQuantityInCart(prev => prev - 1)
           existingItem.quantity -= 1;
         }
         else {
+          setQuantityInCart(prev => prev - 1)
+          setAddClicked(false)
           cart = cart.filter(item => item.productId._id !== productId);
         }
       }
       localStorage.setItem('cart', JSON.stringify(cart));
-      refreshCart();
+ 
 
     }
 
   }
-  const handleAdd = async (productId: string) => {
+
+  const handleAddToCart = async (productId: string) => {
 
 
     if (localStorage.getItem('isLogged') === 'true') {
-        setLoading(true)
+      setLoading(true)
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addToCart`, {
           method: 'POST',
@@ -148,11 +159,13 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
           setLoading(false)
           return
         }
-
-        refreshCart();
+        setQuantityInCart(data.quantity)
+    
       } catch (err) {
         alert('some thing went wrong please try again later');
         console.log(err)
+      } finally {
+        setLoading(false)
       }
 
     }
@@ -173,94 +186,54 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
       if (existingItem) {
 
         existingItem.quantity += 1;
+        setQuantityInCart(existingItem.quantity)
       } else {
         const imageUrls = [imageUrl]
 
         cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price }, quantity: 1 });
+        setQuantityInCart(prev => prev + 1)
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
 
-      refreshCart();
+   
     }
 
 
   };
 
-  useEffect(() => {
-   
-
-    if (localStorage.getItem('isLogged') === 'true') {
-      setLoading(true)
-      const getCart = async () => {
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-
-            credentials: 'include',
-
-          })
-          const data = await res.json();
-          if (res.ok) {
-            setCart(data.cart)
-            setLoading(false)
-          }
-
-        } catch (err) {
-
-          console.log(err)
-        }finally{
-          setLoading(false)
-        }
-      }
-      getCart()
-    }
-
-    else {
-      
-      console.log('get cart from local storage :')
-      setCart(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[]);
-      console.log(JSON.parse(localStorage.getItem('cart') || '[]') as CartItem[])
-      setLoading(false)
-
-    }
-    
-
-
-  }, [cartRefreshFlag])
-  
-const itemIndex = useMemo(() => {
-  return cart.findIndex((item) => item.productId?._id === productId);
-}, [cart, productId]);
 
 
   return (
-    <>{loading ?(<div onClick={(e) => { e.preventDefault();}}  className="w-full flex justify-center items-center py-1 px-2 rounded-2xl border-2 border-amber-600  ">
-     loading...
-    </div>):(<>
-      {itemIndex !== -1 ? (
-        <div onClick={(e) => { e.preventDefault() }} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
-          <button onClick={(e) => { e.preventDefault(); handleIncrease(cart[itemIndex].productId._id) }} className="cursor-pointer">+ </button>
-          <div>
-            {
-              loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "></h1></>) : (
-                < > {cart[itemIndex].quantity}</>)
-            }
-
-          </div>
-          <button onClick={(e) => { e.preventDefault(); handleDecrease(cart[itemIndex].productId._id) }} className="cursor-pointer">- </button>
+    <>
+      {loading ? (
+        <div onClick={(e) => { e.preventDefault(); }} className=" py-1  border-2 border-sky-600 text-black rounded-3xl w-full flex justify-center items-center  cursor-default  ">
+          loading...
         </div>
-      ) : (
-        <div onClick={(e) => { e.preventDefault();  handleAdd(productId) }} className='bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out'>
-          <h1>add to cart</h1>
-        </div>
-      )}
+      )
+        : (
+          <>
+
+            {addClicked ? (
+              <div onClick={(e) => { e.preventDefault() }} className=' px-2    py-1  border-2 border-sky-600 text-black rounded-3xl w-full flex justify-between items-center    '>
+                <button onClick={(e) => { e.preventDefault(); handleIncrease(productId) }} className="cursor-pointer">+ </button>
+                <div>
+                  {
+                    loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "></h1></>) : (
+                      < > {quantityInCart}</>)
+                  }
+
+                </div>
+                <button onClick={(e) => { e.preventDefault(); handleDecrease(productId) }} className="cursor-pointer">- </button>
+              </div>
+            ) : (
+              <div onClick={(e) => { e.preventDefault(); handleAddToCart(productId); setAddClicked(true) }} className='py-1 bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 '>
+                add to cart
+              </div>
+            )}
 
 
-</>)}
+          </>)}
     </>
   );
 
