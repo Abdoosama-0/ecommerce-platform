@@ -13,7 +13,7 @@ export default function Orders() {
   const [message, setMessage] = useState<string>("");
 
   const [status, setStatus] = useState<string>('pending')
-  const fetchData = async () => {
+  const fetchData = async (status:string) => {
     setLoading(true)
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getOrders/${status}`, {
@@ -45,7 +45,7 @@ export default function Orders() {
   }
   useEffect(() => {
 
-    fetchData()
+    fetchData(status)
   }
     , [status])
   const options: Intl.DateTimeFormatOptions = {

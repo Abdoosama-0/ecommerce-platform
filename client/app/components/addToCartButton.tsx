@@ -1,5 +1,6 @@
 'use client'
 
+
 import { useEffect, useMemo, useState } from "react";
 
 interface AddToCartProps {
@@ -22,6 +23,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
   const handleIncrease = async (productId: string) => {
     if (localStorage.getItem('isLogged') === 'true') {
+      setLoading(true)
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/increaseQuantity`, {
           method: 'PATCH',
@@ -40,6 +42,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
         } else {
           alert(data.message);
+          setLoading(false)
         }
       } catch (err) {
         console.log(err);
@@ -73,6 +76,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
   const handleDecrease = async (productId: string) => {
     if (localStorage.getItem('isLogged') === 'true') {
+      setLoading(true)
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/decreaseQuantity`, {
           method: 'PATCH',
@@ -88,6 +92,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
           refreshCart();
         } else {
           alert('failed');
+          setLoading(false)
         }
       } catch (err) {
         console.log(err);
@@ -126,7 +131,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
 
 
     if (localStorage.getItem('isLogged') === 'true') {
-
+        setLoading(true)
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addToCart`, {
           method: 'POST',
@@ -140,6 +145,7 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
         const data = await res.json()
         if (!res.ok) {
           alert(data.message)
+          setLoading(false)
           return
         }
 
@@ -182,9 +188,10 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
   };
 
   useEffect(() => {
-    setLoading(true)
+   
 
     if (localStorage.getItem('isLogged') === 'true') {
+      setLoading(true)
       const getCart = async () => {
         try {
           const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
@@ -205,6 +212,8 @@ export default function AddToCartButton({ productQuantity, productId, price, nam
         } catch (err) {
 
           console.log(err)
+        }finally{
+          setLoading(false)
         }
       }
       getCart()
@@ -229,13 +238,15 @@ const itemIndex = useMemo(() => {
 
 
   return (
-    <>
+    <>{loading ?(<div onClick={(e) => { e.preventDefault();}}  className="w-full flex justify-center items-center py-1 px-2 rounded-2xl border-2 border-amber-600  ">
+     loading...
+    </div>):(<>
       {itemIndex !== -1 ? (
         <div onClick={(e) => { e.preventDefault() }} className='w-full flex justify-between py-1 px-2 rounded-2xl border-2 border-amber-600  '>
           <button onClick={(e) => { e.preventDefault(); handleIncrease(cart[itemIndex].productId._id) }} className="cursor-pointer">+ </button>
           <div>
             {
-              loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "> loading...</h1></>) : (
+              loading ? (<> <h1 onClick={(e) => { e.preventDefault() }} className=" "></h1></>) : (
                 < > {cart[itemIndex].quantity}</>)
             }
 
@@ -249,7 +260,7 @@ const itemIndex = useMemo(() => {
       )}
 
 
-
+</>)}
     </>
   );
 
