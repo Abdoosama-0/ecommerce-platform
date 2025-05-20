@@ -7,7 +7,6 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation'
 import ErrorMessage from "@/components/errorMessage";
 import Loading from "@/components/loading";
-import Link from "next/link";
 
 
 
@@ -98,8 +97,8 @@ export default function Home() {
 
               <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
                 {data?.products.map((el) => (
- <Link key={el._id}  href={`/${el._id}/`}>
-                  <UserProductCard 
+
+                  <UserProductCard key={el._id}
 
                     title={el.title}
                     image={el.imageUrls[0]}
@@ -107,7 +106,7 @@ export default function Home() {
                     price={el.price}
                     quantity={el.quantity}
                   />
-</Link>
+
                 ))}
               </div>
             </div>

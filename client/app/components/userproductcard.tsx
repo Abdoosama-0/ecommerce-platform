@@ -1,8 +1,8 @@
 
 import Image from 'next/image'
 
-// import Link from 'next/link';
-// import AddToCart from '@/app/components/addToCartButton'
+import Link from 'next/link';
+import AddToCart from '@/app/components/addToCartButton'
 
 interface ProductCardProps {
   image?: string;
@@ -14,13 +14,13 @@ interface ProductCardProps {
 }
 
 
-const UserProductCard = ({ image, title, price ,quantity}: ProductCardProps) => {
+const UserProductCard = ({ image, title, price, productId ,quantity}: ProductCardProps) => {
 
 
 
   
   return (
-    // <Link  href={`/${productId}/`}>
+    <Link  href={`/${productId}/`}>
     <div className='p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-4  rounded-xl border-gray-200 bg-gray-100'>
       
       <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
@@ -40,11 +40,10 @@ const UserProductCard = ({ image, title, price ,quantity}: ProductCardProps) => 
          <span>quantity: {quantity}</span>
   
       </div> 
-     
-      <button className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">add to cart</button>
-    </div>
-    // </Link>
+     {productId && <AddToCart productQuantity={quantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
+      
+    </div></Link>
   )
 }
-//  <AddToCart productQuantity={quantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />
+
 export default UserProductCard
