@@ -145,7 +145,7 @@ export default function QuantityButton({ productId,handleDeleteProduct, quantity
       <button onClick={() => { handleIncrease(productId) }} className="cursor-pointer">+</button>
       <div>
         {loading ? (
-          <> <p onClick={(e) => { e.preventDefault() }} className=""> loading...</p></>
+          <> <div onClick={(e) => { e.preventDefault() }} className="">  <div className="loader"></div></div></>
         ) : (
           < > {currentQuantity}</>)}
 

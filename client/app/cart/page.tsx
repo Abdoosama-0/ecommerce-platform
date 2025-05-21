@@ -146,8 +146,8 @@ export default function Cart() {
                     <div key={index} className="p-2 relative  flex flex-col    gap-2  w-full     h-fit rounded-2xl overflow-hidden shadow-lg border-2 border-gray-300">
 
                       {deleteLoading === item?.productId?._id && (
-                        <div className="absolute inset-0 w-full h-full bg-gray-500/50 z-20 text-white font-[fantasy] text-4xl flex justify-center items-center">
-                          loading...
+                        <div className="absolute inset-0 w-full h-full bg-gray-500/80 z-20 text-white font-[fantasy] text-4xl flex justify-center items-center">
+                           <div className="loader2"></div>
                         </div>
                       )}
 

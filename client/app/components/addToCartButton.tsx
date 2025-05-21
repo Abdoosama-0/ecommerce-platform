@@ -208,7 +208,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
     <>
       {loading ? (
         <div onClick={(e) => { e.preventDefault(); }} className=" py-1  border-2 border-sky-600 text-black rounded-3xl w-full flex justify-center items-center  cursor-default  ">
-          loading...
+          <div className="loader"></div>
         </div>
       )
         : (
