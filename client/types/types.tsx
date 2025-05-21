@@ -104,3 +104,9 @@
               clicked: boolean
               setClicked: (arg0: boolean) => void
             }
+
+            type categoriesDetails = {
+              _id: string;
+              name: string;
+            }
+            

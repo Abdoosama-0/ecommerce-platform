@@ -4,7 +4,7 @@ const User = require('../models/user');
 const Category = require('../models/category');
 
 const deleteCategory = async (req, res) => {
-  const categoryId = req.params
+  const {categoryId} = req.params
   const category = await Category.findById(categoryId);
   if (!category) {
     return res.status(404).json({ message: 'Category not found' });

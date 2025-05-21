@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import AddCategory from './addCtegory'
+import DeleteCategory from './deleteCategory'
 interface addProductProps {
   clicked: boolean
   setClicked: (arg0: boolean) => void
 }
 
 export default function AddProduct({ clicked, setClicked }: addProductProps) {
-
 
 
 
@@ -22,8 +22,9 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
   const [images, setImages] = useState<File[]>([]);
   const [quantity, setQuantity] = useState<number | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [allowedCategories, setAllowedCategories] = useState<string[]>();
 
+  const [refresh, setRefresh] = useState(0)
+  const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
   const getCategories = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getCategories`, {
@@ -39,7 +40,8 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
         setMessage(data.message)
         return
       }
-      setAllowedCategories(data.categoryNames)
+      setCategoryDetails(data.categories)
+
 
     }
     catch (error) {
@@ -53,7 +55,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
   useEffect(() => {
     getCategories()
 
-  }, [])
+  }, [refresh])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -105,7 +107,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
     <>
       {clicked && (
 
-        <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
+        <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">
           <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
 
             {/* Title */}
@@ -144,41 +146,48 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
             </div>
 
             {/* Category */}
-            {loading ?(<div className='loader'></div>):(<>
-            { allowedCategories &&
-              allowedCategories.length>0 ? (<>
-            
+            {loading ? (<div className='loader'></div>) : (<>
+              {categoryDetails &&
+                categoryDetails.length > 0 ? (<>
 
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="bg-slate-300 border-2 text-black border-slate-500 hover:bg-slate-400 px-2 text-sm py-1 rounded-lg cursor-pointer font-bold"
-            >
-              { 
-               allowedCategories.map((s) => (
-                <option key={s} value={s} >
-                  {s}
-                </option>
-              ))
-            }
-            </select>
-            </>):(<>
-          <p className='text-sm font-light text-neutral-700'>please add category first</p>
+
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="bg-slate-100  w-fit border-2 text-black border-slate-950 hover:bg-slate-200 px-2 text-lg py-1 rounded-lg cursor-pointer font-sans"
+                  >
+                    {
+                      [...categoryDetails].reverse().map((s) => (
+                        <option key={s._id} value={s.name} >
+                          {s.name}
+                        </option>
+                      ))
+                    }
+                  </select>
+                </>) : (<>
+                  <p className='text-sm font-light text-neutral-700'>please add category first</p>
+                </>)}
+              <div className='flex gap-4'>
+                <AddCategory setRefresh={setRefresh} />
+                {categoryDetails && categoryDetails.length > 0 &&
+                (<DeleteCategory  setCategoryDetails={setCategoryDetails} categoryDetails={categoryDetails} setRefresh={setRefresh} />)
+                }
+                
+
+              </div>
+
             </>)}
-            <AddCategory/>
-
-
-</>)}
 
             {/* quantity */}
-            <div className='p-1 w-full mb-4 flex flex-col gap-1'>
-              <label className='w-fit'>quantity:</label>
+            <div className='w-fit flex flex-col '>
+              <label className='w-fit mb-1'>quantity:</label>
               <input
                 value={quantity ?? ''}
                 onChange={(e) => setQuantity(Number(e.target.value))}
                 type="number"
-                className='rounded-lg w-[100%] p-2 border-2'
+                className='rounded-lg  p-2 border-2  w-[100px] '
                 placeholder='quantity'
+                  min={0} 
               />
             </div>
 
