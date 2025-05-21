@@ -1,7 +1,59 @@
 const Product=require('../models/product')
 const Order = require('../models/order');
 const User = require('../models/user');
+const Category = require('../models/category');
 
+const deleteCategory = async (req, res) => {
+  const categoryId = req.params
+  const category = await Category.findById(categoryId);
+  if (!category) {
+    return res.status(404).json({ message: 'Category not found' });
+  }
+  const products = await Product.find({ category: categoryId });
+  if (products.length > 0) {
+    return res.status(400).json({ message: 'Cannot delete category with existing products' });
+  }
+  await Category.findByIdAndDelete(categoryId);
+  return res.status(200).json({ message: 'Category deleted successfully' });
+};
+
+const getCategories = async (req, res) => {
+  const categories = await Category.find().populate('createdBy', 'name email');
+
+  if (!categories) {
+    return res.status(404).json({ message: 'Categories not found' });
+  }
+
+  if (categories.length === 0) {
+    return res.status(404).json({ message: 'there is no Categories yet please add one' });
+  }
+
+  const categoryNames = categories.map(cat => cat.name);
+
+  return res.status(200).json({
+    message: 'All categories',
+    categories,
+    categoryNames
+  });
+};
+
+
+const addCategory = async (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ message: 'Category name is required' });
+  }
+  const existingCategory = await Category.findOne({ name });
+  if (existingCategory) {
+    return res.status(400).json({ message: 'Category already exists' });
+  }
+  const newCategory = new Category({
+    name,
+    createdBy:  req.userID 
+  });
+  await newCategory.save();
+  return res.status(201).json({ message: 'Category created successfully', category: newCategory });
+}
 
 
 const banUser = async (req, res) => {
@@ -276,4 +328,6 @@ const getDeletedProducts = async (req, res) => {
         return res.status(200).json({ message: "The product has been successfully restored." });
     
     }
-module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct}
+module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,
+  
+  getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct,addCategory,getCategories,deleteCategory}
