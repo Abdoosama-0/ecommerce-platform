@@ -8,23 +8,11 @@ const cors = require('cors');
 const app = express();
 //========================Global Middleware===============================
 
-const allowedOrigins = [
-  process.env.Client_URL,
-  process.env.Vercel_Client_URL,
-  'http://localhost:3000',
-
-];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+    origin: process.env.Client_URL||'http://localhost:3000',
+    credentials: true,
+  }));
 app.use(cookieParser())
 app.use(express.json()) 
 
