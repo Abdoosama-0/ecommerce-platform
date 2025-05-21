@@ -214,7 +214,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
         : (
           <>
 
-            {addClicked ? (
+            {addClicked && quantityInCart>0 ? (
               <div onClick={(e) => { e.preventDefault() }} className=' px-2    py-1  border-2 border-sky-600 text-black rounded-3xl w-full flex justify-between items-center    '>
                 <button onClick={(e) => { e.preventDefault(); handleIncrease(productId) }} className="cursor-pointer">+ </button>
                 <div>
