@@ -2,10 +2,31 @@
 const User = require('../models/user');
 const Product = require('../models/product');
 const Order = require('../models/order');
+const Category = require('../models/category');
 const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
 
+
+const getCategories = async (req, res) => {
+  const categories = await Category.find().populate('createdBy', 'name email');
+
+  if (!categories) {
+    return res.status(404).json({ message: 'Categories not found' });
+  }
+
+  if (categories.length === 0) {
+    return res.status(404).json({ message: 'there is no Categories yet' });
+  }
+
+  const categoryNames = categories.map(cat => cat.name);
+
+  return res.status(200).json({
+    message: 'All categories',
+    categories,
+    categoryNames
+  });
+};
 const getProductQuantity = async (req, res) => {
  
     const { productId } = req.params;
@@ -474,4 +495,4 @@ const order = async (req, res) => {
 };
 
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,getCategories,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}

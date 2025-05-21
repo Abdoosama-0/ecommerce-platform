@@ -40,8 +40,16 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
         setMessage(data.message)
         return
       }
-      setCategoryDetails(data.categories)
 
+      setCategoryDetails(data.categories)
+      if (data.categories.length === 1) {
+
+        setCategory(data.categories[0].name)
+      }
+      else {
+        const lastCategory = data.categories.at(-1); 
+        setCategory(lastCategory?.name || '');
+      }
 
     }
     catch (error) {
@@ -59,8 +67,12 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!title.trim() || !category.trim() || price === null || quantity === null || images.length === 0) {
+    if (!title.trim() || price === null || quantity === null || images.length === 0) {
       setMessage("All fields are required unless details .");
+      return;
+    }
+    if (!category.trim()) {
+      setMessage("category ? .");
       return;
     }
     try {
@@ -90,6 +102,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
 
 
       if (!res.ok) {
+
         setMessage(data.message)
 
         return
@@ -164,15 +177,16 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
                       ))
                     }
                   </select>
+                 
                 </>) : (<>
                   <p className='text-sm font-light text-neutral-700'>please add category first</p>
                 </>)}
               <div className='flex gap-4'>
                 <AddCategory setRefresh={setRefresh} />
                 {categoryDetails && categoryDetails.length > 0 &&
-                (<DeleteCategory  setCategoryDetails={setCategoryDetails} categoryDetails={categoryDetails} setRefresh={setRefresh} />)
+                  (<DeleteCategory setCategoryDetails={setCategoryDetails} categoryDetails={categoryDetails} setRefresh={setRefresh} />)
                 }
-                
+
 
               </div>
 
@@ -187,7 +201,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
                 type="number"
                 className='rounded-lg  p-2 border-2  w-[100px] '
                 placeholder='quantity'
-                  min={0} 
+                min={0}
               />
             </div>
 
