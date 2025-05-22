@@ -1,133 +1,82 @@
 'use client'
 
 
-import UserProductCard from "./components/userproductcard"
-
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from 'next/navigation'
-import ErrorMessage from "@/components/errorMessage";
-import Loading from "@/components/loading";
+import ErrorMessage from "@/components/errorMessage"
+import Loading from "@/components/loading"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 
 
 
 
-type ProductResponse = {
-  message: string;
-  products: productDetails[];
-  currentPage: number;
-  totalPages: number;
-  totalProducts: number;
 
-};
-function SearchParamsHandler({ onPageChange }: { onPageChange: (page: number) => void }) {
-  const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "1");
-
-  useEffect(() => {
-    onPageChange(page);
-  }, [page, onPageChange]);
-
-  return null;
-}
 export default function Home() {
-  const router = useRouter()
-  const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ProductResponse>();
+    const [loading, setLoading] = useState<boolean>(true)
+    const [message, setMessage] = useState('')
+    const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
+    const getCategories = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+
+            })
+            const data = await res.json()
+            if (!res.ok) {
+                setMessage(data.message)
+                return
+            }
+            setCategoryDetails(data.categories)
 
 
-  const [page, setPage] = useState(1);
-  const changePage = (newPage: number) => {
-    router.push(`?page=${newPage}`, { scroll: false });
+        }
+        catch (error) {
+            setMessage('something went wrong please try again later')
 
-  };
-
-
-
-  const getProducts = async (page: number) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?page=${page}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setMessage(data.message)
-        return
-      }
-      setData(data)
-
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false)
+        }
     }
-    catch (error) {
-      setMessage('something went wrong please try again later')
+    useEffect(() => {
+        getCategories()
 
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false)
-    }
-  }
+    }, [])
+    return (
+        <>
 
 
-  useEffect(() => {
-    getProducts(page)
-  }
-    , [page])
+            {loading ? (<Loading/>) : (<>
+                {!categoryDetails ? (<p><ErrorMessage message={message}/></p>) :
+                    (<div className="m-2">
+                    <h1 className="text-4xl font-[fantasy]">Categories:</h1>
+                    
+
+                    {categoryDetails.length === 0 ? (<p className="text-center text-2xl font-bold">No categories found</p>) : (<>
+                        <div className="grid grid-cols-1   gap-4 m-2">
+                            {categoryDetails.map((category) => (
+
+                                <Link href={`/${category.name}`} key={category._id} className="w-full rounded-lg p-20 text-white font-[fantasy] text-5xl flex justify-center items-center border-2 border-gray-900 bg-slate-900 ">
+                                   
+                                        
+                                   
+                                        <h1>{category.name}</h1>
+                                    
+
+                                </Link>
+                            ))}
+
+                        </div>
 
 
-  return (
-
-    <>
-
-
-      {loading ? (<><Loading /></>) : (<>
-        {!data ? (<><ErrorMessage message={message} /></>) : (<>
-          <Suspense fallback={<div className="text-white font-bold text-4xl mx-auto mt-5">Loading...</div>}>
-            <SearchParamsHandler onPageChange={setPage} />
-          </Suspense>
-
-          <main className="p-2 border-2 m-2 rounded-lg border-slate-950 shadow-2xl shadow-slate-300">
-
-            {/**products */}
-            <div>
-              {data && <h2 className="mb-2 ">products: {data.totalProducts}</h2>}
-
-              <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
-                {data?.products.map((el) => (
-
-                  <UserProductCard key={el._id}
-
-                    title={el.title}
-                    image={el.imageUrls[0]}
-                    productId={el._id}
-                    price={el.price}
-                    availableQuantity={el.quantity}
-                  />
-
-                ))}
-              </div>
-            </div>
-
-            {/**next and previous buttons  */}
-            <div className="flex justify-center gap-4 w-full  ">
-              {data && data?.currentPage > 1 &&
-                <button onClick={() => { changePage(page - 1); }} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg cursor-pointer ">previous</button>
-
-              }
-
-              {data && data?.totalPages - data?.currentPage > 0 &&
-                <button onClick={() => { changePage(page + 1); }} className="bg-slate-950 hover:bg-slate-700 text-white px-4 py-1 rounded-lg  cursor-pointer">next</button>
-              }
-            </div>
-
-
-          </main>
-        </>)}
-      </>)}
-    </>
-
-  );
+                        </>)}
+                    </div>)}
+            </>)} 
+        </>
+    );
 }
+
+

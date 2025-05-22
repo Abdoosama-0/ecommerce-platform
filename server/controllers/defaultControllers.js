@@ -19,12 +19,11 @@ const getCategories = async (req, res) => {
     return res.status(404).json({ message: 'there is no Categories yet' });
   }
 
-  const categoryNames = categories.map(cat => cat.name);
+
 
   return res.status(200).json({
     message: 'All categories',
-    categories,
-    categoryNames
+    categories 
   });
 };
 const getProductQuantity = async (req, res) => {
@@ -384,12 +383,12 @@ const cart= async(req,res)=>{
   if (!userId){
     return res.status(404).json({message:'userId not found'})
   }
-  const user = await User.findById(userId).populate('cart.productId', 'title price imageUrls quantity');
+  const user = await User.findById(userId).populate('cart.productId', 'title price imageUrls quantity category');
   if (!user){
     return res.status(404).json({message:'user not found'})
   }
  
-  return res.status(200).json({message:'get user card successfully' ,cart:user.cart})
+  return res.status(200).json({message:'get user cart successfully' ,cart:user.cart})
 
 }
 
@@ -398,11 +397,13 @@ const products = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
     const skip = (page - 1) * limit;
+    const {category} = req.params
 
 
     const query = {
       isDeleted: false,
       quantity: { $gt: 0 },
+      category: category
     };
 
     const products = await Product.find(query).skip(skip).limit(limit);

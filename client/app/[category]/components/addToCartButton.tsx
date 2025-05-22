@@ -4,14 +4,16 @@
 import {  useState } from "react";
 
 interface AddToCartProps {
+  
   productId: string
   name: string
   availableQuantity: number
   price: number
   imageUrl: string
+  category: string
 
 }
-export default function AddToCartButton({ availableQuantity, productId, price, name, imageUrl }: AddToCartProps) {
+export default function AddToCartButton({ availableQuantity, productId, price, category,name, imageUrl }: AddToCartProps) {
   const [loading, setLoading] = useState(false)
   const [addClicked, setAddClicked] = useState(false);
 
@@ -56,6 +58,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
           imageUrls: string[],
           title: string,
           price: number
+                   category: string
         }, quantity: number
       }[];
       console.log(cart)
@@ -114,6 +117,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
           imageUrls: string[],
           title: string,
           price: number
+          category: string
         }, quantity: number
       }[];
 
@@ -177,6 +181,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
           imageUrls: string[],
           title: string,
           price: number
+          category: string
         }, quantity: number
       }[];
 
@@ -190,7 +195,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, n
       } else {
         const imageUrls = [imageUrl]
 
-        cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price }, quantity: 1 });
+        cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price,category:category }, quantity: 1 });
         setQuantityInCart(prev => prev + 1)
       }
 

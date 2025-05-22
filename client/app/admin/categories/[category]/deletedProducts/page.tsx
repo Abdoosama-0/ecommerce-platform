@@ -19,10 +19,10 @@ export default function DeletedProducts() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('')
   const [data, setData] = useState<adminProductResponse>()
-  const getDeletedProducts = async () => {
+  const getDeletedProducts = async (category:string) => {
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getDeletedProducts`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getDeletedProducts/${category}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,10 @@ export default function DeletedProducts() {
     }
   }
   useEffect(() => {
-    getDeletedProducts()
+            const path = window.location.pathname;
+        const segments = path.split('/');
+        const category = segments[3]; 
+    getDeletedProducts(category)
 
   }, [])
 

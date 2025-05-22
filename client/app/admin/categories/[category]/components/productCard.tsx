@@ -9,9 +9,10 @@ interface ProductCardProps {
   price?: number;
   productId?: string;
   quantity?: number;
+  category?: string;
 }
 
-const ProductCard = ({ image, title, price, productId ,quantity}: ProductCardProps) => {
+const ProductCard = ({ image, title, price, category,productId ,quantity}: ProductCardProps) => {
 
     const deleteProduct = async (productId :string ) => {
     try {
@@ -37,7 +38,7 @@ const ProductCard = ({ image, title, price, productId ,quantity}: ProductCardPro
 }
 
   return (
-    <Link  href={`/admin/products/${productId}/`}>
+    <Link  href={`/admin/categories/${category}/${productId}/`}>
     <div className=' p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-4  rounded-xl border-gray-200 bg-gray-100'>
       
       <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">

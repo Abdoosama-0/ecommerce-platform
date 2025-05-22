@@ -39,7 +39,7 @@ export default function ProductPage() {
   useEffect(() => {
     const path = window.location.pathname;
     const segments = path.split('/');
-    const productId = segments[1];
+    const productId = segments[2];
     getProductData(productId)
 
   }, [])
@@ -56,6 +56,7 @@ export default function ProductPage() {
               title={data?.title ?? 'not found'}
               productID={data?._id ?? 'not found'}
               quantity={data?.quantity}
+              category={data?.category ?? 'not found'}
 
             />
             {/**more details */}

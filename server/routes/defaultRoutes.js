@@ -4,7 +4,7 @@ const {order,products,product,welcomeUser,address,cart,addToCart,getProductQuant
 const { isUser } = require('../Middleware/authMiddleware')
 
 router.post('/order',isUser,order)
-router.get('/products',products)
+router.get('/products/:category',products)
 router.get('/product',product)
 router.get('/welcomeUser',isUser,welcomeUser)
 router.post('/address',isUser,address)

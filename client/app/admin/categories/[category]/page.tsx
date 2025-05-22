@@ -1,11 +1,26 @@
 'use client'
 
-import ProductCard from '@/app/admin/categories/[category]/components/productCard';
+
+
+
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
-import AddProduct from '@/app/admin/categories/[category]/components/addProduct';
-import ErrorMessage from '@/components/errorMessage';
-import Loading from '@/components/loading';
+import ErrorMessage from "@/components/errorMessage";
+import Loading from "@/components/loading";
+import ProductCard from "./components/productCard";
+import AddProduct from "./components/addProduct";
+
+
+
+
+// type ProductResponse = {
+//   message: string;
+//   products: productDetails[];
+//   currentPage: number;
+//   totalPages: number;
+//   totalProducts: number;
+
+// };
 function SearchParamsHandler({ onPageChange }: { onPageChange: (page: number) => void }) {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1");
@@ -30,36 +45,40 @@ export default function Products() {
   };
 
 
-  const getProducts = async (page: number) => {
+  const getProducts = async (page: number, category: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getProducts?page=${page}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${category}?page=${page}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+
       })
       const data = await res.json()
       if (!res.ok) {
         setMessage(data.message)
         return
       }
-
-
       setData(data)
 
     }
     catch (error) {
-      setMessage("something went wrong please try again later")
-      console.log(error)
+      setMessage('something went wrong please try again later')
 
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false)
     }
   }
-  useEffect(() => {
-    getProducts(page)
+const [category, setCategory] = useState<string>('')
 
+  useEffect(() => {
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const category = segments[3];
+    setCategory(category)
+    getProducts(page, category);
   }
     , [page])
 
@@ -82,7 +101,7 @@ export default function Products() {
                     <h2>products:  {data.totalProducts}</h2>
                     <button
                       onClick={() => {
-                        router.push('/admin/products/deletedProducts')
+                        router.push(`/admin/categories/${category}/deletedProducts`)
                       }}
                       className="px-4 py-2 w-fit text-white font-bold rounded-xl hover:opacity-50 cursor-pointer bg-slate-600">deleted products</button>
                   </div>

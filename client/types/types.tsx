@@ -24,6 +24,7 @@
         title: string,
         price: number
         quantity: number
+        category: string
       }
       quantity: number;
     }

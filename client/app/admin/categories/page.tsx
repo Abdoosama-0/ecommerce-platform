@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 
 
 
-export default function Categories() {
+export default function Home() {
     const [loading, setLoading] = useState<boolean>(true)
     const [message, setMessage] = useState('')
     const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
@@ -51,23 +51,32 @@ export default function Categories() {
 
             {loading ? (<Loading/>) : (<>
                 {!categoryDetails ? (<p><ErrorMessage message={message}/></p>) :
-                    (<>
-                        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-4 m-10">
+                    (<div className="m-2">
+                    <h1 className="text-4xl font-[fantasy]">Categories:</h1>
+                    
+
+                    {categoryDetails.length === 0 ? (<p className="text-center text-2xl font-bold">No categories found</p>) : (<>
+                        <div className="grid grid-cols-1   gap-4 m-2">
                             {categoryDetails.map((category) => (
 
-                                <div key={category._id} className="w-full rounded-lg p-20 text-white font-[fantasy] text-5xl flex justify-center items-center border-2 border-gray-900 bg-neutral-500  ">
-                                    <Link
-                                        href={`/categories/${category.name}`}
-                                    >
+                                <Link href={`/admin/categories/${category.name}`} key={category._id} className="w-full rounded-lg p-20 text-white font-[fantasy] text-5xl flex justify-center items-center border-2 border-gray-900 bg-slate-900 ">
+                                   
+                                        
+                                   
                                         <h1>{category.name}</h1>
-                                    </Link>
+                                    
 
-                                </div>
+                                </Link>
                             ))}
 
                         </div>
-                    </>)}
+
+
+                        </>)}
+                    </div>)}
             </>)} 
         </>
     );
 }
+
+

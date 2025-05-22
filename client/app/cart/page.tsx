@@ -152,16 +152,7 @@ export default function Cart() {
                       )}
 
 
-
-
-
-
-
-
-
-
-
-                      <Link href={`/${item?.productId?._id ?? '#'}`} className="hover:opacity-80 transition">
+                      <Link href={`/${item?.productId?.category}/${item?.productId?._id ?? '#'}`} className="hover:opacity-80 transition">
                         <div className="w-full h-auto sm:aspect-[13/9]  aspect-[1/1] bg-white relative rounded-xl overflow-hidden">
                           <Image
                             src={item?.productId?.imageUrls?.[0] || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}

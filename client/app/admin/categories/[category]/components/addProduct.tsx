@@ -27,7 +27,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
   const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
   const getCategories = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getCategories`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

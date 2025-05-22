@@ -2,9 +2,10 @@
 import Image from 'next/image'
 
 import Link from 'next/link';
-import AddToCart from '@/app/components/addToCartButton'
+import AddToCart from './addToCartButton'
 
 interface ProductCardProps {
+  category: string;
   image?: string;
   title?: string;
   price?: number;
@@ -14,13 +15,13 @@ interface ProductCardProps {
 }
 
 
-const UserProductCard = ({ image, title, price, productId ,availableQuantity}: ProductCardProps) => {
+const UserProductCard = ({ image, title, price,category, productId ,availableQuantity}: ProductCardProps) => {
 
 
 
   
   return (
-    <Link  href={`/${productId}/`}>
+    <Link  href={`${category}/${productId}/`}>
     <div className='p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-4  rounded-xl border-gray-200 bg-gray-100'>
       
       <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
@@ -40,7 +41,7 @@ const UserProductCard = ({ image, title, price, productId ,availableQuantity}: P
          <span>quantity: {availableQuantity}</span>
   
       </div> 
-     {productId && <AddToCart availableQuantity={availableQuantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
+     {productId && <AddToCart category={category} availableQuantity={availableQuantity}   productId={productId} name={title || "Unknown Product"} price={price|| 0} imageUrl={image || ""} />}
       
     </div></Link>
   )

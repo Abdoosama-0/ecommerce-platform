@@ -5,20 +5,21 @@ import Image from "next/image";
 import BuyForm from "./buyform";
 import { useRouter } from "next/navigation";
 
-import AddToCartButton from "@/app/components/addToCartButton";
+import AddToCartButton from "@/app/[category]/components/addToCartButton";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 
-type ImagesProps = {
+type ProductDetailsProps = {
   imageUrls: string[];
   title: string
   price: number
   productID: string
   quantity: number
+  category: string
 };
 
 
-export default function ProductDetails({ imageUrls, title, price, productID, quantity }: ImagesProps) {
+export default function ProductDetails({ imageUrls, title, category, price, productID, quantity }: ProductDetailsProps) {
   const router = useRouter();
   const [buyClicked, setBuyClicked] = useState<boolean>(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -71,7 +72,7 @@ export default function ProductDetails({ imageUrls, title, price, productID, qua
 
 
           }} className="bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out"> buy </button>
-          <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} availableQuantity={quantity} />
+          <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} availableQuantity={quantity} category={category} />
 
         </div>
       </div>

@@ -17,25 +17,7 @@ const deleteCategory = async (req, res) => {
   return res.status(200).json({ message: 'Category deleted successfully' });
 };
 
-const getCategories = async (req, res) => {
-  const categories = await Category.find().populate('createdBy', 'name email');
 
-  if (!categories) {
-    return res.status(404).json({ message: 'Categories not found' });
-  }
-
-  if (categories.length === 0) {
-    return res.status(404).json({ message: 'there is no Categories yet please add one' });
-  }
-
-  const categoryNames = categories.map(cat => cat.name);
-
-  return res.status(200).json({
-    message: 'All categories',
-    categories,
-    categoryNames
-  });
-};
 
 
 const addCategory = async (req, res) => {
@@ -184,9 +166,11 @@ const getDeletedProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
     const skip = (page - 1) * limit;
+    const {category} = req.params
 
     const query = {
-      isDeleted: true
+      isDeleted: true,
+      category:category
     };
 
 
@@ -330,4 +314,4 @@ const getDeletedProducts = async (req, res) => {
     }
 module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,
   
-  getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct,addCategory,getCategories,deleteCategory}
+  getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct,addCategory,deleteCategory}

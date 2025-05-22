@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 
-import EditProduct from "@/app/admin/products/[productId]/components/updateProduct";
+import EditProduct from "./components/updateProduct";
 
 import Auth from "@/components/errorMessage";
 
@@ -46,7 +46,7 @@ export default function Product() {
   useEffect(() => {
     const path = window.location.pathname;
     const segments = path.split('/');
-    const productId = segments[3];
+    const productId = segments[4];
 
 
     getProduct(productId);
