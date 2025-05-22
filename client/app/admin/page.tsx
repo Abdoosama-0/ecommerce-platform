@@ -58,7 +58,7 @@ export default function Admin() {
               </Link>
               <Link href="/admin/categories">
                 <div className="bg-blue-600 hover:bg-blue-700 rounded-lg flex flex-col items-center w-full justify-center p-5 text-2xl text-white font-semibold transition-all">
-                  products categories
+                  categories
                 </div>
               </Link>
               <Link href="/admin/orders">

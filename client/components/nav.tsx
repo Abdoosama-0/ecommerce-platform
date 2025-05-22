@@ -80,6 +80,7 @@ const [clicked,setClicked]=useState(false)
                 logout
               </h1>
               <Link href={`/userdata`}>userData</Link>
+              <Link href={`/userOrders`}>userOrders</Link>
               {isAdmin &&
                 <Link href={'/admin'}>
                   <h1>dashboard</h1>

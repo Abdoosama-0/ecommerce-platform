@@ -6,9 +6,10 @@ import DeleteCategory from './deleteCategory'
 interface addProductProps {
   clicked: boolean
   setClicked: (arg0: boolean) => void
+  currentCategory: string
 }
 
-export default function AddProduct({ clicked, setClicked }: addProductProps) {
+export default function AddProduct({ clicked, setClicked ,currentCategory}: addProductProps) {
 
 
 
@@ -18,7 +19,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
   const [price, setPrice] = useState<number | null>(null)
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState(currentCategory)
   const [images, setImages] = useState<File[]>([]);
   const [quantity, setQuantity] = useState<number | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
@@ -42,14 +43,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
       }
 
       setCategoryDetails(data.categories)
-      if (data.categories.length === 1) {
 
-        setCategory(data.categories[0].name)
-      }
-      else {
-        const lastCategory = data.categories.at(-1); 
-        setCategory(lastCategory?.name || '');
-      }
 
     }
     catch (error) {
@@ -182,7 +176,7 @@ export default function AddProduct({ clicked, setClicked }: addProductProps) {
                   <p className='text-sm font-light text-neutral-700'>please add category first</p>
                 </>)}
               <div className='flex gap-4'>
-                <AddCategory setRefresh={setRefresh} />
+                <AddCategory setCurrentCategory={setCategory} setRefresh={setRefresh} />
                 {categoryDetails && categoryDetails.length > 0 &&
                   (<DeleteCategory setCategoryDetails={setCategoryDetails} categoryDetails={categoryDetails} setRefresh={setRefresh} />)
                 }

@@ -110,4 +110,28 @@
               _id: string;
               name: string;
             }
+
             
+            
+            type userOrder = {
+              _id: string;
+              userId: string;
+              products:{
+                productId: {
+                  _id: string;
+                  title: string;
+                  price: number;
+                  imageUrls: string[];
+                  category: string;
+                };
+                quantity: number;
+           
+              }[];
+              status: string;
+            totalQuantity: number;
+            totalPrice: number;
+            address: address;
+            paymentMethod: string;
+            createdAt: string;
+
+            }

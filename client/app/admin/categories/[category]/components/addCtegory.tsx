@@ -5,9 +5,10 @@ import { useState } from "react";
 interface addCategoryProps {
 
 setRefresh: React.Dispatch<React.SetStateAction<number>>;
+setCurrentCategory?:(arg0:string) => void
 }
 
-export default function AddCategory({setRefresh}: addCategoryProps) {
+export default function AddCategory({setRefresh,setCurrentCategory}: addCategoryProps) {
     const [clicked, setClicked] = useState(false)
     const [message, setMessage] = useState('')
     const [categoryName, setCategoryName] = useState('')
@@ -36,6 +37,9 @@ export default function AddCategory({setRefresh}: addCategoryProps) {
             }
 
             alert("added successfully");
+            if (setCurrentCategory) {
+                setCurrentCategory(categoryName)
+            }
             setRefresh((prev) => prev + 1)
             setCategoryName('');
             setMessage('');

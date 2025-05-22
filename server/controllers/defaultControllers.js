@@ -7,6 +7,60 @@ const welcomeUser = (req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 };
 
+const restoreOrder = async (req, res) => {
+const {orderId} =req.params
+  if (!orderId) {
+    return res.status(400).json({ message: 'orderId is required' });
+  }
+const order = await Order.findById(orderId)
+order.status="pending"
+await order.save()
+return res.status(200).json({order})
+
+}
+const cancelOrder = async (req, res) => {
+const {orderId} =req.params
+  if (!orderId) {
+    return res.status(400).json({ message: 'orderId is required' });
+  }
+const order = await Order.findById(orderId)
+order.status="cancelled"
+await order.save()
+return res.status(200).json({order})
+
+}
+
+const getUserOrders = async (req, res) => {
+  const userId = req.userId;
+  const {status} = req.params
+  if (!status) {
+    return res.status(400).json({ message: 'Status is required' });
+  }
+  const query = {
+    status: status,
+    userId: userId
+  };
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  const orders = await Order.find(query)
+    .populate('products.productId', 'title price imageUrls  category')
+    
+    if (!orders) {
+      return res.status(404).json({ message: 'Orders not found' });
+    }
+
+  return res.status(200).json({
+    message: 'User orders retrieved successfully',
+    orders:orders
+
+ })
+}
+
 
 const getCategories = async (req, res) => {
   const categories = await Category.find().populate('createdBy', 'name email');
@@ -15,10 +69,7 @@ const getCategories = async (req, res) => {
     return res.status(404).json({ message: 'Categories not found' });
   }
 
-  if (categories.length === 0) {
-    return res.status(404).json({ message: 'there is no Categories yet' });
-  }
-
+ 
 
 
   return res.status(200).json({
@@ -496,4 +547,4 @@ const order = async (req, res) => {
 };
 
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,getCategories,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById}
+module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,cancelOrder,getCategories,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById,getUserOrders ,restoreOrder}

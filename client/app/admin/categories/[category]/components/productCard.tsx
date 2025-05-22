@@ -66,7 +66,7 @@ const ProductCard = ({ image, title, price, category,productId ,quantity}: Produ
           
               
           }}
-          className='bg-red-600 text-white rounded-xl py-1 px-4 cursor-default'
+          className='bg-red-600 hover:bg-red-800 text-white rounded-xl py-1 px-4 cursor-pointer'
         >
           del
         </span>

@@ -62,7 +62,7 @@ export default function Orders() {
     <>
       {loading ? (<><Loading /></>) : (<>
         {!data ? (<><ErrorMessage message={message} /></>) : (<>
-
+            
           <main className="min-h-screen bg-gray-100 p-4 ">
             <div className='flex justify-between items-center pr-5 mb-1'>
               <h1 className="text-2xl font-bold">Orders:</h1>

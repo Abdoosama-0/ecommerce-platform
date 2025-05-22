@@ -130,7 +130,7 @@ const [category, setCategory] = useState<string>('')
               </div>
 
               {/**add product form */}
-              <AddProduct clicked={clicked} setClicked={setClicked} />
+              <AddProduct currentCategory={category} clicked={clicked} setClicked={setClicked} />
 
 
               <div className="flex justify-center gap-4 w-full  ">

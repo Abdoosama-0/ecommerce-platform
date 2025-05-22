@@ -4,7 +4,10 @@
 import ErrorMessage from "@/components/errorMessage"
 import Loading from "@/components/loading"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
+import AddCategory from "./[category]/components/addCtegory"
+
+import DeleteCategory from "./[category]/components/deleteCategory"
 
 
 
@@ -14,6 +17,7 @@ export default function Home() {
     const [loading, setLoading] = useState<boolean>(true)
     const [message, setMessage] = useState('')
     const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
+    const [refresh, setRefresh] = useState<number>(0)
     const getCategories = async () => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
@@ -44,18 +48,24 @@ export default function Home() {
     useEffect(() => {
         getCategories()
 
-    }, [])
+    }, [refresh])
     return (
         <>
 
 
             {loading ? (<Loading/>) : (<>
                 {!categoryDetails ? (<p><ErrorMessage message={message}/></p>) :
-                    (<div className="m-2">
+                    (<div className="m-2 ">
                     <h1 className="text-4xl font-[fantasy]">Categories:</h1>
                     
 
-                    {categoryDetails.length === 0 ? (<p className="text-center text-2xl font-bold">No categories found</p>) : (<>
+                    {categoryDetails.length === 0 ? (
+
+                        <div className="flex flex-col gap-4 items-center justify-center  border-4  p-2 rounded-xl mx-auto border-slate-800  max-w-96">    
+                        <p className=" text-2xl font-bold">No categories found</p>
+                        <AddCategory setRefresh={setRefresh}/>
+                </div>
+                ) : (<>
                         <div className="grid grid-cols-1   gap-4 m-2">
                             {categoryDetails.map((category) => (
 
@@ -70,8 +80,10 @@ export default function Home() {
                             ))}
 
                         </div>
-
-
+                            <div className="fixed bottom-0 right-0 m-4 z-20 w-fit flex justify-between items-center gap-4">
+                        <AddCategory setRefresh={setRefresh}/>
+                        <DeleteCategory setRefresh={setRefresh} categoryDetails={categoryDetails} setCategoryDetails={setCategoryDetails} />
+                        </div>
                         </>)}
                     </div>)}
             </>)} 
