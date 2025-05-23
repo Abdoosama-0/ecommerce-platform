@@ -6,7 +6,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 
 interface MobNavProps {
   isAdmin: boolean
-  isLogged: boolean
+  isLogged: boolean | null
   logout: (e: React.MouseEvent<HTMLElement>) => void
   setClicked: (arg0: boolean) => void
   clicked: boolean

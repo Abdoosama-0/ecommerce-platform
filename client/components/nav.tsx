@@ -11,7 +11,7 @@ import MobNav from "./mobNavMenu";
 export default function Nav() {
   
 
-const [isLogged,setIsLogged]= useState<boolean>(false)
+const [isLogged,setIsLogged]= useState<boolean |null >(null)
 const [isAdmin,setIsAdmin]= useState<boolean>(false)
 
 useEffect(()=>{
@@ -70,6 +70,7 @@ const [clicked,setClicked]=useState(false)
         </Link>
 
         <>
+        {isLogged === null ? (<></>) : (<>
           {!isLogged ? (
             <Link href={`/login`}>
               <h1>login</h1>
@@ -89,6 +90,7 @@ const [clicked,setClicked]=useState(false)
             </>
 
           )}
+          </>)}
         </>
       </div>
     
