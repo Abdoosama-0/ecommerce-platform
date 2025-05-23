@@ -9,7 +9,7 @@ interface addProductProps {
   currentCategory: string
 }
 
-export default function AddProduct({ clicked, setClicked ,currentCategory}: addProductProps) {
+export default function AddProduct({ clicked, setClicked, currentCategory }: addProductProps) {
 
 
 
@@ -22,8 +22,8 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
   const [category, setCategory] = useState(currentCategory)
   const [images, setImages] = useState<File[]>([]);
   const [quantity, setQuantity] = useState<number | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-
+  const [getCategoriesLoading, setGetCategoriesLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState(false)
   const [refresh, setRefresh] = useState(0)
   const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
   const getCategories = async () => {
@@ -51,7 +51,7 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
 
       console.error('Error fetching data:', error);
     } finally {
-      setLoading(false)
+      setGetCategoriesLoading(false)
     }
   }
   useEffect(() => {
@@ -61,6 +61,7 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true)
     if (!title.trim() || price === null || quantity === null || images.length === 0) {
       setMessage("All fields are required unless details .");
       return;
@@ -107,6 +108,8 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
       setMessage("something went wrong please try again later")
       console.log(err);
 
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -116,7 +119,11 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
 
         <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">
           <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
-
+            {loading && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                <div className="loader3"></div>
+              </div>
+            )}
             {/* Title */}
             <div className='p-1 w-full mb-4 flex flex-col gap-1'>
               <label className='w-fit'>title:</label>
@@ -153,7 +160,7 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
             </div>
 
             {/* Category */}
-            {loading ? (<div className='loader'></div>) : (<>
+            {getCategoriesLoading ? (<div className='loader'></div>) : (<>
               {categoryDetails &&
                 categoryDetails.length > 0 ? (<>
 
@@ -171,7 +178,7 @@ export default function AddProduct({ clicked, setClicked ,currentCategory}: addP
                       ))
                     }
                   </select>
-                 
+
                 </>) : (<>
                   <p className='text-sm font-light text-neutral-700'>please add category first</p>
                 </>)}

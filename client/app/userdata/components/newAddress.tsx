@@ -9,7 +9,7 @@ interface newAddressProps {
 }
 export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked }: newAddressProps) {
 
-
+ const [loading, setLoading] = useState(false)
   const [government, setGovernment] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [area, setArea] = useState<string>('');
@@ -21,7 +21,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
-
+setLoading(true)
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/address`, {
         method: 'POST',
@@ -60,6 +60,8 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
     } catch (error) {
       setMessage('something went wrong please try again later')
       console.log('Error fetching data:', error);
+    }finally {
+      setLoading(false)
     }
   };
 
@@ -73,7 +75,11 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
 <div onClick={() =>setClicked(false)} className="fixed inset-0  z-30 bg-slate-900/90">  
 
       <form onSubmit={handleSubmit}  onClick={(e) => e.stopPropagation()} className="absolute  p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
-        
+                   {loading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 rounded">
+                <div className="loader3"></div>
+              </div>
+            )}
         {/* Government */}
         <div className='p-1 w-full mb-4 flex flex-col gap-1'>
           <label className='w-fit'>Government:</label>
@@ -131,6 +137,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
             type="number"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='Enter Building Number'
+            min={0}
           />
         </div>
 
@@ -143,6 +150,7 @@ export default function NewAddress({ setAdd, getAddresses, clicked  ,setClicked 
             type="number"
             className='rounded-lg w-[100%] p-2 border-2'
             placeholder='Enter Department Number'
+            min={0}
           />
         </div>
         {/* error message */}

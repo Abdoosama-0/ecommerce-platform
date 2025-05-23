@@ -4,17 +4,18 @@ import { useState } from "react";
 
 interface addCategoryProps {
 
-setRefresh: React.Dispatch<React.SetStateAction<number>>;
-setCurrentCategory?:(arg0:string) => void
+    setRefresh: React.Dispatch<React.SetStateAction<number>>;
+    setCurrentCategory?: (arg0: string) => void
 }
 
-export default function AddCategory({setRefresh,setCurrentCategory}: addCategoryProps) {
+export default function AddCategory({ setRefresh, setCurrentCategory }: addCategoryProps) {
     const [clicked, setClicked] = useState(false)
     const [message, setMessage] = useState('')
     const [categoryName, setCategoryName] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
-        
+        setLoading(true)
         if (!categoryName.trim()) {
             setMessage("Category name is required");
             return;
@@ -49,6 +50,8 @@ export default function AddCategory({setRefresh,setCurrentCategory}: addCategory
             setMessage("something went wrong please try again later")
             console.log(err);
 
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -59,8 +62,14 @@ export default function AddCategory({setRefresh,setCurrentCategory}: addCategory
             </div>
             {clicked && (
 
-                <div onClick={() => setClicked(false)} className="fixed inset-0 z-40 bg-slate-900/90">
-                    <div  onClick={(e) => e.stopPropagation()} className="absolute p-4 w-fit h-fit inset-0 m-auto z-50 flex flex-col gap-4  overflow-y-auto bg-white rounded">
+                <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
+                    <div onClick={(e) => e.stopPropagation()} className="absolute z-30 p-4 w-fit h-fit inset-0  min-w-[80%] sm:min-w-[40%] m-auto  flex flex-col gap-4  overflow-y-auto bg-white rounded">
+
+                        {loading && (
+                            <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                                <div className="loader"></div>
+                            </div>
+                        )}
                         <label >category Name</label>
                         <input type="text"
                             value={categoryName}
@@ -70,7 +79,7 @@ export default function AddCategory({setRefresh,setCurrentCategory}: addCategory
 
                         />
                         <p className="text-sm text-red-600 ">{message}</p>
-                        <button onClick={(e) => { e.preventDefault(); ; handleSubmit()}} className="bg-slate-950 mx-auto hover:bg-slate-800 rounded-2xl py-1 px-3 cursor-pointer w-fit text-white font-sans"> submit</button>
+                        <button onClick={(e) => { e.preventDefault();; handleSubmit() }} className="bg-slate-950 mx-auto hover:bg-slate-800 rounded-2xl py-1 px-3 cursor-pointer w-fit text-white font-sans"> submit</button>
 
 
                         <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>

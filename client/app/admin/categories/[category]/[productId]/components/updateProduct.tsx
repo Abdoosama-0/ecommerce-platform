@@ -1,5 +1,5 @@
 'use client'
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 
 
@@ -22,7 +22,7 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
   const [message, setMessage] = useState('')
   const [price, setPrice] = useState<number>(currentPrice || 0)
   const [title, setTitle] = useState(currentTitle || '')
-
+ const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState(currentDetails || '')
   const [category, setCategory] = useState(currentCategory || '')
   const [images, setImages] = useState<File[]>([]);
@@ -30,7 +30,7 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+setLoading(true)
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -49,7 +49,7 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
 
       const path = window.location.pathname;
       const segments = path.split('/');
-      const productId = segments[3];
+      const productId = segments[4];
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/editProduct?id=${productId}`, {
         method: 'PATCH',
@@ -63,7 +63,7 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
         setMessage(data.message)
         return
       }
-      
+
 
       alert("updated successfully");
       window.location.reload();
@@ -71,6 +71,8 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
       setMessage('something went wrong please try again later')
       console.log(err);
 
+    }finally {
+      setLoading(false)
     }
   };
 
@@ -80,10 +82,14 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
 
       {editClicked && (
 
-        <div onClick={() => setEditClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90"> 
+        <div onClick={() => setEditClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">
           <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
 
-
+            {loading && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                <div className="loader3"></div>
+              </div>
+            )}
             <div className=' overflow-y-auto p-4 '>
               {/* Title */}
               <div className='p-1 w-full mb-4 flex flex-col gap-1'>
@@ -140,52 +146,52 @@ export default function EditProduct({ setEditClicked, editClicked, currentPrice,
                   {/* existingImages*/}
 
                   {existingImages.map((url, index) => (
-                              <div key={index} className=" h-auto aspect-[1/1] w-[100%] sm:w-[20%] max-w-[40%] border-2 border-gray-300 bg-white relative rounded-xl overflow-hidden">
-                                          <Image
-                                            src={url || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
-                                            alt={index.toString() || 'No title available'}
-                                            fill
-                                            priority
-                                            className="   object-contain "
-                                          />
-                                              <button
-                                    type="button"
-                                    onClick={() => {
-                                      const updated = [...existingImages];
-                                      updated.splice(index, 1);
-                                      setExistingImages(updated);
-                                    }}
-                                    className="absolute top-0 right-0 bg-red-600 hover:bg-red-800 cursor-pointer text-white text-xs px-1 py-0.5 rounded-bl"
-                                  >
-                                    ×
-                                  </button>
-                                        </div>
-                 
+                    <div key={index} className=" h-auto aspect-[1/1] w-[100%] sm:w-[20%] max-w-[40%] border-2 border-gray-300 bg-white relative rounded-xl overflow-hidden">
+                      <Image
+                        src={url || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
+                        alt={index.toString() || 'No title available'}
+                        fill
+                        priority
+                        className="   object-contain "
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...existingImages];
+                          updated.splice(index, 1);
+                          setExistingImages(updated);
+                        }}
+                        className="absolute top-0 right-0 bg-red-600 hover:bg-red-800 cursor-pointer text-white text-xs px-1 py-0.5 rounded-bl"
+                      >
+                        ×
+                      </button>
+                    </div>
+
                   ))}
 
                   {/* new images*/}
                   {images.map((img, index) => (
                     <div key={index} className=" h-auto aspect-[1/1] w-[100%] sm:w-[20%] max-w-[40%] border-2 border-gray-300 bg-white relative rounded-xl overflow-hidden">
-                                          <Image
-                                            src={URL.createObjectURL(img) || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
-                                            alt={index.toString() || 'No title available'}
-                                            fill
-                                            priority
-                                            className="   object-contain "
-                                          />
-                                              <button
-                                    type="button"
-                                    onClick={() => {
-                                      const updated = [...images];
-                                      updated.splice(index, 1);
-                                      setImages(updated);
-                                    }}
-                                    className="absolute top-0 right-0 bg-red-600 hover:bg-red-800 cursor-pointer text-white text-xs px-1 py-0.5 rounded-bl"
-                                  >
-                                    ×
-                                  </button>
-                                        </div>
-                              
+                      <Image
+                        src={URL.createObjectURL(img) || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
+                        alt={index.toString() || 'No title available'}
+                        fill
+                        priority
+                        className="   object-contain "
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...images];
+                          updated.splice(index, 1);
+                          setImages(updated);
+                        }}
+                        className="absolute top-0 right-0 bg-red-600 hover:bg-red-800 cursor-pointer text-white text-xs px-1 py-0.5 rounded-bl"
+                      >
+                        ×
+                      </button>
+                    </div>
+
                   ))}
                 </div>
 

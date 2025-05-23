@@ -72,6 +72,13 @@ export default function Product() {
             {/** about the product */}
             <AdminProductDetails data={data} />
 
+            {data.details&&(<>
+            <div className="m-2 ">
+              <h1 className="font-[fantasy] text-4xl text-slate-900 ">details</h1>
+              <p className="text-lg font-light text-slate-800 m-1">{data.details}</p>
+            </div>
+            </>)}
+
             {/** edit product button */}
             <div onClick={() => { setEditClicked(true) }} className="fixed min-w-[80px] cursor-pointer hover:opacity-50 flex justify-center items-center bottom-4 left-4 rounded-2xl px-2 py-1 w-fit bg-sky-700 shadow-2xl  ">edit</div>
 

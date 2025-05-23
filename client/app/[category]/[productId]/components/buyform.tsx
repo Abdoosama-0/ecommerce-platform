@@ -19,13 +19,14 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   const [paymentMethod, setPaymentMethod] = useState<string>("cash on delivery")
   const [newAddress, setNewAddress] = useState<boolean>(false)
   const [addresses, setAddresses] = useState<address[]| null>(null)
-
+const [loading, setLoading] = useState(false)
   const [quantity, setQuantity] = useState<number>(1)
   const [totalPrice, setTotalPrice] = useState<number>(quantity * price);
   const [message, setMessage] = useState('')
   const [getAddressesMessage, setGetAddressesMessage] = useState('')
 
   const getAddresses = async () => {
+    
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addresses`, {
         method: 'GET',
@@ -52,7 +53,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   }
  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+   setLoading(true)
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: 'POST',
@@ -78,6 +79,8 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
     catch (err) {
       setMessage('something went wrong please try again later')
       console.log(err)
+    }finally {
+      setLoading(false)
     }
   }
 
@@ -118,7 +121,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
       buildingNumber: "",
       departmentNumber: ""
     },
-    paymentMethod: paymentMethod // استخدام paymentMethod المدخل
+    paymentMethod: paymentMethod
   };
 
  
@@ -129,6 +132,11 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
 
         <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
           <form onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit} className="absolute inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+               {loading && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                <div className="loader3"></div>
+              </div>
+            )}
             <div className=' overflow-y-auto p-4 '>
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Quantity
@@ -138,6 +146,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
                 className=" p-2 border rounded-lg text-black mb-2 w-fit"
+                min={1}
 
               />
 

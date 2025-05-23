@@ -13,9 +13,9 @@ export default function DeleteCategory({ setRefresh, categoryDetails, setCategor
     const [message, setMessage] = useState('')
 
     const [categoryId, setCategoryId] = useState('')
-
+    const [loading, setLoading] = useState(false)
     const handleSubmit = async () => {
-
+        setLoading(true)
         if (!categoryId.trim()) {
             setMessage("you must select category ");
             return;
@@ -50,7 +50,9 @@ export default function DeleteCategory({ setRefresh, categoryDetails, setCategor
             setMessage("something went wrong please try again later")
             console.log(err);
 
-        }
+        }finally {
+            setLoading(false)
+        }   
     };
 
     return (
@@ -61,7 +63,12 @@ export default function DeleteCategory({ setRefresh, categoryDetails, setCategor
             {clicked && (
 
                 <div onClick={() => setClicked(false)} className="fixed inset-0 z-40 bg-slate-900/90  ">
-                    <div onClick={(e) => e.stopPropagation()} className="absolute p-4 w-fit h-fit inset-0 min-w-[40%]  m-auto z-50 flex flex-col gap-4  overflow-y-auto bg-white rounded">
+                    <div onClick={(e) => e.stopPropagation()} className="absolute p-4 w-fit h-fit inset-0  min-w-[80%] sm:min-w-[40%]  m-auto z-50 flex flex-col gap-4  overflow-y-auto bg-white rounded">
+                                   {loading && (
+                            <div className="absolute inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                                <div className="loader"></div>
+                            </div>
+                        )}
                         <label >choose category:</label>
                         <div className="flex flex-col gap-2">
                             {[...categoryDetails].reverse().map((s) => (

@@ -12,11 +12,13 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
   const [paymentMethod, setPaymentMethod] = useState<string>("cash on delivery")
   const [addresses, setAddresses] = useState<address[]>([])
   const [newAdd, setNewAdd] = useState<boolean>(false)
-
+ const [loading, setLoading] = useState(false)
 
 
   const getAddresses = async () => {
+    setLoading(true)
     try {
+      
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addresses`, {
         method: 'GET',
         headers: {
@@ -36,6 +38,8 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
     }
     catch (err) {
       console.log(err)
+    }finally {
+      setLoading(false)
     }
   }
 
@@ -74,7 +78,7 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+setLoading(true)
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: 'POST',
@@ -97,6 +101,8 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
     catch (err) {
       setMessage('something went wrong please try again later')
       console.log(err)
+    }finally {
+      setLoading(false)
     }
   }
  
@@ -107,7 +113,11 @@ export default function BuyCartForm({ items, totalPrice, products, clearCart, cl
 
         <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
           <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
-
+            {loading && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
+                <div className="loader3"></div>
+              </div>
+            )}
             <div className=' overflow-y-auto p-4 '>
 
               <label className="block mb-2 text-sm font-medium text-gray-700">
