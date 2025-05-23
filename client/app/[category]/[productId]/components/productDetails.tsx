@@ -58,7 +58,7 @@ export default function ProductDetails({ imageUrls, title, category, price, prod
       </div>
       <div className="relative w-full sm:w-[30%] flex flex-col gap-2 ">
         <p className="">{title}</p>
-        <p>available quantity : just {quantity}</p>
+      
         <p className="text-sm"> <strong className="text-xl">{Number(price).toLocaleString()}</strong> EGP</p>
 
         <div className="sm:absolute bottom-2  right-2 left-2 flex flex-col gap-2  p-2">

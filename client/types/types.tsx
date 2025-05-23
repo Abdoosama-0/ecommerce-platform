@@ -45,6 +45,7 @@
               currentPage: number;
               totalPages: number;
               totalProducts: number;
+              deletedProductsCount: number;
             };
      
 
@@ -92,11 +93,7 @@
               users: userType[];
             };
 
-            // interface BuyCartItem {
-            //   productId: string;
-            //   quantity: number;
-            // }
-            
+     
             interface BuyCartFormProps {
               items: any;//BuyCartItem[]
               totalPrice: number

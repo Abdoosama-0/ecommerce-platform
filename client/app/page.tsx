@@ -61,7 +61,7 @@ export default function Home() {
 
                                 <Link href={`/${category.name}`}
                                  key={category._id}
-                                  className="w-full rounded-lg p-20 lg:max-w-[800px] xl:max-w-[1200px] text-white font-[fantasy] text-5xl flex justify-center items-center border-2 border-gray-900 bg-slate-900 mx-auto ">
+                                  className="w-full rounded-lg p-20 lg:max-w-[800px] xl:max-w-[1200px] text-white font-[fantasy] text-5xl flex justify-center items-center border-2 border-gray-900 bg-slate-900 mx-auto hover:bg-slate-800 transition-all duration-300 ease-in-out ">
                                    
                                         
                                    

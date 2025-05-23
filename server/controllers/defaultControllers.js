@@ -459,12 +459,15 @@ const products = async (req, res) => {
 
     const products = await Product.find(query).skip(skip).limit(limit);
     const total = await Product.countDocuments(query);
+ 
+    const deletedProductsCount = await Product.countDocuments({ isDeleted: true,category: category });  
 
     res.status(200).json({
       products,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalProducts: total,
+      deletedProductsCount: deletedProductsCount
     });
  
 };

@@ -99,11 +99,14 @@ const [category, setCategory] = useState<string>('')
                
                   <div className=' flex justify-between w-full items-center px-2 '>
                     <h2>products:  {data.totalProducts}</h2>
+                    {data.deletedProductsCount > 0  &&
                     <button
                       onClick={() => {
                         router.push(`/admin/categories/${category}/deletedProducts`)
                       }}
-                      className="px-4 py-2 w-fit text-white font-bold rounded-xl hover:opacity-50 cursor-pointer bg-slate-600">deleted products</button>
+                      
+                      className="px-4 py-2 w-fit text-white font-bold rounded-xl hover:opacity-50 cursor-pointer bg-slate-600">
+                        deleted products</button>}
                   </div>
               
                 {/**products*/}

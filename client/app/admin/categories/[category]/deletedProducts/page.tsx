@@ -19,7 +19,7 @@ export default function DeletedProducts() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('')
   const [data, setData] = useState<adminProductResponse>()
-  const getDeletedProducts = async (category:string) => {
+  const getDeletedProducts = async (category: string) => {
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getDeletedProducts/${category}`, {
@@ -50,9 +50,9 @@ export default function DeletedProducts() {
     }
   }
   useEffect(() => {
-            const path = window.location.pathname;
-        const segments = path.split('/');
-        const category = segments[3]; 
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const category = segments[3];
     getDeletedProducts(category)
 
   }, [])
@@ -69,46 +69,49 @@ export default function DeletedProducts() {
 
 
         </>) : (<>
-          <div>
-            {<h2 className="mb-2 ">products: {data.totalProducts}</h2>}
+          <div className="m-4">
+            <h1 className=" text-slate-900 text-4xl font-[fantasy]">Deleted Products</h1>
+            {data.totalProducts === 0 ? (<h1 className="text-center text-lg font-sans text-slate-700">No Deleted Products</h1>) : (<>
+              <h2 className="my-2 ">products: {data.totalProducts}</h2>
 
-            <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
+              <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
 
-              {data.products.map((el, index) => (
+                {data.products.map((el, index) => (
 
 
 
-                <Link key={index} href={`/admin/products/${el._id}/`}>
-                  <div className=' p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2  rounded-xl border-gray-200 bg-gray-100'>
+                  <Link key={index} href={`/admin/products/${el._id}/`}>
+                    <div className=' p-1 flex flex-col justify-between items-start gap-3 w-full h-fit mb-6 border-2  rounded-xl border-gray-200 bg-gray-100'>
 
-                    <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
-                      <Image
-                        src={el.imageUrls[0] || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
-                        alt={el.title || 'Product'}
-                        layout="fill"
-                        objectFit="contain"
-                        className="object-cover"
-                      />
+                      <div className="w-full h-auto aspect-[13/9] bg-white relative rounded-xl overflow-hidden">
+                        <Image
+                          src={el.imageUrls[0] || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
+                          alt={el.title || 'Product'}
+                          layout="fill"
+                          objectFit="contain"
+                          className="object-cover"
+                        />
+                      </div>
+
+                      <h1 className='text-2xl font-[Serif] font-bold'>{el.title}</h1>
+
+                      <div className='flex flex-row w-full flex-wrap justify-between pr-4 items-center text-xl'>
+                        <span>{el.price} EGP</span>
+
+                        <RestoreButton productId={el._id} />
+
+
+                      </div>
+
                     </div>
-
-                    <h1 className='text-2xl font-[Serif] font-bold'>{el.title}</h1>
-
-                    <div className='flex flex-row w-full flex-wrap justify-between pr-4 items-center text-xl'>
-                      <span>{el.price} EGP</span>
-
-                      <RestoreButton productId={el._id} />
-
-
-                    </div>
-
-                  </div>
-                </Link>
+                  </Link>
 
 
 
-              ))}
+                ))}
 
-            </div>
+              </div>
+            </>)}
           </div>
 
 
