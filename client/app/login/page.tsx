@@ -41,11 +41,11 @@ export default function LoginPage() {
       localStorage.setItem('isAdmin', data.isAdmin.toString())
       localStorage.removeItem('cart');
 
-      if (typeof document !== 'undefined' && document.referrer.includes('/register')) {
+      // if (typeof document !== 'undefined' && document.referrer.includes('/register')) {
         window.location.href = '/';
-      } else {
-        window.location.href = document.referrer || '/';
-      }
+      // } else {
+      //   window.location.href = document.referrer || '/';
+      // }
 
     } catch (err) {
       setMessage('something went wrong please try again later')
