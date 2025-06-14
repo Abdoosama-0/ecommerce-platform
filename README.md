@@ -45,17 +45,33 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
    cd ecommerce-platform
    ```
 
-3. Set up environment variables (.env file):
+3. Set up environment variables in server file (.env file):
 
    ```
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   NODE_ENV=development
-   PORT=5000 (Backend)
-   NEXT_PUBLIC_PORT=3000 (Frontend)
+GOOGLE_CLIENT_ID=your_GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET=your_GOOGLE_CLIENT_SECRET
+CALLBACK_URL=your_CALLBACK_URL
+COOKIE_SECRET=your_COOKIE_SECRET
+CLOUD_NAME=your_CLOUD_NAME
+API_KEY=your_API_KEY
+API_SECRET=your_API_SECRET
+SECRET_TOKEN=your_SECRET_TOKEN
+Client_URL=your_Client_URL
+MONGODB_URI=your_mongodb_connection_string
+ 
+  
+
+
    ```
-   
-4. Install dependencies for both backend and frontend:
+4. Set up environment variables in client file (.env.local file):
+
+  ```
+NEXT_PUBLIC_API_URL=you_API_URL
+
+  ```
+
+
+5. Install dependencies for both backend and frontend:
 
    ```bash
    cd server
