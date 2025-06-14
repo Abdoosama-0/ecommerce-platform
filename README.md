@@ -22,9 +22,10 @@ The project is deployed on Railway — Frontend and Backend are hosted as separa
 #### 📦 2. Products Listing
 
 * Inside each category, all available products are shown.
+  ![image](https://i.postimg.cc/mrMFh8kp/Screenshot-2025-06-14-191748.png)
 * Clicking a product opens a **detailed view** with more information.
 * Users can choose a quantity, **add to cart**, or proceed directly to purchase.
-  ![image](path-to-product-details-image)
+  ![image](https://i.postimg.cc/LXL7CKXk/Screenshot-2025-06-14-193211.png)
 
 #### 🔐 3. Authentication Flow
 
