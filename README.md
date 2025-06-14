@@ -17,7 +17,7 @@ The project is deployed on Railway — Frontend and Backend are hosted as separa
 
 * The landing page displays all **product categories**.
 * Users can click any category to view its products.
-  ![image]([path-to-categories-image](https://i.postimg.cc/QC6FvzYC/Screenshot-2025-06-14-191218.png))
+  ![image](https://i.postimg.cc/QC6FvzYC/Screenshot-2025-06-14-191218.png)
 
 #### 📦 2. Products Listing
 
