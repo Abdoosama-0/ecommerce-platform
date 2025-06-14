@@ -30,28 +30,29 @@ The project is deployed on Railway — Frontend and Backend are hosted as separa
 #### 🔐 3. Authentication Flow
 
 * Before purchasing, the user must **log in**.
+   ![image](https://i.postimg.cc/P5jvR04X/Screenshot-2025-06-14-200658.png)
 * If they don’t have an account, they can register quickly.
+    ![image](https://i.postimg.cc/rmP82t2G/Screenshot-2025-06-14-200714.png)
 * The **guest cart** is automatically transferred to their user account after login.
-  ![image](path-to-login-image)
+
 
 #### 🛍️ 4. Checkout Process
 
 * Users choose a **payment method** and **shipping address**.
 * If no address is stored, they can **add a new one**.
 * Once completed, the order is sent to the admin for processing.
-  ![image](path-to-checkout-image)
+  ![image](https://i.postimg.cc/Wzcs4ctt/Screenshot-2025-06-14-210938.png)
 
-#### 📃 5. My Orders (`/user/orders`)
+#### 📃 5. My Orders 
 
 * Displays all orders made by the user with full details.
 * Shows current **order status**: `Pending`, `Shipped`, etc.
-  ![image](path-to-user-orders-image)
+  ![image](https://i.postimg.cc/Y0NMGDmR/Screenshot-2025-06-14-200522.png)
 
-#### 👤 6. User Profile (`/user/data`)
-
+#### 👤 6. User information 
 * Allows updating personal information.
 * Manage addresses: **add**, **edit**, or **delete**.
-  ![image](path-to-user-profile-image)
+  ![image](https://i.postimg.cc/T2nR41Hb/Screenshot-2025-06-14-200550.png)
 
 ---
 
