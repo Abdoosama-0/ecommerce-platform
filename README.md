@@ -153,7 +153,7 @@ If the logged-in user is an **admin**, they get access to additional features th
 ## 📱 Responsive Design
 
 * The application is **fully responsive** and works seamlessly across all screen sizes.
-  ![image](path-to-responsive-image)
+  ![image](https://i.postimg.cc/rFbpVC3m/Screenshot-2025-06-18-055028.png)
 
 ---
 
