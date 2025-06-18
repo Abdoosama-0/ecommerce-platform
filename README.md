@@ -64,21 +64,24 @@ If the logged-in user is an **admin**, they get access to additional features th
 
 * View all users.
 * Ability to **ban** any user.
-  ![image](path-to-users-management-image)
+  ![image](https://i.postimg.cc/RFnRYTkH/Screenshot-2025-06-14-200753.png)
 
 #### 📚 2. Categories Management
 
 * View, add, and delete categories.
+    ![image](https://i.postimg.cc/vTxGYHGJ/Screenshot-2025-06-14-200813.png)
 * View products within categories.
 * Filter to show **deleted** or **out-of-stock** products.
+  ![image](https://i.postimg.cc/yYnFv5DG/Screenshot-2025-06-14-200834.png)
 * Edit product details: name, price, quantity, description, etc.
-  ![image](path-to-categories-admin-image)
+  ![image](https://i.postimg.cc/3rzvgk0D/Screenshot-2025-06-14-200852.png)
 
 #### 📦 3. Orders Management
 
 * View all orders across the platform.
+  ![image](https://i.postimg.cc/ZYWNB8nS/Screenshot-2025-06-14-200922.png)
 * Change order status (e.g., from `Pending` to `Shipped`).
-  ![image](path-to-orders-admin-image)
+  ![image](https://i.postimg.cc/Hs573Tbv/Screenshot-2025-06-14-200948.png)
 
 ---
 ## Tech Stack 🛠️ 
