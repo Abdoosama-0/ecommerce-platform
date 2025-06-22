@@ -8,9 +8,6 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
 The project is deployed on Railway — Frontend and Backend are hosted as separate services.
 [Go to Live demo](https://calm-imagination-production.up.railway.app/)
 
-## 🔗 Postman Public Workspace  
-You can explore and test all API endpoints through the public Postman workspace below:  
-[🧪 Open SocialNet-API Workspace](https://www.postman.com/goatme/socialnet-api/overview)
 
 ## 📂 Project Structure
 
