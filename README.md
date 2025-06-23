@@ -6,7 +6,7 @@ This is a full-stack e-commerce platform built using Next.js, TypeScript, React,
 
 ## 🌐 Live Preview
 The project is deployed on Railway — Frontend and Backend are hosted as separate services.
-[Go to Live demo](https://calm-imagination-production.up.railway.app/)
+[Go to Live demo](https://ecommerce-platform-sage.vercel.app/)
 
 
 ## 📂 Project Structure
