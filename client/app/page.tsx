@@ -26,7 +26,7 @@ export default function Home() {
             })
             const data = await res.json()
             if (!res.ok) {
-                setMessage(data.message)
+                setMessage(` ${data.message } :  ${process.env.NEXT_PUBLIC_API_URL}`)
                 return
             }
             setCategoryDetails(data.categories)
@@ -34,7 +34,7 @@ export default function Home() {
 
         }
         catch (error) {
-            setMessage('something went wrong please try again later')
+            setMessage(`something went wrong please try again later :, ${process.env.NEXT_PUBLIC_API_URL}`)
 
             console.error('Error fetching data:', error);
         } finally {
