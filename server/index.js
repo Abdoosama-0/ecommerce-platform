@@ -10,7 +10,10 @@ const app = express();
 
 
 app.use(cors({
-    origin: process.env.Client_URL||'http://localhost:3000',
+    // origin: process.env.Client_URL||'http://localhost:3000',
+      origin: (origin, callback) => {
+    callback(null, true); // السماح بأي origin
+  },
     credentials: true,
   }));
 app.use(cookieParser())
