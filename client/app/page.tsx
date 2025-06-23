@@ -42,6 +42,7 @@ export default function Home() {
         }
     }
     useEffect(() => {
+        console.log(process.env.NEXT_PUBLIC_API_URL)
         getCategories()
 
     }, [])
