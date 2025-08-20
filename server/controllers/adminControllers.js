@@ -7,7 +7,7 @@ const updateCategory = async (req, res) => {
   const { id } = req.params;
   const { name, description } = req.body;
   console.log(req.body)
-  if (!name|| !description ||  !req.file ) {
+  if (!name|| !description  ) {
     return res.status(400).json({ message: 'all data required' });
   }
   const category = await Category.findById(id);

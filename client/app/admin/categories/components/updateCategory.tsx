@@ -6,7 +6,7 @@ interface UpdateCategoryProps {
     setSelectedCategory: React.Dispatch<React.SetStateAction<categoriesDetails | null>>
 
 }
-const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCategoryProps) => {
+const UpdateCategory = ({ selectedCategory, setSelectedCategory }: UpdateCategoryProps) => {
     const [clicked, setClicked] = useState(false)
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState('')
@@ -19,14 +19,19 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
     const [showModal, setShowModal] = useState(false);
     const handleSubmit = async () => {
         try {
-           
+            if (!categoryPhoto && !selectedCategory.categoryPhoto) {
+                setMessage('please provide a photo')
+                return
+            }
+
+
             const formData = new FormData();
             formData.append("name", name);
- 
+
             formData.append("description", description);
-            if(categoryPhoto)
-                formData.append("categoryPhoto", categoryPhoto); 
-            
+            if (categoryPhoto)
+                formData.append("categoryPhoto", categoryPhoto);
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/category/${selectedCategory._id}`, {
                 method: 'PUT',
                 credentials: 'include',
@@ -54,18 +59,18 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
         return
     }
     return (<>
-                        {loading &&(
-        <div className='fixed flex items-center justify-center inset-0 z-100  bg-slate-950/50'>
-            <div className='loader2'></div>
-             </div>
-    )}
+        {loading && (
+            <div className='fixed flex items-center justify-center inset-0 z-100  bg-slate-950/50'>
+                <div className='loader2'></div>
+            </div>
+        )}
         <button onClick={() => { setClicked(true) }} className='px-2 py-1 text-white bg-blue-900 hover:blue-800 cursor-pointer rounded-full'>Update Category</button>
 
         {clicked && (
             <div onClick={() => setClicked(false)} className="fixed inset-0 z-30 bg-slate-900/90 ">
                 <div onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded h-fit">
 
-                    
+
                     <h1>update : {selectedCategory.name} data</h1>
 
 
@@ -127,9 +132,9 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
                         {/* Preview photo */}
                         {(categoryPhoto || selectedCategory.categoryPhoto) && (
                             <div onClick={(e) => { ; e.stopPropagation() }} className="mt-4">
-                                <div onClick={(e) => { ; e.stopPropagation() }} className="relative  w-[60%] h-[200px]  overflow-hidden border-2 border-gray-600 bg-gray-400 rounded-2xl">
+                                <div onClick={(e) => { ; e.stopPropagation() }} className="relative  w-[30%] h-[200px]  overflow-hidden border-2 border-slate-300 bg-gray-100 rounded-2xl">
                                     <Image
-                                        src={categoryPhoto ? (URL.createObjectURL(categoryPhoto)): (selectedCategory.categoryPhoto)}
+                                        src={categoryPhoto ? (URL.createObjectURL(categoryPhoto)) : (selectedCategory.categoryPhoto)}
                                         alt="photo"
                                         fill
                                         priority
@@ -147,7 +152,16 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
 
                                     {/* delete button*/}
                                     <button
-                                        onClick={() =>{categoryPhoto?(setCategoryPhoto(null)):(  setSelectedCategory(prev => prev ? { ...prev, categoryPhoto: null } : prev)     ) }}
+                                        onClick={() => {
+                                            if (categoryPhoto) {
+                                                setCategoryPhoto(null);
+                                            } else {
+                                                setSelectedCategory(prev =>
+                                                    prev ? { ...prev, categoryPhoto: null } : prev
+                                                );
+                                            }
+
+                                        }}
                                         className="bg-red-600/50   rounded cursor-pointer text-white px-2 py-0 hover:bg-red-600/90 absolute top-0 right-0"
                                     >
                                         x
@@ -155,7 +169,7 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
 
                                 </div>
                                 {/* big Preview photo */}
-                                {showModal && (categoryPhoto|| selectedCategory.categoryPhoto) && (
+                                {showModal && (categoryPhoto || selectedCategory.categoryPhoto) && (
                                     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
                                         <div className="relative bg-white p-4 rounded-lg shadow-lg">
                                             <button
@@ -165,7 +179,7 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
                                                 x
                                             </button>
                                             <img
-                                                src={categoryPhoto ? (URL.createObjectURL(categoryPhoto)): (selectedCategory.categoryPhoto)}
+                                                src={categoryPhoto ? (URL.createObjectURL(categoryPhoto)) : (selectedCategory.categoryPhoto)}
                                                 alt="Large Preview"
                                                 className="max-w-[90vw] max-h-[80vh] object-contain"
                                             />
@@ -174,14 +188,14 @@ const UpdateCategory = ({ selectedCategory , setSelectedCategory  }: UpdateCateg
                                 )}
                             </div>
                         )
-                    
-                    }
+
+                        }
 
                     </div>
                     {/* =================================== */}
 
                     <p className="text-sm text-red-600 ">{message}</p>
-                    <button onClick={(e) => { handleSubmit() ;setLoading(true) }} className="bg-slate-950 mx-auto hover:bg-slate-800 rounded-2xl py-1 px-3 cursor-pointer w-fit text-white font-sans"> submit</button>
+                    <button onClick={() => { handleSubmit(); setLoading(true) }} className="bg-slate-950 mx-auto hover:bg-slate-800 rounded-2xl py-1 px-3 cursor-pointer w-fit text-white font-sans"> submit</button>
 
 
                     <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
