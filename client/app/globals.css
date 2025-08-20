@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+/* Global Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 14px;              /* عرض الـ scrollbar */
+  height: 12px;             /* لو scrollbar أفقي */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;      /* لون الخلفية */
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #696580;         /* لون الجزء المتحرك */
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4c4c61;         /* عند الـ hover */
+}
 
 .loader {
   width: 25px;

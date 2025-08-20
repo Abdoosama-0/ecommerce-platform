@@ -58,7 +58,7 @@ export default function UpdateUserData({ setClicked, clicked, data, setData }: U
         <div onClick={() => setClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90 ">
 
 
-          <form onClick={(e) => e.stopPropagation()} className="absolute inset-0 p-4 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+          <form onClick={(e) => e.stopPropagation()} className="absolute inset-0 p-4 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] h-fit overflow-y-auto bg-white rounded">
             <div>
               <label>الاسم الكامل:</label>
               <input type="text" name="name" value={data.name} onChange={(e) => handleChange(e)} className="border p-2 w-full" />

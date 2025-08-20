@@ -86,7 +86,7 @@ const Categories = () => {
                                 <div className='flex flex-col-reverse md:flex-row justify-around  absolute w-full  text-white text-4xl font-[cursive] z-10'>
 
                                     <div className='flex flex-col items-center justify-center'>
-                                        <h1 className='md:mb-3'>{selectedCategory?.name}</h1>
+                                        <h1 className='md:mb-3 md:flex hidden'>{selectedCategory?.name}</h1>
                                         <p className='md:ml-10 max-w-[600px] text-xl md:flex hidden'>{selectedCategory?.description}</p>
                                         < Link href={`/${selectedCategory?.name}`} className='rounded md:ml-10 mt-4 bg-blue-900 hover:bg-blue-700 cursor-pointer px-2 py-1 w-fit text-xl'>discover {selectedCategory?.name}</Link>
                                     </div>
@@ -95,11 +95,11 @@ const Categories = () => {
                                             <div className=' loader2'></div>
 
                                         ):(    
-                                             <div>
+                                             <div className='flex items-center justify-center'>
                                         <img
                                             src={selectedCategory?.categoryPhoto}
                                             alt={selectedCategory?.name}
-                                            className="w-full h-full   object-cover"
+                                            className="w-full h-full md:max-w-[1000px] max-w-[400px] md:max-h-[1000px] max-h-[400px]   object-cover"
                                         />
                                         </div>
                                     )  }

@@ -13,14 +13,7 @@ import AddProduct from "./components/addProduct";
 
 
 
-// type ProductResponse = {
-//   message: string;
-//   products: productDetails[];
-//   currentPage: number;
-//   totalPages: number;
-//   totalProducts: number;
 
-// };
 function SearchParamsHandler({ onPageChange }: { onPageChange: (page: number) => void }) {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1");
@@ -98,6 +91,7 @@ const [category, setCategory] = useState<string>('')
                 {/**products count */}
                
                   <div className=' flex justify-between w-full items-center px-2 '>
+                    <h1 className="text-2xl font-[cursive ]">{category}</h1>
                     <h2>products:  {data.totalProducts}</h2>
                     {data.deletedProductsCount > 0  &&
                     <button

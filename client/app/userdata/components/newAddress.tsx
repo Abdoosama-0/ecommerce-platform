@@ -74,7 +74,7 @@ setLoading(true)
     
 <div onClick={() =>setClicked(false)} className="fixed inset-0  z-30 bg-slate-900/90">  
 
-      <form onSubmit={handleSubmit}  onClick={(e) => e.stopPropagation()} className="absolute  p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+      <form onSubmit={handleSubmit}  onClick={(e) => e.stopPropagation()} className="absolute  p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[70%] h-fit  overflow-y-auto bg-white rounded">
                    {loading && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 rounded">
                 <div className="loader3"></div>

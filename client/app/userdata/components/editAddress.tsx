@@ -49,7 +49,7 @@ export default function  EditAddress({currentEditAddress,setCurrentEditAddress,s
     {clicked && (
     
      <div onClick={() => setClicked(false)} className="fixed inset-0 z-30 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
-      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+      <form  onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-40 flex flex-col gap-4 w-full md:w-[75%] max-h-[70%] h-fit overflow-y-auto bg-white rounded">
                     {/* Government */}
   <div className="p-1 w-full mb-4 flex flex-col gap-1">
     <label className="w-fit">Government:</label>

@@ -37,7 +37,7 @@ const [clicked,setClicked]=useState<boolean>(false)
                       {data.phone}</p>
                     </div>
                     <div className="flex justify-center my-4">
-                        <button onClick={()=>{setClicked(true)}} className=" px-4 py-1 rounded-2xl bg-amber-600 w-fit text-2xl font-bold cursor-pointer hover:opacity-50">edit data</button>
+                        <button onClick={()=>{setClicked(true)}} className=" px-4 py-1 rounded-2xl bg-amber-600 w-fit text-2xl font-bold cursor-pointer hover:opacity-50">update your data</button>
                       </div>
                       <UpdateUserData setData={setData} data={data}  clicked={clicked} setClicked={setClicked}/>
 

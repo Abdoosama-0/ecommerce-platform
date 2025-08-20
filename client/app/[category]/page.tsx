@@ -34,7 +34,7 @@ export default function Category() {
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ProductResponse>();
-const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
 
   const [page, setPage] = useState(1);
   const changePage = (newPage: number) => {
@@ -98,8 +98,10 @@ const [category, setCategory] = useState<string>("");
 
                 {/**products */}
                 <div>
+                  <div className="flex flex-col justify-between px-2 my-1">
+                  <h1 className="text-4xl font-[fantasy]">{category}</h1>
                   {data && <h2 className="mb-2 ">products: {data.totalProducts}</h2>}
-
+                    </div>
                   <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
                     {data?.products.map((el) => (
 
