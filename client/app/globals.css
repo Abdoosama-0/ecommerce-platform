@@ -2,8 +2,8 @@
 
 /* Global Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 14px;              /* عرض الـ scrollbar */
-  height: 12px;             /* لو scrollbar أفقي */
+  width: 10px;              /* عرض الـ scrollbar */
+  height: 10px;             /* لو scrollbar أفقي */
 }
 
 ::-webkit-scrollbar-track {
