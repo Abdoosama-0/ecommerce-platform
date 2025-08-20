@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import AddCategory from './addCtegory'
-import DeleteCategory from './deleteCategory'
+import AddCategory from '../../components/addCtegory'
+import DeleteCategory from '../../components/deleteCategory'
 interface addProductProps {
   clicked: boolean
   setClicked: (arg0: boolean) => void

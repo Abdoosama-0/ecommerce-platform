@@ -12,6 +12,14 @@ const CategorySchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', 
     required: true
+  },
+  description: {
+    type: String,
+    required: true,}
+    ,
+  categoryPhoto: {
+    type: String,
+    required: true,
   }
 }, {
   timestamps: true 

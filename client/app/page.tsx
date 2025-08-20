@@ -5,52 +5,56 @@ import ErrorMessage from "@/components/errorMessage"
 import Loading from "@/components/loading"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import Categories from "./Categories"
 
 
 
 
 
 export default function Home() {
-    const [loading, setLoading] = useState<boolean>(true)
-    const [message, setMessage] = useState('')
-    const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
-    const getCategories = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
+    // const [loading, setLoading] = useState<boolean>(true)
+    // const [message, setMessage] = useState('')
+    // const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
+    // const getCategories = async () => {
+    //     try {
+    //         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             credentials: 'include',
 
-            })
-            const data = await res.json()
-            if (!res.ok) {
-                setMessage(` ${data.message } :  ${process.env.NEXT_PUBLIC_API_URL}`)
-                return
-            }
-            setCategoryDetails(data.categories)
+    //         })
+    //         const data = await res.json()
+    //         if (!res.ok) {
+    //             setMessage(` ${data.message } :  ${process.env.NEXT_PUBLIC_API_URL}`)
+    //             return
+    //         }
+    //         setCategoryDetails(data.categories)
 
 
-        }
-        catch (error) {
-            setMessage(`something went wrong please try again later :, ${process.env.NEXT_PUBLIC_API_URL}`)
+    //     }
+    //     catch (error) {
+    //         setMessage(`something went wrong please try again later :, ${process.env.NEXT_PUBLIC_API_URL}`)
 
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false)
-        }
-    }
-    useEffect(() => {
-        console.log(process.env.NEXT_PUBLIC_API_URL)
-        getCategories()
+    //         console.error('Error fetching data:', error);
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
+    // useEffect(() => {
+    //     console.log(process.env.NEXT_PUBLIC_API_URL)
+    //     getCategories()
 
-    }, [])
+    // }, [])
     return (
         <>
+        <Categories/>
 
 
-            {loading ? (<Loading/>) : (<>
+
+
+            {/* {loading ? (<Loading/>) : (<>
                 {!categoryDetails ? (<p><ErrorMessage message={message}/></p>) :
                     (<div className="m-2">
                     <h1 className="text-4xl font-[fantasy]">Categories:</h1>
@@ -77,7 +81,7 @@ export default function Home() {
 
                         </>)}
                     </div>)}
-            </>)} 
+            </>)}  */}
         </>
     );
 }

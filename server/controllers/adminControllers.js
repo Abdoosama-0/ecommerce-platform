@@ -3,6 +3,30 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const Category = require('../models/category');
 
+const updateCategory = async (req, res) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+  console.log(req.body)
+  if (!name|| !description ||  !req.file ) {
+    return res.status(400).json({ message: 'all data required' });
+  }
+  const category = await Category.findById(id);
+  
+  if (!category) {
+    return res.status(404).json({ message: 'Category not found' });
+
+  }
+     if (name) category.name = name;
+    if (description) category.description = description;
+  if (req.file) {
+    category.categoryPhoto = req.file.path;
+  }
+
+  await category.save();
+  return res.status(200).json({ message: 'Category updated successfully', category });
+  }
+
+
 const deleteCategory = async (req, res) => {
   const {categoryId} = req.params
   const category = await Category.findById(categoryId);
@@ -21,9 +45,15 @@ const deleteCategory = async (req, res) => {
 
 
 const addCategory = async (req, res) => {
-  const { name } = req.body;
+  const { name,description,categoryPhoto } = req.body;
   if (!name) {
     return res.status(400).json({ message: 'Category name is required' });
+  }
+  if (!description) {
+    return res.status(400).json({ message: 'Category description is required' });
+  }
+  if (!categoryPhoto) {
+    return res.status(400).json({ message: 'Category photo is required' });
   }
   const existingCategory = await Category.findOne({ name });
   if (existingCategory) {
@@ -31,6 +61,8 @@ const addCategory = async (req, res) => {
   }
   const newCategory = new Category({
     name,
+    description,
+    categoryPhoto,
     createdBy:  req.userID 
   });
   await newCategory.save();
@@ -314,4 +346,4 @@ const getDeletedProducts = async (req, res) => {
     }
 module.exports={addProduct,getProducts,getProductById,editProduct,deleteProduct,adminWelcome,
   
-  getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct,addCategory,deleteCategory}
+  getOrders,getOrder,updateOrderStatus,getUsers,banUser,getDeletedProducts,restoreProduct,addCategory,deleteCategory,updateCategory}

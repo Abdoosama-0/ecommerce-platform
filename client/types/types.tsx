@@ -106,6 +106,8 @@
             type categoriesDetails = {
               _id: string;
               name: string;
+              description: string;
+              categoryPhoto: any
             }
 
             

@@ -5,9 +5,10 @@ import ErrorMessage from "@/components/errorMessage"
 import Loading from "@/components/loading"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import AddCategory from "./[category]/components/addCtegory"
+import AddCategory from "./components/addCtegory"
 
-import DeleteCategory from "./[category]/components/deleteCategory"
+import DeleteCategory from "./components/deleteCategory"
+import ChooseCategory from "./components/chooseCategory"
 
 
 
@@ -85,6 +86,7 @@ export default function Home() {
                             <div className="fixed bottom-0 right-0 m-4 z-20 w-fit flex justify-between items-center gap-4">
                                 <AddCategory setRefresh={setRefresh} />
                                 <DeleteCategory setRefresh={setRefresh} categoryDetails={categoryDetails} setCategoryDetails={setCategoryDetails} />
+                                <ChooseCategory/>
                             </div>
                         </>)}
                     </div>)}
