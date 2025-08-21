@@ -78,6 +78,7 @@ const Categories = () => {
                             <>
 
 
+
                                 <img
                                     src="/danielle-cerullo-CQfNt66ttZM-unsplash.jpg"
                                     alt="Gym"
@@ -94,13 +95,16 @@ const Categories = () => {
                                         { loadPhoto ?(
                                             <div className=' loader2'></div>
 
-                                        ):(    
+                                        ):(      
+                                            <div className='flex flex-col justify-center items-center'>
+                                               <h1 className='md:mb-3 md:hidden flex '>{selectedCategory?.name}</h1>
                                              <div className='flex items-center justify-center'>
                                         <img
                                             src={selectedCategory?.categoryPhoto}
                                             alt={selectedCategory?.name}
                                             className="w-full h-full md:max-w-[1000px] max-w-[400px] md:max-h-[1000px] max-h-[400px]   object-cover"
                                         />
+                                    </div>
                                         </div>
                                     )  }
                                    
