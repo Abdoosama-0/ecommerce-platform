@@ -54,8 +54,8 @@ export default function LoginPage() {
   };
   return (
 
-    <div className="flex items-center justify-center bg-white min-h-screen">
-      <div className="flex flex-col items-center justify-center p-2 m-auto rounded-2xl bg-gray-700 w-full md:w-[60%] gap-3">
+    <div className="flex items-center justify-center bg-slate-50 min-h-screen">
+      <div className="flex flex-col items-center justify-center p-2 m-auto rounded-2xl bg-slate-700  border-2 border-slate-900 w-full md:w-[60%] gap-3">
         <h1 className="mt-2 text-4xl font-bold">login</h1>
         <form onSubmit={handleSubmit} className="w-full  flex flex-col items-center justify-center p-2 m-auto rounded-2xl gap-2 ">
           <div className="p-1  w-full mb-4">
@@ -95,7 +95,7 @@ export default function LoginPage() {
           )}
           <button
             type="submit"
-            className="bg-white cursor-pointer text-red-900 font-bold py-2 px-4 rounded hover:bg-gray-200 transition"
+            className="bg-white cursor-pointer text-black font-bold py-2 px-4 rounded hover:bg-gray-200 transition"
           >
             Login
           </button>

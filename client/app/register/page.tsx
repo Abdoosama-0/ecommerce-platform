@@ -51,7 +51,8 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+    <div className='min-h-screen flex items-center bg-slate-50 justify-center'>
+    <div className="p-6 max-w-[700px] w-[80%]  h-fit  bg-white border-2 border-slate-900 rounded-xl shadow-2xl   space-y-4">
       <h1 className="text-xl font-bold">Register</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
@@ -110,5 +111,5 @@ export default function RegisterForm() {
         </button>
       </form>
     </div>
-  );
+ </div> );
 }

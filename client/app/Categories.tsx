@@ -97,7 +97,7 @@ const Categories = () => {
 
                                         ):(      
                                             <div className='flex flex-col justify-center items-center'>
-                                               <h1 className='md:mb-3 md:hidden flex '>{selectedCategory?.name}</h1>
+                                               <h1 className='mb-2 md:hidden flex '>{selectedCategory?.name}</h1>
                                              <div className='flex items-center justify-center'>
                                         <img
                                             src={selectedCategory?.categoryPhoto}
