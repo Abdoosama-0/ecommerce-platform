@@ -4,6 +4,10 @@ const passport=require('passport')
 
 const bcrypt=require('bcrypt')
 const validator = require('validator');
+const redis = require('../config/redis')
+const crypto = require("crypto");
+const {transporter, sendEmailWithLink } = require("../config/email");
+
 
 //=========================================
 const jwt=require('jsonwebtoken')
@@ -42,7 +46,7 @@ await editUser.save();
       const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
       
    
-      res.cookie("access_token", accessToken, { httpOnly: true, secure: false, maxAge: 100 * 365 * 24 * 60 * 60 * 1000 }); // 100 years
+      res.cookie("access_token", accessToken, { httpOnly: true, secure: false }); 
       
      
       return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
@@ -84,18 +88,122 @@ if(!validator.isStrongPassword(password)){
 
 //================================================================================================================
     const hashed =await bcrypt.hash(password,10)
-    const newUser=new User({
+    const otp = crypto.randomInt(100000, 999999).toString();
+    await redis.set(`OTP:${email}`, JSON.stringify({
+      otp,
+      name,
+      username,
+      email,
+      password: hashed,
+      phone,
+    }), 'EX', 300);
+    const sendVerificationEmail = async (email, otp) => {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Verify your email",
+        text: `Your verification code is: ${otp}`
+      });
+    };
+    const response = await sendVerificationEmail(email, otp);
+    if (response.success) {
+      res.status(200).json({ message: "OTP sent to your email. Please verify to complete registration." });    
+    } else {
+      return res.status(500).json({ message: "Failed to send email", error: response.error });
+    }
 
-       
-         name,
-         email,
-         username,
-         password:hashed,
-         phone,
-        
-    })
-    await newUser.save()
-    res.json({message:"done"})
+ 
+
+   
 
 }
-module.exports={register,localLogin}
+
+const verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+  const userDataB = await redis.get(`OTP:${email}`);
+  if (!userDataB) {
+    return res.status(400).json({ message: "OTP expired or not found" });
+  }
+  const userData = JSON.parse(userDataB);
+
+
+  if (userData.otp !== otp) {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
+
+
+  const newUser = new User({
+    phone:userData.phone,
+    name: userData.name,
+    email: userData.email,
+    username: userData.username,
+    password: userData.password
+  });
+  await newUser.save();
+
+
+  await redis.del(`OTP:${email}`); 
+
+  res.json({ message: "Email verified and registration completed successfully. Please login." });
+};
+
+const forgetPassword = async (req, res) => {
+  const { email } = req.body
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  const token = crypto.randomBytes(32).toString("hex");
+await redis.set(
+  `reset:${token}`,
+  email,
+  'EX',
+  60 * 3 
+);
+
+
+const subject = "Reset password";
+const linkText = "click here to Reset password";
+const linkUrl = `${process.env.FRONT_URL}/auth/recreatePassword?token=${token}`;
+
+const response = await sendEmailWithLink(email, subject, linkText, linkUrl);
+
+if (response.success) {
+  return res.status(200).json({ msg: "Email sent successfully. If you do not see it in your inbox, please check your spam or junk folder." });
+} else {
+  return res.status(500).json({ error: "Failed to send email", error: response.error });
+}
+}
+
+const recreatePassword = async (req, res) => {
+  const { token } = req.query;
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
+  const email = await redis.get(`reset:${token}`);
+  if (!email) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+
+  const { newPassword } = req.body
+
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ message: "Email not found" });
+  }
+
+  //===================================================================check password=============================================
+  if (!validator.isStrongPassword(newPassword)) {
+    return res.status(400).json({ message: "Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character." })
+  }
+  //================================================================================================================
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  await user.save();
+  await redis.del(`reset:${token}`); 
+
+  return res.status(200).json({ message: "password recreated successfully, go back to login page" })
+
+}
+module.exports={register,localLogin,verifyOtp,forgetPassword,recreatePassword}

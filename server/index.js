@@ -6,6 +6,8 @@ require('./config/mongo')
 
 const cors = require('cors');
 const app = express();
+//========================connect to redis================================
+const redis = require("./config/redis") 
 //========================Global Middleware===============================
 
 

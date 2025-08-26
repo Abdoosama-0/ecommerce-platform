@@ -41,11 +41,9 @@ export default function LoginPage() {
       localStorage.setItem('isAdmin', data.isAdmin.toString())
       localStorage.removeItem('cart');
 
-      // if (typeof document !== 'undefined' && document.referrer.includes('/register')) {
+   
         window.location.href = '/';
-      // } else {
-      //   window.location.href = document.referrer || '/';
-      // }
+  
 
     } catch (err) {
       setMessage('something went wrong please try again later')
@@ -100,7 +98,7 @@ export default function LoginPage() {
             Login
           </button>
         </form>
-
+          <div className=" flex gap-4">
         <p
           onClick={() => {
             router.push("/register");
@@ -108,7 +106,14 @@ export default function LoginPage() {
           className="text-gray-950 cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">
           don&apos;t have an account
         </p>
-
+        <p
+          onClick={() => {
+            router.push("/auth/forgetPassword");
+          }}
+          className="text-gray-950 cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">
+          forget password
+        </p>
+</div>
       </div>
     </div>
 
