@@ -25,6 +25,7 @@
         price: number
         quantity: number
         category: string
+      availableQuantity:number
       }
       quantity: number;
     }

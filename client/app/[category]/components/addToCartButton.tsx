@@ -182,6 +182,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, c
           title: string,
           price: number
           category: string
+          availableQuantity:number
         }, quantity: number
       }[];
 
@@ -195,7 +196,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, c
       } else {
         const imageUrls = [imageUrl]
 
-        cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price,category:category }, quantity: 1 });
+        cart.push({ productId: { _id: productId, imageUrls: imageUrls, title: name, price: price,category:category,availableQuantity }, quantity: 1 });
         setQuantityInCart(prev => prev + 1)
       }
 

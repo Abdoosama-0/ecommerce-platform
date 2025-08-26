@@ -8,79 +8,115 @@ import { useRouter } from "next/navigation";
 import AddToCartButton from "@/app/[category]/components/addToCartButton";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-
 type ProductDetailsProps = {
   imageUrls: string[];
-  title: string
-  price: number
-  productID: string
-  quantity: number
-  category: string
+  title: string;
+  price: number;
+  productID: string;
+  quantity: number;
+  category: string;
 };
 
-
-export default function ProductDetails({ imageUrls, title, category, price, productID, quantity }: ProductDetailsProps) {
+export default function ProductDetails({
+  imageUrls,
+  title,
+  category,
+  price,
+  productID,
+  quantity,
+}: ProductDetailsProps) {
   const router = useRouter();
-  const [buyClicked, setBuyClicked] = useState<boolean>(false)
+  const [buyClicked, setBuyClicked] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const goToNextImage = () => {
-    if (imageUrls && currentImageIndex < imageUrls.length - 1) {
-      setCurrentImageIndex(currentImageIndex + 1);
-    } else {
-      setCurrentImageIndex(0);
-    }
+    setCurrentImageIndex((prev) =>
+      prev < imageUrls.length - 1 ? prev + 1 : 0
+    );
   };
 
   const goToPreviousImage = () => {
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(currentImageIndex - 1);
-    } else {
-      setCurrentImageIndex(imageUrls ? imageUrls.length - 1 : 0);
-    }
+    setCurrentImageIndex((prev) =>
+      prev > 0 ? prev - 1 : imageUrls.length - 1
+    );
   };
 
   return (
+    <div className="w-full flex flex-col sm:flex-row gap-6 bg-white border border-gray-200 rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
 
-    <div className="border-4 border-gray-300 shadow-2xl bg-gray-50 rounded-2xl p-4   flex flex-col sm:flex-row  justify-center items-center sm:justify-center  sm:items-stretch   gap-4 h-fit w-full  ">
-
-      <div className="w-full h-auto aspect-[1/1]   sm:aspect-[13/9]  sm:max-w-[60%] lg:max-w-[40%]  bg-white relative overflow-hidden     gap-2    rounded-2xl shadow-lg border-2 border-gray-300">
+      {/* Image Section */}
+      <div className="relative w-full sm:w-2/3 lg:w-1/2 aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden border border-gray-100 shadow-sm">
         <Image
-          src={imageUrls[currentImageIndex] || `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`}
-          alt={title || 'No title available'}
+          src={
+            imageUrls[currentImageIndex] ||
+            `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`
+          }
+          alt={title || "No title available"}
           fill
           priority
-          className="   object-contain "
+          className="object-contain bg-gray-50"
         />
-        {imageUrls.length > 1 && (<>
-          <div onClick={goToNextImage} className="absolute right-0 p-1 h-full w-fit flex justify-center items-center  cursor-pointer "> <FaArrowRight /> </div>
-          <div onClick={goToPreviousImage} className="absolute left-0 p-1 h-full w-fit flex justify-center items-center  cursor-pointer "> <FaArrowLeft /> </div>
-        </>)}
+        {imageUrls.length > 1 && (
+          <>
+            <button
+              onClick={goToPreviousImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow"
+            >
+              <FaArrowLeft className="text-gray-700" />
+            </button>
+            <button
+              onClick={goToNextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow"
+            >
+              <FaArrowRight className="text-gray-700" />
+            </button>
+          </>
+        )}
       </div>
-      <div className="relative w-full sm:w-[30%] flex flex-col gap-2 ">
-        <p className="">{title}</p>
-      
-        <p className="text-sm"> <strong className="text-xl">{Number(price).toLocaleString()}</strong> EGP</p>
 
-        <div className="sm:absolute bottom-2  right-2 left-2 flex flex-col gap-2  p-2">
-          <button onClick={() => {
-            if (localStorage.getItem('isLogged') !== 'true') {
-              router.push('/login');
-            } else {
-              setBuyClicked(true)
+      {/* Details Section */}
+      <div className="flex-1 flex flex-col justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-800">{title}</h1>
+          <p className="mt-2 text-lg text-gray-700">
+            <span className="text-2xl font-bold text-primary">
+              {Number(price).toLocaleString()}
+            </span>{" "}
+            <span className="text-gray-500 text-sm">EGP</span>
+          </p>
+        </div>
 
-            }
-
-
-          }} className="bg-sky-800 rounded-3xl w-full flex justify-center items-center  text-white font-bold cursor-pointer hover:bg-sky-900 transition-all duration-300 ease-in-out"> buy </button>
-          <AddToCartButton productId={productID} price={price} name={title} imageUrl={imageUrls[0]} availableQuantity={quantity} category={category} />
-
+        {/* Buttons */}
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => {
+              if (localStorage.getItem("isLogged") !== "true") {
+                router.push("/login");
+              } else {
+                setBuyClicked(true);
+              }
+            }}
+            className="bg-sky-700 hover:bg-sky-800 text-white font-semibold py-3 rounded-xl shadow-sm transition-all"
+          >
+            Buy Now
+          </button>
+          <AddToCartButton
+            productId={productID}
+            price={price}
+            name={title}
+            imageUrl={imageUrls[0]}
+            availableQuantity={quantity}
+            category={category}
+          />
         </div>
       </div>
 
-      <BuyForm clicked={buyClicked} setClicked={setBuyClicked} productId={productID} price={price} />
+      <BuyForm
+        clicked={buyClicked}
+        setClicked={setBuyClicked}
+        productId={productID}
+        price={price}
+      />
     </div>
-
-  )
+  );
 }
-
-
