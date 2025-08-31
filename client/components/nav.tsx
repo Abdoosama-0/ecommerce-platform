@@ -107,7 +107,7 @@ const [clicked,setClicked]=useState(false)
       <div className="hidden lg:flex pointer-events-none md:pointer-events-auto mr-10 justify-end items-center w-full gap-8">
     <div className="relative group">
   <Link
-    className="font-normal text-md flex items-center hover:text-indigo-400"
+    className="  flex items-center hover:text-indigo-400"
     title="categories"
     href="#"
   >
