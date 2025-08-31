@@ -4,122 +4,147 @@ import Loading from "@/components/loading";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+type Order = {
+  _id: string;
+  userId: { name: string; email: string };
+  totalQuantity: number;
+  totalPrice: number;
+  status: string;
+  createdAt: string;
+};
 
 export default function Orders() {
-
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<Order[]>([])
-
+  const [data, setData] = useState<Order[]>([]);
   const [message, setMessage] = useState<string>("");
+  const [status, setStatus] = useState<string>("pending");
 
-  const [status, setStatus] = useState<string>('pending')
-  const fetchData = async (status:string) => {
-    setLoading(true)
+  const fetchData = async (status: string) => {
+    setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getOrders/${status}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      })
-      const data = await res.json()
-
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/getOrders/${status}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message)
-        return
-
+        setMessage(data.message);
+        return;
       }
 
-      setData(data.orders)
-    }
-    catch (error) {
-      setMessage('something went wrong please try again later')
-      console.error('Error fetching data:', error);
-
-
+      setData(data.orders);
+    } catch (error) {
+      setMessage("Something went wrong, please try again later");
+      console.error("Error fetching data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  useEffect(() => {
-
-    fetchData(status)
-  }
-    , [status])
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-    timeZone: 'Africa/Cairo'
   };
+
+  useEffect(() => {
+    fetchData(status);
+  }, [status]);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Africa/Cairo",
+  };
+
   return (
-
     <>
-      {loading ? (<><Loading /></>) : (<>
-        {!data ? (<><ErrorMessage message={message} /></>) : (<>
-            
-          <main className="min-h-screen bg-gray-100 p-4 ">
-            <div className='flex justify-between items-center pr-5 mb-1'>
-              <h1 className="text-2xl font-bold">Orders:</h1>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="bg-slate-300 border-2 text-black border-slate-500 hover:bg-slate-400 px-2 text-sm py-1 rounded-lg cursor-pointer font-bold"
-              >
-                {['pending', 'shipped', 'delivered', 'cancelled'].map((s) => (
-                  <option key={s} value={s} >
-                    {s}
-                  </option>
-                ))}
-              </select>
+      {loading ? (
+        <Loading />
+      ) : !data ? (
+        <ErrorMessage message={message} />
+      ) : (
+        <main className="min-h-screen bg-gray-50 p-6">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="bg-white border border-gray-300 shadow-sm text-gray-700 px-3 py-2 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            >
+              {["pending", "shipped", "delivered", "cancelled"].map((s) => (
+                <option key={s} value={s}>
+                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
 
+          {/* Orders List */}
+          {data.length > 0 ? (
+            <div className="grid gap-4">
+              {[...data].reverse().map((order, index) => (
+                <Link
+                  key={index}
+                  href={`/admin/orders/${order._id}/`}
+                  className="bg-white shadow-md rounded-lg p-5 transition hover:shadow-lg hover:scale-[1.01]"
+                >
+                  {/* User Info */}
+                  <div className="flex flex-wrap gap-4 text-gray-800 font-medium">
+                    <span>
+                      👤 <strong>Name:</strong> {order.userId.name}
+                    </span>
+                    <span>
+                      📧 <strong>Email:</strong> {order.userId.email}
+                    </span>
+                  </div>
+
+                  {/* Order Info */}
+                  <div className="flex flex-wrap gap-4 mt-2 text-gray-600">
+                    <span>
+                      🛒 <strong>Products:</strong> {order.totalQuantity}
+                    </span>
+                    <span>
+                      💵 <strong>Total:</strong> ${order.totalPrice}
+                    </span>
+                    <span>
+                      📦 <strong>Status:</strong>{" "}
+                      <span
+                        className={`px-2 py-1 rounded-md text-white text-sm ${
+                          order.status === "pending"
+                            ? "bg-yellow-500"
+                            : order.status === "shipped"
+                            ? "bg-blue-500"
+                            : order.status === "delivered"
+                            ? "bg-green-600"
+                            : "bg-red-600"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Time */}
+                  <div className="mt-2 text-gray-500 text-sm">
+                    ⏰ {new Date(order.createdAt).toLocaleString("en-GB", options)}
+                  </div>
+                </Link>
+              ))}
             </div>
-            {/**Check if there are any orders. */}
-            {data.length > 0 ? (
-              <div className=" flex flex-col gap-2">
-                {[...data].reverse().map((order, index) => (
-                  <Link key={index} href={`/admin/orders/${order._id}/`}>
-                    <div className="flex flex-col gap-1  text-xl font-bold bg-blue-400 rounded-lg p-4 overflow-y-auto ">
-
-                      <div className="flex flex-row flex-wrap gap-2">
-                        <span>| name:  {order.userId.name} </span>
-                        <span>| email:  {order.userId.email}</span>
-                      </div>
-                      <div className="flex flex-row flex-wrap gap-2 ">
-                        <span>| Number of products:  {order.totalQuantity}</span>
-                        <span>| total price:  {order.totalPrice}</span>
-                        <span>| status:  {order.status}</span>
-                      </div>
-                      <span>time: {new Date(order.createdAt).toLocaleString('en-GB', options)}</span>
-
-                    </div>
-
-
-                  </Link>
-                ))}
-
-              </div>
-
-            ) : (<>
-              {/**if there are no orders yet */}
-              <h1>there is no {status} orders </h1>
-            </>)}
-          </main>
-
-
-
-
-
-
-        </>)}
-
-      </>)}
+          ) : (
+            <h2 className="text-gray-600 text-lg">
+              There are no <span className="font-semibold">{status}</span> orders.
+            </h2>
+          )}
+        </main>
+      )}
     </>
-
   );
 }

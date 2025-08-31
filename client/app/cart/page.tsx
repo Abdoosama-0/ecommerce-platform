@@ -103,7 +103,7 @@ export default function Cart() {
               <h1 className="text-3xl font-bold mb-6 text-slate-800">🛒 Your Cart</h1>
 
               {cart.length === 0 ? (
-                <div className="text-center p-10 bg-white shadow-md rounded-2xl border">
+                <div className="text-center p-10 bg-white shadow-md rounded-2xl ">
                   <p className="text-lg font-medium text-gray-600">Your cart is empty.</p>
                   <Link href="/" className="mt-4 inline-block text-indigo-600 hover:underline">
                     Continue Shopping →

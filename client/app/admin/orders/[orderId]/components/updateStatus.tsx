@@ -4,15 +4,14 @@ import { useState } from "react";
 
 interface AddProps {
   currentStatus?: string;
-
-
 }
+
 export default function UpdateStatus({ currentStatus }: AddProps) {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
   const path = window.location.pathname;
   const segments = path.split('/');
   const orderId = segments[3];
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -25,72 +24,101 @@ export default function UpdateStatus({ currentStatus }: AddProps) {
       return;
     }
 
-
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/updateOrderStatus?id=${orderId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        credentials: 'include',
-        body: JSON.stringify({ status: newStatus }),
-      }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/updateOrderStatus?id=${orderId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ status: newStatus }),
+        }
       );
-      const data = await res.json()
+
+      const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message)
-        return
+        setMessage(data.message);
+        return;
       }
 
       alert('Status updated successfully!');
       window.location.reload();
-
-
     } catch (error) {
-    setMessage('something went wrong please try again later')
+      setMessage('Something went wrong, please try again later');
       console.error('Error sending request:', error);
     }
   };
 
-
-
   return (
-    <form onSubmit={handleSubmit} className=' p-10 bg-white text-black fixed z-30 inset-0 m-auto rounded-lg w-fit sm:w-[80%] md:w-[60%] h-fit  overflow-hidden  flex flex-col gap-2'>
-      <h1 className="mb-8" >choose status:</h1>
-      <div className="flex flex-col sm:flex-row  items-center justify-around ">
-        <div>
-          <label htmlFor="pending">pending </label>
-          <input type="radio" id="pending" name="choice" value="pending" defaultChecked={currentStatus === 'pending'} />
-        </div>
+    <form
+      onSubmit={handleSubmit}
+      className="fixed inset-0 z-30 m-auto flex w-[90%] max-w-md flex-col gap-6 rounded-2xl h-fit bg-white p-8 shadow-xl text-gray-900"
+    >
+      <h1 className="text-xl font-semibold text-center">Choose Status</h1>
 
-        <div>
-          <label htmlFor="shipped">shipped </label>
-          <input type="radio" id="shipped" name="choice" value="shipped" defaultChecked={currentStatus === 'shipped'} />
-        </div>
+      <div className="grid grid-cols-2 gap-4">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            id="pending"
+            name="choice"
+            value="pending"
+            defaultChecked={currentStatus === 'pending'}
+            className="accent-indigo-500"
+          />
+          Pending
+        </label>
 
-        <div>
-          <label htmlFor="delivered">delivered </label>
-          <input type="radio" id="delivered" name="choice" value="delivered" defaultChecked={currentStatus === 'delivered'} />
-        </div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            id="shipped"
+            name="choice"
+            value="shipped"
+            defaultChecked={currentStatus === 'shipped'}
+            className="accent-indigo-500"
+          />
+          Shipped
+        </label>
 
-        <div>
-          <label htmlFor="cancelled">cancelled </label>
-          <input type="radio" id="cancelled" name="choice" value="cancelled" defaultChecked={currentStatus === 'cancelled'} />
-        </div>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            id="delivered"
+            name="choice"
+            value="delivered"
+            defaultChecked={currentStatus === 'delivered'}
+            className="accent-green-600"
+          />
+          Delivered
+        </label>
 
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="radio"
+            id="cancelled"
+            name="choice"
+            value="cancelled"
+            defaultChecked={currentStatus === 'cancelled'}
+            className="accent-red-600"
+          />
+          Cancelled
+        </label>
       </div>
-      {message&&
-      <p className="text-red-500 text-sm ">{message}</p>
-      }
+
+      {message && (
+        <p className="text-center text-sm text-red-500">{message}</p>
+      )}
+
       <button
         type="submit"
-        className=" rounded-lg w-full bg-black text-red-50 font-bold py-2 px-4 hover:bg-gray-200 hover:text-black cursor-pointer transition"
+        className="w-full rounded-lg bg-indigo-600 py-2 font-semibold text-white transition hover:bg-indigo-500"
       >
-        update status
+        Update Status
       </button>
-
     </form>
   );
 }

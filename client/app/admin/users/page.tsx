@@ -2,134 +2,153 @@
 
 import ErrorMessage from "@/components/errorMessage";
 import Loading from "@/components/loading";
-
-
 import { useEffect, useState } from "react";
 
+type responseType = {
+  usersCount: number;
+  users: {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    isBanned: boolean;
+  }[];
+};
 
 export default function Users() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<responseType | null>(null)
-
+  const [data, setData] = useState<responseType | null>(null);
   const [message, setMessage] = useState<string>("");
+
   const handleClick = async (id: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/banUser?id=${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ isBanned: true }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/banUser?id=${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ isBanned: true }),
+        }
+      );
 
       if (!res.ok) {
-        alert('Failed to update status!');
-        return
+        alert("Failed to update status!");
+        return;
       }
 
-      alert('Status updated successfully!');
+      alert("Status updated successfully!");
       window.location.reload();
-
-
-
-
-
     } catch (error) {
-      alert('something went wrong please try again later');
+      alert("Something went wrong, please try again later");
       console.log(error);
     }
+  };
 
-
-  }
   const fetchData = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/getUsers`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      })
-      const data = await res.json()
-
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/getUsers`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message)
-        return
+        setMessage(data.message);
+        return;
       }
 
-
-      setData(data)
-
-    }
-    catch (error) {
-      setMessage('something went wrong please try again later')
-      console.error('Error fetching data:', error);
-
-
+      setData(data);
+    } catch (error) {
+      setMessage("Something went wrong, please try again later");
+      console.error("Error fetching data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
-
-
-
-
+  };
 
   useEffect(() => {
-
-
-    fetchData()
-  }
-    , [])
+    fetchData();
+  }, []);
 
   return (
     <>
-      {loading ? (<><Loading /></>) : (<>
-        {!data ? (<><ErrorMessage message={message} /></>) : (<>
-          <main className=" bg-gray-100 min-h-screen ">
-            <div className="flex flex-col">
-              <h1 className="m-4 text-gray-800 text-3xl font-semibold">Users Count: {data.usersCount} </h1>
-              <div className="flex flex-col   gap-3 p-1">
-                { data.users.length > 0 ? (
-                  <>
-                    {data.users.map((user) => (
-                      <div key={user._id} className="relative p-2  text-sm md:text-xl flex flex-row gap-8 break-words overflow-x-auto  justify-start items-center bg-white rounded-xl  w-full flex-wrap  shadow-md ">
-                        <div className="flex flex-row gap-8  flex-wrap    justify-start  w-[90%] ">
+      {loading ? (
+        <Loading />
+      ) : !data ? (
+        <ErrorMessage message={message} />
+      ) : (
+        <main className="bg-gray-50 min-h-screen p-6">
+          {/* العنوان */}
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+            Users ({data.usersCount})
+          </h1>
 
-                          <h1>userId:{user._id}  </h1>
-                          <h1>Name:{user.name}  </h1>
-                          <h1>email:{user.email}  </h1>
-                          <h1>Phone:{user.phone}  </h1>
-                          <h1>isBanned:{`${user.isBanned}`}  </h1>
-                        </div>
-
-                        <div onClick={() => handleClick(user._id.toString())}
-                          className='absolute bg-violet-700 bottom-1 right-1  w-fit   cursor-pointer  rounded-lg overflow-hidden  text-white flex flex-col items-center justify-center  '>
-
-                          {user.isBanned ? <h1 className="bg-green-600 hover:bg-green-700 py-1 px-2">Unban</h1> : <h1 className="bg-red-600 hover:bg-red-700 py-1 px-2">Ban</h1>}
-
-
-                        </div>
-
-                      </div>
-
-                    ))}
-                  </>
-                ) : (<><h1>there is no users yet</h1></>)}
-              </div>
-
-
-
+          {/* جدول المستخدمين */}
+          {data.users.length > 0 ? (
+            <div className="overflow-x-auto rounded-lg shadow-md bg-white">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-indigo-600 text-white text-sm md:text-base">
+                    <th className="p-3">User ID</th>
+                    <th className="p-3">Name</th>
+                    <th className="p-3">Email</th>
+                    <th className="p-3">Phone</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.users.map((user) => (
+                    <tr
+                      key={user._id}
+                      className="border-b hover:bg-gray-100 text-sm md:text-base"
+                    >
+                      <td className="p-3 break-words">{user._id}</td>
+                      <td className="p-3">{user.name}</td>
+                      <td className="p-3">{user.email}</td>
+                      <td className="p-3">{user.phone}</td>
+                      <td className="p-3">
+                        {user.isBanned ? (
+                          <span className="text-red-600 font-semibold">
+                            Banned
+                          </span>
+                        ) : (
+                          <span className="text-green-600 font-semibold">
+                            Active
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-3 text-center">
+                        <button
+                          onClick={() => handleClick(user._id.toString())}
+                          className={`px-4 py-1 rounded-lg text-white font-medium transition ${
+                            user.isBanned
+                              ? "bg-green-600 hover:bg-green-700"
+                              : "bg-red-600 hover:bg-red-700"
+                          }`}
+                        >
+                          {user.isBanned ? "Unban" : "Ban"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-
-          </main>
-
-        </>)}
-
-      </>)}
+          ) : (
+            <h2 className="text-gray-600 text-lg">There are no users yet.</h2>
+          )}
+        </main>
+      )}
     </>
   );
 }
