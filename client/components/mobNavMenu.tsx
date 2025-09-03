@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai";
 import { FiUser, FiLogOut, FiLogIn } from "react-icons/fi";
-import { MdOutlineArrowDropDown, MdOutlineArrowLeft, MdOutlineArrowRight, MdOutlineDashboard } from "react-icons/md";
+import { MdOutlineArrowDropDown,  MdOutlineDashboard } from "react-icons/md";
 import { BsClipboardCheck } from "react-icons/bs";
 
 interface MobNavProps {

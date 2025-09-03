@@ -146,7 +146,7 @@ export default function UserOrders() {
                                     <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
                                         <div className="text-6xl mb-4">📭</div>
                                         <h3 className="text-lg font-semibold text-slate-600 mb-2">No {status} orders</h3>
-                                        <p className="text-slate-500">You don't have any {status} orders at the moment</p>
+                                        <p className="text-slate-500">You don&apos;t have any {status} orders at the moment</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-6">

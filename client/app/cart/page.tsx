@@ -41,7 +41,7 @@ export default function Cart() {
         console.log(err);
       }
     } else {
-      let newCart = cart?.filter(item => item.productId._id !== productId) || [];
+      const newCart = cart?.filter(item => item.productId._id !== productId) || [];
       localStorage.setItem('cart', JSON.stringify(newCart));
       setCart(newCart);
       refreshCart();

@@ -4,15 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import MobNav from "./mobNavMenu";
-import { FaRegUser } from "react-icons/fa";
-import { IoCartOutline, IoLogOutOutline } from "react-icons/io5";
-import { MdOutlineArrowDropDown, MdOutlineDashboard, MdOutlineLocalShipping } from "react-icons/md";
-import { CiLogin } from "react-icons/ci";
-import { RiAdminLine } from "react-icons/ri";
+
+import { MdOutlineArrowDropDown, MdOutlineDashboard } from "react-icons/md";
+
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { BsClipboardCheck } from "react-icons/bs";
 import { FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
-import { CgGym } from "react-icons/cg";
+
 import { GiGymBag } from "react-icons/gi";
 
 
