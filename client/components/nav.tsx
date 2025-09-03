@@ -137,9 +137,9 @@ const [clicked,setClicked]=useState(false)
         <>
         {isLogged === null ? (<></>) : (<>
           {!isLogged ? (
-            <Link className="hover:text-indigo-400"  href={`/login`}>
-              <h1 title="log in"> <FiLogIn />
-</h1>
+            <Link  title="log in" className="hover:text-indigo-400 flex gap-1 items-center"  href={`/login`}>
+             <FiLogIn /><span>login</span>
+
             </Link>
           ) : (
             <>
