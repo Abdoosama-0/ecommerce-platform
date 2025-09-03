@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -105,7 +106,7 @@ export default function RegisterForm() {
           </button>
 
           <div className='flex justify-between text-sm '>
-            <a href="/login" className='text-slate-700 hover:text-indigo-600 hover:underline '>Already have an account?</a>
+            <Link href="/login" className='text-slate-700 hover:text-indigo-600 hover:underline '>Already have an account?</Link>
           </div>
         </form>
       </div>
