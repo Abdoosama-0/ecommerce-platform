@@ -1,45 +1,92 @@
-"use client"
-import React, { useState } from 'react'
+"use client";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
-const ForgetPassword = () => {
-    const [email,setEmail]= useState('')
-    const [message,setMessage]= useState('')
-    const handleSubmit =async ()=>{
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgetPassword`,
-         {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-           body: JSON.stringify({email}),
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            setMessage(data.message)
-            return;
-          }
-    
-          alert('email was sent to you to recreate password');
-          
+export default function ForgetPasswordPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/forgetPassword`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(data.message);
+        return;
+      }
+
+      setMessage("📧 Please check your email for reset instructions.");
+    } catch (err) {
+      setMessage("Something went wrong, please try again later.");
+      console.log(err);
     }
+  };
+
   return (
-    <main className='min-h-screen flex items-center justify-center bg-slate-50'>
-    <div className=' text-2xl flex flex-col h-fit w-fit border-2 border-slate-900 rounded-2xl shadow-2xl text-slate-900 px-4 py-10 gap-3  min-w-[95%]  md:min-w-[40%] '>
-    <h1 className='font-bold mx-auto'>Forget Password</h1>
-    <input className='border-2 rounded-2xl text-lg border-slate-900  p-2 w-full placeholder:text-lg '
-    type='text'
-    value={email}
-    placeholder='your email'
-    onChange={(e) => setEmail(e.target.value)}
-    />
-    {message &&(<h1 className='text-sm text-red-500'>{message}</h1>)}
-    
-    <button onClick={()=>handleSubmit()}  className='mx-auto px-2 py-1 font-bold text-md text-slate-900 border-2 border-slate-900  bg-slate-100 cursor-pointer hover:bg-slate-200 rounded-2xl w-fit'>submit</button>
-    </div>
-   
+    <main className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-4">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-slate-200">
+        <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">
+          🔑 Forgot Password
+        </h1>
 
-</main>
-  )
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Message */}
+          {message && (
+            <div className="bg-indigo-500 text-white font-medium p-2 rounded-xl text-center">
+              {message}
+            </div>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
+          >
+            Send Reset Link
+          </button>
+        </form>
+
+        {/* Back to Login */}
+        <div className="flex justify-center mt-6 text-sm text-slate-700">
+          <p
+            onClick={() => router.push("/login")}
+            className="cursor-pointer hover:text-indigo-600 hover:underline"
+          >
+            Back to Login
+          </p>
+        </div>
+      </div>
+    </main>
+  );
 }
-
-export default ForgetPassword

@@ -1,225 +1,249 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
 import NewAddress from "@/app/userdata/components/newAddress";
 
+interface address {
+  _id: string;
+  government: string;
+  city: string;
+  area: string;
+  street: string;
+  buildingNumber: string;
+  departmentNumber: string;
+}
+
 interface BuyProps {
-  productId: string
-  price: number
-  clicked: boolean
-  setClicked: (arg0: boolean) => void
+  productId: string;
+  price: number;
+  clicked: boolean;
+  setClicked: (arg0: boolean) => void;
 }
 
 export default function BuyForm({ productId, price, clicked, setClicked }: BuyProps) {
-
-  // ======================type==========================
-
-
-  const [selectedAddress, setSelectedAddress] = useState<address | null>(null)
-  const [paymentMethod, setPaymentMethod] = useState<string>("cash on delivery")
-  const [newAddress, setNewAddress] = useState<boolean>(false)
-  const [addresses, setAddresses] = useState<address[]| null>(null)
-const [loading, setLoading] = useState(false)
-  const [quantity, setQuantity] = useState<number>(1)
+  const [selectedAddress, setSelectedAddress] = useState<address | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string>("cash on delivery");
+  const [newAddress, setNewAddress] = useState<boolean>(false);
+  const [addresses, setAddresses] = useState<address[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(quantity * price);
-  const [message, setMessage] = useState('')
-  const [getAddressesMessage, setGetAddressesMessage] = useState('')
+  const [message, setMessage] = useState("");
+  const [getAddressesMessage, setGetAddressesMessage] = useState("");
 
   const getAddresses = async () => {
-    
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/addresses`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        credentials: 'include',
-
-
-      })
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
       const data = await res.json();
       if (!res.ok) {
-        setGetAddressesMessage(data.message)
-        return
-        
+        setGetAddressesMessage(data.message);
+        return;
       }
-    setAddresses(data.addresses);
+      setAddresses(data.addresses);
+    } catch (err) {
+      console.log(err);
+      setGetAddressesMessage("Something went wrong, please try again later");
     }
-    catch (err) {
-      setGetAddressesMessage('something went wrong please try again later')
-      console.log(err)
-    }
-  }
- const handleSubmit = async (e: React.FormEvent) => {
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-   setLoading(true)
+    setLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        credentials: 'include',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(orderData),
-
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       if (!res.ok) {
-        setMessage(data.message)
-        return
-
+        setMessage(data.message);
+        return;
       }
-
-      alert('added successfully')
-      window.location.reload()
-
+      alert("Added successfully");
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      setMessage("Something went wrong, please try again later");
+    } finally {
+      setLoading(false);
     }
-    catch (err) {
-      setMessage('something went wrong please try again later')
-      console.log(err)
-    }finally {
-      setLoading(false)
-    }
-  }
+  };
 
   useEffect(() => {
-    getAddresses()
+    getAddresses();
+  }, []);
 
-  }, [])
   useEffect(() => {
+    setTotalPrice(quantity * price);
+  }, [quantity, price]);
 
-    setTotalPrice(quantity * price)
-
-  }, [quantity, price])
   useEffect(() => {
-
     if (addresses && addresses.length > 0) {
-      setSelectedAddress(addresses[addresses.length - 1]); 
+      setSelectedAddress(addresses[addresses.length - 1]);
     }
   }, [addresses]);
+
   const orderData = {
     products: [
       {
-        productId: productId, 
-        quantity: quantity     
-      }
+        productId: productId,
+        quantity: quantity,
+      },
     ],
-    address: selectedAddress ? {
-      government: selectedAddress.government,
-      city: selectedAddress.city,
-      area: selectedAddress.area,
-      street: selectedAddress.street,
-      buildingNumber: selectedAddress.buildingNumber,
-      departmentNumber: selectedAddress.departmentNumber
-    } : {
-      government: "",
-      city: "",
-      area: "",
-      street: "",
-      buildingNumber: "",
-      departmentNumber: ""
-    },
-    paymentMethod: paymentMethod
+    address: selectedAddress
+      ? {
+          government: selectedAddress.government,
+          city: selectedAddress.city,
+          area: selectedAddress.area,
+          street: selectedAddress.street,
+          buildingNumber: selectedAddress.buildingNumber,
+          departmentNumber: selectedAddress.departmentNumber,
+        }
+      : {
+          government: "",
+          city: "",
+          area: "",
+          street: "",
+          buildingNumber: "",
+          departmentNumber: "",
+        },
+    paymentMethod: paymentMethod,
   };
-
- 
 
   return (
     <>
       {clicked && (
-
-        <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
-          <form onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit} className="absolute inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
-               {loading && (
-              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
-                <div className="loader3"></div>
+      <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
+          <form
+            onClick={(e) => e.stopPropagation()}
+            onSubmit={handleSubmit}
+            className="mt-20 h-fit absolute inset-0 m-auto z-30 bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-slate-200 flex flex-col gap-4 max-h-[90%] overflow-y-auto"
+          >
+            {loading && (
+              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded-2xl">
+                <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
-            <div className=' overflow-y-auto p-4 '>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+            <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">🛒 Place Your Order</h1>
+
+            {/* Quantity */}
+            <div>
+              <label htmlFor="quantity" className="block text-sm font-semibold text-slate-700 mb-1">
                 Quantity
               </label>
               <input
                 type="number"
+                id="quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(Number(e.target.value))}
-                className=" p-2 border rounded-lg text-black mb-2 w-fit"
+                className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
                 min={1}
-
+                required
               />
+            </div>
 
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+            {/* Payment Method */}
+            <div>
+              <label htmlFor="paymentMethod" className="block text-sm font-semibold text-slate-700 mb-1">
                 Payment Method
               </label>
               <select
+                id="paymentMethod"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full p-2 border rounded-lg text-black mb-2"
+                className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
               >
                 <option value="cash on delivery">Cash on Delivery</option>
-
               </select>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                choose address
-              </label>
-              <div className="flex flex-col gap-2 w-full p-2 text-black max-h-72  overflow-y-auto">
-                {addresses ? (<>
-                {addresses.slice().reverse().map((address, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-row justify-between items-center w-full p-2 border rounded-lg bg-gray-50"
-                  >
-                    <div>
+            </div>
+
+            {/* Addresses */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Choose Address</label>
+              <div className="flex flex-col gap-2 max-h-72 overflow-y-auto">
+                {addresses ? (
+                  addresses.slice().reverse().map((address, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-3 border border-slate-300 rounded-xl bg-gray-50"
+                    >
                       <input
                         type="radio"
                         name="address"
                         value={address._id}
                         onChange={() => setSelectedAddress(address)}
                         checked={selectedAddress?._id === address._id}
+                        className="mr-2"
                       />
-                      <label className="ml-2">
-                        <p>City: {address.city}, Government: {address.government}</p>
-                        <p>Area: {address.area}, Street: {address.street}</p>
-                        <p>Building: {String(address.buildingNumber)}, Dept: {String(address.departmentNumber)}</p>
+                      <label className="text-sm text-slate-700">
+                        <p>
+                          City: {address.city}, Government: {address.government}
+                        </p>
+                        <p>
+                          Area: {address.area}, Street: {address.street}
+                        </p>
+                        <p>
+                          Building: {String(address.buildingNumber)}, Dept: {String(address.departmentNumber)}
+                        </p>
                       </label>
                     </div>
+                  ))
+                ) : (
+                  <div className="bg-red-500 text-white font-medium p-2 rounded-xl text-center">
+                    {getAddressesMessage}
                   </div>
-                ))}</>) :(<>
-                <p>{getAddressesMessage}</p>
-                </>)}
-                <button onClick={(e) => { e.preventDefault(); setNewAddress(true) }} className="mx-auto py-1  hover:opacity-50  px-2 rounded-2xl bg-amber-600 cursor-pointer">add new address</button>
+                )}
               </div>
-
-
             </div>
-            <h1>totalPrice : {totalPrice}</h1>
-            {message &&
-              <h1 className="text-sm text-red-500">{message}</h1>
-            }
-            <button type="submit" className="mx-auto rounded-2xl py-1 px-2 bg-amber-600 hover:opacity-50 cursor-pointer w-[40%]">submit</button>
 
-            <button onClick={() => setClicked(false)} className="absolute cursor-pointer top-1 right-2 text-gray-700 hover:opacity-70 text-2xl ">X</button>
+            {/* Add New Address Button */}
+            <button
+              type="button"
+              onClick={() => setNewAddress(true)}
+              className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
+            >
+              Add New Address
+            </button>
+
+            {/* Total Price */}
+            <div className="text-center text-lg font-semibold text-slate-800">
+              Total Price: ${totalPrice}
+            </div>
+
+            {/* Error Message */}
+            {message && (
+              <div className="bg-red-500 text-white font-medium p-2 rounded-xl text-center">
+                {message}
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
+            >
+              Submit Order
+            </button>
+
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setClicked(false)}
+              className="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 text-2xl font-medium cursor-pointer"
+            >
+              ✕
+            </button>
           </form>
-
         </div>
-
-
-
-
-
-
-      )
-      }
+      )}
 
       <NewAddress clicked={newAddress} setClicked={setNewAddress} />
-
-
-
-
-
     </>
-
   );
 }

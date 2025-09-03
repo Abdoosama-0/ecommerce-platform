@@ -1,10 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function LoginPage() {
-
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -12,19 +10,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-
       const cart = JSON.parse(localStorage.getItem('cart') || '[]') as { productId: string, quantity: number }[];
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/localLogin`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ username, password, cart }),
       });
@@ -33,90 +27,93 @@ export default function LoginPage() {
 
       if (!res.ok) {
         setMessage(data.message);
-        return
-
+        return;
       }
 
-      localStorage.setItem('isLogged', 'true')
-      localStorage.setItem('isAdmin', data.isAdmin.toString())
+      localStorage.setItem('isLogged', 'true');
+      localStorage.setItem('isAdmin', data.isAdmin.toString());
       localStorage.removeItem('cart');
 
-   
-        window.location.href = '/';
-  
-
+      window.location.href = '/';
     } catch (err) {
-      setMessage('something went wrong please try again later')
-      console.log(err)
+      setMessage('Something went wrong, please try again later');
+      console.log(err);
     }
   };
-  return (
 
-    <div className="flex items-center justify-center bg-slate-50 min-h-screen">
-      <div className="flex flex-col items-center justify-center p-2 m-auto rounded-2xl bg-slate-700  border-2 border-slate-900 w-full md:w-[60%] gap-3">
-        <h1 className="mt-2 text-4xl font-bold">login</h1>
-        <form onSubmit={handleSubmit} className="w-full  flex flex-col items-center justify-center p-2 m-auto rounded-2xl gap-2 ">
-          <div className="p-1  w-full mb-4">
-            <label htmlFor="username" className="text-black font-semibold mb-1">Username</label>
-            <input type="text"
+  return (
+    <main className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 p-4">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-slate-200">
+        <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">🔐 Login</h1>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Username */}
+          <div>
+            <label htmlFor="username" className="block text-sm font-semibold text-slate-700 mb-1">Username</label>
+            <input
+              type="text"
               id="username"
-              placeholder="username"
-              className=" rounded text-black   w-full p-1 bg-blue-50"
+              placeholder="Enter your username"
+              className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required />
+              required
+            />
           </div>
-          <div className=" p-1  w-full">
-            <label htmlFor="password" className="text-black font-semibold mb-1">Password</label>
+
+          {/* Password */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-1">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className=" rounded text-black   w-full p-1 bg-blue-50"
+                className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-blue-600 cursor-pointer"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-indigo-600 font-medium hover:underline"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
+
           {/* Error Message */}
           {message && (
-            <div className="bg-red-600 text-white font-medium p-2 rounded w-full text-center">
+            <div className="bg-red-500 text-white font-medium p-2 rounded-xl text-center">
               {message}
             </div>
           )}
+
+          {/* Submit */}
           <button
             type="submit"
-            className="bg-white cursor-pointer text-black font-bold py-2 px-4 rounded hover:bg-gray-200 transition"
+            className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
           >
             Login
           </button>
         </form>
-          <div className=" flex gap-4">
-        <p
-          onClick={() => {
-            router.push("/register");
-          }}
-          className="text-gray-950 cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">
-          don&apos;t have an account
-        </p>
-        <p
-          onClick={() => {
-            router.push("/auth/forgetPassword");
-          }}
-          className="text-gray-950 cursor-pointer hover:border-b-2 hover:text-amber-50 w-fit">
-          forget password
-        </p>
-</div>
+
+        {/* Links */}
+        <div className="flex justify-between items-center mt-6 text-sm text-slate-700">
+          <p
+            onClick={() => router.push("/register")}
+            className="cursor-pointer hover:text-indigo-600 hover:underline"
+          >
+            Don&apos;t have an account?
+          </p>
+          <p
+            onClick={() => router.push("/auth/forgetPassword")}
+            className="cursor-pointer hover:text-indigo-600 hover:underline"
+          >
+            Forgot password?
+          </p>
+        </div>
       </div>
-    </div>
-
-
+    </main>
   );
 }

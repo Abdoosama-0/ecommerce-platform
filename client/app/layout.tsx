@@ -6,8 +6,8 @@ import Nav from "@/components/nav";
 
 
 export const metadata: Metadata = {
-  title: "Abdo's Store",
-  description: "store for Abdo's products",
+  title: "muscular Store",
+  description: "store for gym supplements",
 };
 
 export default function RootLayout({

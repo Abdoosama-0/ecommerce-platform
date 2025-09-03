@@ -6,9 +6,14 @@ import { useEffect, useState } from "react";
 import MobNav from "./mobNavMenu";
 import { FaRegUser } from "react-icons/fa";
 import { IoCartOutline, IoLogOutOutline } from "react-icons/io5";
-import { MdOutlineLocalShipping } from "react-icons/md";
+import { MdOutlineArrowDropDown, MdOutlineDashboard, MdOutlineLocalShipping } from "react-icons/md";
 import { CiLogin } from "react-icons/ci";
 import { RiAdminLine } from "react-icons/ri";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { BsClipboardCheck } from "react-icons/bs";
+import { FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
+import { CgGym } from "react-icons/cg";
+import { GiGymBag } from "react-icons/gi";
 
 
 
@@ -49,9 +54,34 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
       console.log(err);
     }
   };
+   const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+            const data = await res.json();
 
+            if (!res.ok) {
+                alert(data.message);
+                return;
+            }
+            setCategoryDetails(data.categories);
+     
+        } catch (error) {
+            alert('something went wrong please try again later');
+            console.error('Error fetching data:', error);
+        } 
+    }
 
+useEffect(()=>{
+fetchCategories()
 
+},[])
 const [clicked,setClicked]=useState(false)
 
   return (<>
@@ -61,43 +91,76 @@ const [clicked,setClicked]=useState(false)
     
     
       <div className="ml-10 w-fit ">
-        <Link onClick={()=>{
+        <Link className="flex gap-1 items-center  hover:text-indigo-300 text-3xl" 
+        onClick={()=>{
           if(clicked){
           setClicked(false)}
-          }}  href={`/`}>
-          <h1>store</h1>
+          }} 
+           href={`/`}>
+      <p className=" font-extrabold">muscular</p><GiGymBag />
+
+
+
         </Link>
       </div>
 
-      <div className="hidden md:flex pointer-events-none md:pointer-events-auto mr-10 justify-end items-center w-full gap-8">
-        <Link title="cart" href={`/cart`}>
-          <h1><IoCartOutline />
-</h1>
+      <div className="hidden lg:flex pointer-events-none md:pointer-events-auto mr-10 justify-end items-center w-full gap-8">
+    <div className="relative group">
+  <Link
+    className="  flex items-center hover:text-indigo-400"
+    title="categories"
+    href="#"
+  >
+    <MdOutlineArrowDropDown className="mr-1" />
+    <span>Categories</span>
+  </Link>
+
+  {/* Dropdown */}
+  <div className="absolute right-[20%]  top-full hidden w-40 rounded-md bg-white shadow-md group-hover:block">
+    <ul className="py-2">
+      {categoryDetails?.map((cat) => (
+        <li key={cat._id}>
+          <Link
+            href={`/${cat.name}`}
+            className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600"
+          >
+            {cat.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+        <Link  className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/cart`}>
+       <AiOutlineShoppingCart /> 
+       <span>cart</span>
         </Link>
 
         <>
         {isLogged === null ? (<></>) : (<>
           {!isLogged ? (
-            <Link href={`/login`}>
-              <h1 title="log in"><CiLogin />
+            <Link className="hover:text-indigo-400"  href={`/login`}>
+              <h1 title="log in"> <FiLogIn />
 </h1>
             </Link>
           ) : (
             <>
-              <h1 title="Log out" className="cursor-pointer" onClick={handleLogout}>
-                <IoLogOutOutline />
-
-              </h1>
-              <Link title="user data" href={`/userdata`}><FaRegUser />
+           
+              <Link className="hover:text-indigo-400 flex gap-1"  title="user data" href={`/userdata`}>   <FiUser />  <span>userdata</span>
 </Link>
-              <Link  title=" orders" href={`/userOrders`}><MdOutlineLocalShipping />
+              <Link className="hover:text-indigo-400 flex gap-1"  title=" orders" href={`/userOrders`}>      <BsClipboardCheck  />  <span>orders</span>
 </Link>
               {isAdmin &&
-                <Link href={'/admin'}>
-                  <h1  title="admin dashboard"><RiAdminLine />
-</h1>
+                <Link   title="admin dashboard" className="hover:text-indigo-400 flex gap-1"  href={'/admin'}>
+             
+                    <MdOutlineDashboard />  <span>dashboard</span>
+
                 </Link>
               }
+                 <h1 className="hover:text-indigo-400 cursor-pointer flex gap-1"  title="Log out"  onClick={handleLogout}>
+               <FiLogOut /> 
+                <span>Log out</span>
+              </h1>
             </>
 
           )}
@@ -105,8 +168,10 @@ const [clicked,setClicked]=useState(false)
         </>
       </div>
     
-      <MobNav clicked={clicked} setClicked={setClicked} logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
-    </main>
+    {categoryDetails&&  
+    (<MobNav  categoryDetails={categoryDetails} clicked={clicked} setClicked={setClicked} logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
+    )
+        }</main>
      
   </>);
 }

@@ -152,7 +152,11 @@ const forgetPassword = async (req, res) => {
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
-  const token = crypto.randomBytes(32).toString("hex");
+  const isUser = await User.findOne({email})
+  if (!isUser){
+  return res.status(404).json({message:"email not found"})
+}  
+const token = crypto.randomBytes(32).toString("hex");
 await redis.set(
   `reset:${token}`,
   email,

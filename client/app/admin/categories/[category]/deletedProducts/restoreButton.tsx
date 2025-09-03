@@ -2,91 +2,95 @@
 
 import { useState } from "react";
 
-
-
 interface RestoreButtonProps {
-productId:string
-
+  productId: string
 }
 
+export default function RestoreButton({ productId }: RestoreButtonProps) {
+  const [message, setMessage] = useState('')
+  const [clicked, setClicked] = useState(false)
+  const [quantity, setQuantity] = useState<number>()
 
-export default function  RestoreButton({productId}:RestoreButtonProps) {
-    const [message,setMessage]=useState('')
-    const [clicked,setClicked]= useState(false)
-const [quantity,setQuantity]= useState<number>()
-
-const handleSubmit = async () => { 
-  
-     try {
+  const handleSubmit = async () => {
+    try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/restoreProduct/${productId}`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({quantity})
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ quantity })
       })
       const data = await res.json()
-      
 
       if (!res.ok) {
         setMessage(data.message)
-       return
+        return
       }
       alert('restored')
       window.location.reload()
-      
-     
-  }
-  catch (error) {
-    setMessage('something went wrong please try again later')
-  
-    console.log('Error fetching data:', error);
-    
-     
-  }
-}
 
+    } catch (error) {
+      setMessage('something went wrong please try again later')
+      console.log('Error fetching data:', error);
+    }
+  }
 
-  
   return (
     <>
-    {/**restore button */}
-    <button onClick={(e)=>{ e.preventDefault();setClicked(true)}} className="px-2 py-1 w-fit text-sm flex justify-center items-center  rounded-2xl hover:opacity-50 cursor-pointer bg-amber-600">
-        restore
-    </button>
-    {/** form to submit*/}
-        {clicked && (
-    
-     <div onClick={(e) =>{ e.preventDefault();setClicked(false)  } } className="cursor-default fixed inset-0 z-10 bg-slate-900/90">  {/* استخدم '/' لتحديد opacity مباشرة في Tailwind */}
-      <form    onClick={(e) => {e.stopPropagation();e.preventDefault()}} className="cursor-default absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-fit h-fit min-w-[400px]  overflow-y-auto bg-white rounded">
-     <div className="flex flex-col m-4 ">
-  <label>Quantity</label>
-  <input 
-    type="number" 
-    placeholder="Quantity"
-    value={quantity} 
-    onChange={(e) => setQuantity(Number(e.target.value))} 
-    className=" flex items-center justify-start px-2 text-sm py-1   border-2 rounded-lg placeholder:text-sm"
-  />
-  {message&&
-  <h1 className=" mt-1 text-sm text-red-600">{message}</h1>
-  }
-</div>
+      {/* restore button */}
+      <button
+        onClick={(e) => { e.preventDefault(); setClicked(true) }}
+        className="px-3 py-1 w-fit text-sm rounded-xl bg-amber-600 text-white hover:bg-amber-700 transition"
+      >
+        Restore
+      </button>
 
+      {/* modal form */}
+      {clicked && (
+        <div
+          onClick={() => setClicked(false)}
+          className="fixed inset-0 z-10 flex items-center justify-center bg-black/70"
+        >
+          <form
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm flex flex-col gap-4"
+          >
+            <h2 className="text-lg font-semibold text-gray-700">Restore Product</h2>
 
-        <button onClick={() =>{handleSubmit()} } className="mx-auto px-2 py-1 w-fit text-sm flex justify-center items-center  rounded-2xl hover:opacity-50 cursor-pointer bg-amber-600">
-        submit</button>
-      <button onClick={() =>{setClicked(false)} } className="absolute cursor-pointer top-3 right-6 text-gray-700 hover:opacity-70 text-lg font-bold">×</button>
-    </form>
-</div>
-      
-      
-    )}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-600">Quantity</label>
+              <input
+                type="number"
+                placeholder="Enter quantity"
+                value={quantity ?? ""}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              {message && (
+                <p className="text-sm text-red-600">{message}</p>
+              )}
+            </div>
 
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="w-full bg-amber-600 text-white py-2 rounded-lg hover:bg-amber-700 transition"
+            >
+              Submit
+            </button>
 
-
-
-</>
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setClicked(false)}
+              className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ×
+            </button>
+          </form>
+        </div>
+      )}
+    </>
   );
 }

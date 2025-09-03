@@ -86,7 +86,7 @@ const [category, setCategory] = useState<string>('')
             <Suspense fallback={<div className="text-white font-bold text-4xl mx-auto mt-5">Loading...</div>}>
               <SearchParamsHandler onPageChange={setPage} />
             </Suspense>
-            <main className='p-2 border-2 m-2 rounded-lg  border-slate-950 shadow-2xl shadow-slate-600'>
+            <main className='p-2 border m-2 rounded-lg  border-slate-200 shadow-xl shadow-slate-400'>
               <div className=''>
                 {/**products count */}
                
