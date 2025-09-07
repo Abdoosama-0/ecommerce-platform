@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import NewAddress from "@/app/userdata/components/newAddress";
 import Loading from "@/components/loading";
 import ErrorMessage from "@/components/errorMessage";
-import Pay from "@/app/pay/page";
+
 
 interface address {
   _id: string;
@@ -253,7 +253,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
 
               {/* Submit Button */}
               <button 
-                onClick={()=>{handleSubmit}}
+                type="submit"
                 disabled={loading || !selectedAddress}
                 className="w-full py-3 px-6 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
               >

@@ -33,6 +33,9 @@ export default function Nav() {
 
         if (res.ok) {
            setIsLogged(JSON.parse("true"))
+           if(data.isAdmin){
+             setIsAdmin(JSON.parse("true"))
+           }
           alert(data.message);
         } else {
               setIsLogged(JSON.parse("false"))

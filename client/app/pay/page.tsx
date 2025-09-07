@@ -4,10 +4,11 @@ import React, { useEffect } from "react";
 //TypeScript
 declare global {
   interface Window {
-    fawaterkCheckout?: (config: any) => void;
-    pluginConfig?: any;
+    fawaterkCheckout?: (config: unknown) => void;
+    pluginConfig?: unknown;
   }
 }
+
 
 const Pay = () => {
   useEffect(() => {
