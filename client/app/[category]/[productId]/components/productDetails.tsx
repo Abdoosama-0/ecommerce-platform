@@ -29,6 +29,7 @@ export default function ProductDetails({
   const [buyClicked, setBuyClicked] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+
   const goToNextImage = () => {
     setCurrentImageIndex((prev) =>
       prev < imageUrls.length - 1 ? prev + 1 : 0
@@ -41,65 +42,116 @@ export default function ProductDetails({
     );
   };
 
-  return (
-    <div className="w-full flex flex-col sm:flex-row gap-6 bg-white border border-gray-200 rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+  const selectImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
-      {/* Image Section */}
-      <div className="relative w-full sm:w-2/3 lg:w-1/2 aspect-square sm:aspect-[4/3] rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-        <Image
-          src={
-            imageUrls[currentImageIndex] ||
-            `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`
-          }
-          alt={title || "No title available"}
-          fill
-          priority
-          className="object-contain bg-gray-50"
-        />
+  return (
+    <div className="w-full flex flex-col lg:flex-row gap-8 bg-white rounded-2xl p-6">
+
+      {/* Image Gallery Section */}
+      <div className="w-full lg:w-1/2 flex flex-col gap-4">
+        {/* Main Image */}
+        <div className="relative w-full aspect-square rounded-2xl overflow-hidden border border-gray-200 shadow-md">
+          <Image
+            src={
+              imageUrls[currentImageIndex] ||
+              `https://www.shutterstock.com/image-vector/default-image-icon-vector-missing-600nw-2079504220.jpg`
+            }
+            alt={title || "No title available"}
+            fill
+            priority
+            className="object-contain bg-gray-50 transition-transform duration-300 hover:scale-105"
+          />
+          {imageUrls.length > 1 && (
+            <>
+              <button
+                onClick={goToPreviousImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+              >
+                <FaArrowLeft className="text-gray-700" />
+              </button>
+              <button
+                onClick={goToNextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+              >
+                <FaArrowRight className="text-gray-700" />
+              </button>
+            </>
+          )}
+          
+  
+        </div>
+
+        {/* Thumbnail Gallery */}
         {imageUrls.length > 1 && (
-          <>
-            <button
-              onClick={goToPreviousImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow"
-            >
-              <FaArrowLeft className="text-gray-700" />
-            </button>
-            <button
-              onClick={goToNextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow"
-            >
-              <FaArrowRight className="text-gray-700" />
-            </button>
-          </>
+          <div className="flex gap-3 overflow-x-auto py-2">
+            {imageUrls.map((url, index) => (
+              <div 
+                key={index} 
+                className={`relative h-20 w-20 min-w-[80px] rounded-lg overflow-hidden border-2 cursor-pointer transition-all ${
+                  index === currentImageIndex ? 'border-blue-500' : 'border-gray-200'
+                }`}
+                onClick={() => selectImage(index)}
+              >
+                <Image
+                  src={url}
+                  alt={`Thumbnail ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Details Section */}
-      <div className="flex-1 flex flex-col justify-between gap-4">
+      {/* Product Info Section */}
+      <div className="w-full lg:w-1/2 flex flex-col gap-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800">{title}</h1>
-          <p className="mt-2 text-lg text-gray-700">
-            <span className="text-2xl font-bold text-primary">
+          <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+            {category}
+          </span>
+          <h1 className="text-3xl font-bold text-gray-900 mt-2">{title}</h1>
+          
+          <div className="flex items-center mt-4">
+            <span className="text-3xl font-bold text-blue-600">
               {Number(price).toLocaleString()}
-            </span>{" "}
-            <span className="text-gray-500 text-sm">EGP</span>
-          </p>
+            </span>
+            <span className="text-gray-600 text-lg mr-1">EGP</span>
+          </div>
+          
+          {quantity > 0 ? (
+            <div className="mt-2 flex items-center">
+              <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                available
+              </span>
+              <span className="text-gray-600 text-sm mr-2">({quantity} remaining )</span>
+            </div>
+          ) : (
+            <span className="text-red-600 font-medium mt-2"> out of stuck</span>
+          )}
         </div>
 
-        {/* Buttons */}
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => {
-              if (localStorage.getItem("isLogged") !== "true") {
-                router.push("/login");
-              } else {
-                setBuyClicked(true);
-              }
-            }}
-            className="bg-sky-700 hover:bg-sky-800 text-white font-semibold py-3 rounded-xl shadow-sm transition-all"
-          >
-            Buy Now
-          </button>
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                if (localStorage.getItem("isLogged") !== "true") {
+                  router.push("/login");
+                } else {
+                  setBuyClicked(true);
+                }
+              }}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-1"
+            >
+                buy now
+              </button>
+            
+    
+          </div>
+          
           <AddToCartButton
             productId={productID}
             price={price}
@@ -108,6 +160,24 @@ export default function ProductDetails({
             availableQuantity={quantity}
             category={category}
           />
+        </div>
+
+        {/* Product Features */}
+        <div className="mt-6 border-t border-gray-200 pt-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Product Features</h3>
+          <ul className="space-y-2 text-gray-700">
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+        Fast shipping within 24-48 hours
+            </li>
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+             Free returns within 14 days
+            </li>
+            <li className="flex items-center">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+Technical support available 24/7            </li>
+          </ul>
         </div>
       </div>
 

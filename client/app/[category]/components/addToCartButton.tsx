@@ -144,7 +144,7 @@ export default function AddToCartButton({ availableQuantity, productId, price, c
 
   const handleAddToCart = async (productId: string) => {
 
-
+  
     if (localStorage.getItem('isLogged') === 'true') {
       setLoading(true)
       try {

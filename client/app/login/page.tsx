@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,6 +11,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
+const googleLogin = () => {
+  window.location.href = `http://localhost:5000/auth/google`;
+};
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -95,6 +99,14 @@ export default function LoginPage() {
             className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
           >
             Login
+          </button>
+               <button
+               onClick={()=>googleLogin()}
+         
+            className="w-full py-3 rounded-xl bg-slate-50 text-black gap-2 flex items-center justify-center cursor-pointer font-semibold text-lg hover:bg-slate-200 transition shadow-md"
+          >
+        <FcGoogle />google
+
           </button>
         </form>
 

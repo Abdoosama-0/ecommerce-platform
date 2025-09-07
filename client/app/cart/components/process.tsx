@@ -45,7 +45,7 @@ export default function Process({ productsCount, totalPrice, cart, setCart }: Pr
       {/* Summary */}
       <div className="flex justify-between items-center bg-indigo-50 rounded-xl py-3 px-4">
         <p className="font-semibold text-slate-700">Products: <span className="text-indigo-600">{productsCount}</span></p>
-        <p className="font-semibold text-slate-700">Total: <span className="text-indigo-600">${totalPrice}</span></p>
+        <p className="font-semibold text-slate-700">Total: <span className="text-indigo-600">{totalPrice}ُEGP</span></p>
       </div>
 
       {/* Clear Cart */}

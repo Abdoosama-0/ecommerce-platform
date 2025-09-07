@@ -83,14 +83,14 @@ setLoading(true)
       {editClicked && (
 
         <div onClick={() => setEditClicked(false)} className="fixed inset-0 z-10 bg-slate-900/90">
-          <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[90%] overflow-y-auto bg-white rounded">
+          <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="absolute p-4 inset-0 m-auto z-20 flex flex-col gap-4 w-full md:w-[75%] max-h-[80%] overflow-y-auto bg-white rounded h-fit">
 
             {loading && (
               <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded">
                 <div className="loader3"></div>
               </div>
             )}
-            <div className=' overflow-y-auto p-4 '>
+            <div className='  '>
               {/* Title */}
               <div className='p-1 w-full mb-4 flex flex-col gap-1'>
                 <label className='w-fit'>title:</label>

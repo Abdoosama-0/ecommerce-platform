@@ -21,6 +21,31 @@ export default function Nav() {
 
 const [isLogged,setIsLogged]= useState<boolean |null >(null)
 const [isAdmin,setIsAdmin]= useState<boolean>(false)
+  useEffect(() => {
+    const verify = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/auth/me", {
+          method: "GET",
+          credentials: "include", 
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem("isLogged", "true");
+          console.log("User verified ✅", data);
+        } else {
+          localStorage.setItem("isLogged", "false");
+          console.log("Not verified ❌", data);
+        }
+      } catch (err) {
+        console.error("Error verifying user:", err);
+      }
+    };
+
+    verify();
+  }, []);
+
 
 useEffect(()=>{
 
@@ -46,6 +71,7 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
       }
       localStorage.setItem('isLogged', 'false');
       alert('Logged out successfully');
+   
       window.location.href = '/'; 
     } catch (err) {
       alert('something went wrong please try again later')

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import NewAddress from "@/app/userdata/components/newAddress";
+import Loading from "@/components/loading";
+import ErrorMessage from "@/components/errorMessage";
 
 interface address {
   _id: string;
@@ -39,13 +41,15 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
         credentials: "include",
       });
       const data = await res.json();
+      
       if (!res.ok) {
         setGetAddressesMessage(data.message);
         return;
       }
+      
       setAddresses(data.addresses);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
       setGetAddressesMessage("Something went wrong, please try again later");
     }
   };
@@ -61,14 +65,17 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
         body: JSON.stringify(orderData),
       });
       const data = await res.json();
+      
       if (!res.ok) {
         setMessage(data.message);
         return;
       }
-      alert("Added successfully");
+      
+      alert("Order placed successfully!");
+      setClicked(false);
       window.location.reload();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error('Error submitting order:', error);
       setMessage("Something went wrong, please try again later");
     } finally {
       setLoading(false);
@@ -119,127 +126,135 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   return (
     <>
       {clicked && (
-      <div onClick={() => setClicked(false)} className="fixed inset-0 z-20 bg-slate-900/90">
-          <form
+        <div 
+          onClick={() => setClicked(false)} 
+          className="fixed inset-0 z-50 bg-slate-900/80 flex items-center justify-center p-4"
+        >
+          <div 
             onClick={(e) => e.stopPropagation()}
-            onSubmit={handleSubmit}
-            className="mt-20 h-fit absolute inset-0 m-auto z-30 bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md border border-slate-200 flex flex-col gap-4 max-h-[90%] overflow-y-auto"
+            className="bg-white shadow-2xl rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden border border-slate-200 relative"
           >
+            {/* Loading Overlay */}
             {loading && (
-              <div className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 rounded-2xl">
-                <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="absolute inset-0 z-50 bg-white/80 flex items-center justify-center rounded-2xl">
+                <Loading />
               </div>
             )}
-            <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">🛒 Place Your Order</h1>
-
-            {/* Quantity */}
-            <div>
-              <label htmlFor="quantity" className="block text-sm font-semibold text-slate-700 mb-1">
-                Quantity
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
-                min={1}
-                required
-              />
-            </div>
-
-            {/* Payment Method */}
-            <div>
-              <label htmlFor="paymentMethod" className="block text-sm font-semibold text-slate-700 mb-1">
-                Payment Method
-              </label>
-              <select
-                id="paymentMethod"
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full border rounded-xl p-3 text-lg border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
-              >
-                <option value="cash on delivery">Cash on Delivery</option>
-              </select>
-            </div>
-
-            {/* Addresses */}
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">Choose Address</label>
-              <div className="flex flex-col gap-2 max-h-72 overflow-y-auto">
-                {addresses ? (
-                  addresses.slice().reverse().map((address, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center p-3 border border-slate-300 rounded-xl bg-gray-50"
-                    >
-                      <input
-                        type="radio"
-                        name="address"
-                        value={address._id}
-                        onChange={() => setSelectedAddress(address)}
-                        checked={selectedAddress?._id === address._id}
-                        className="mr-2"
-                      />
-                      <label className="text-sm text-slate-700">
-                        <p>
-                          City: {address.city}, Government: {address.government}
-                        </p>
-                        <p>
-                          Area: {address.area}, Street: {address.street}
-                        </p>
-                        <p>
-                          Building: {String(address.buildingNumber)}, Dept: {String(address.departmentNumber)}
-                        </p>
-                      </label>
-                    </div>
-                  ))
-                ) : (
-                  <div className="bg-red-500 text-white font-medium p-2 rounded-xl text-center">
-                    {getAddressesMessage}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Add New Address Button */}
-            <button
-              type="button"
-              onClick={() => setNewAddress(true)}
-              className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
-            >
-              Add New Address
-            </button>
-
-            {/* Total Price */}
-            <div className="text-center text-lg font-semibold text-slate-800">
-              Total Price: ${totalPrice}
-            </div>
-
-            {/* Error Message */}
-            {message && (
-              <div className="bg-red-500 text-white font-medium p-2 rounded-xl text-center">
-                {message}
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-lg hover:bg-indigo-700 transition shadow-md"
-            >
-              Submit Order
-            </button>
 
             {/* Close Button */}
             <button
-              type="button"
               onClick={() => setClicked(false)}
-              className="absolute top-4 right-4 text-indigo-600 hover:text-indigo-800 text-2xl font-medium cursor-pointer"
+              className="absolute top-4 right-4 z-20 text-slate-600 hover:text-slate-800 text-2xl font-bold transition-colors"
             >
-              ✕
+              ×
             </button>
-          </form>
+
+            {/* Header */}
+            <div className="bg-slate-50 p-6 border-b border-slate-200">
+              <h1 className="text-3xl font-bold text-center text-slate-800">🛒 Place Your Order</h1>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              
+              {/* Quantity Section */}
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">📦 Quantity</h3>
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full p-3 border border-slate-300 rounded-lg text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  min={1}
+                  required
+                />
+              </div>
+
+              {/* Payment Method Section */}
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">💳 Payment Method</h3>
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="w-full p-3 border border-slate-300 rounded-lg text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                >
+                  <option value="cash on delivery">Cash on Delivery</option>
+                </select>
+              </div>
+
+              {/* Address Selection Section */}
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">📍 Delivery Address</h3>
+                <div className="space-y-3 max-h-60 overflow-y-auto">
+                  {addresses ? (
+                    addresses.slice().reverse().map((address, index) => (
+                      <div 
+                        key={index}
+                        className="flex items-start gap-3 p-4 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                      >
+                        <input 
+                          type="radio" 
+                          name="address" 
+                          value={address._id}
+                          onChange={() => setSelectedAddress(address)}
+                          checked={selectedAddress?._id === address._id}
+                          className="mt-1 text-blue-600 focus:ring-blue-500"
+                        />
+                        <div className="flex-1 text-slate-700">
+                          <p className="font-medium">
+                            {address.city}, {address.government}
+                          </p>
+                          <p className="text-sm">
+                            {address.area}, {address.street}
+                          </p>
+                          <p className="text-sm">
+                            Building: {String(address.buildingNumber)}, Dept: {String(address.departmentNumber)}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                      <ErrorMessage message={getAddressesMessage} />
+                    </div>
+                  )}
+                </div>
+                
+                <button 
+                  type="button"
+                  onClick={() => setNewAddress(true)}
+                  className="mt-4 w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  + Add New Address
+                </button>
+              </div>
+
+              {/* Total Price Section */}
+              <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                <h3 className="text-lg font-semibold text-slate-800 mb-3">💰 Order Summary</h3>
+                <div className="text-center">
+                  <span className="text-2xl font-bold text-slate-800">
+                    Total: <span className="text-green-600">{totalPrice}EGP</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {message && (
+                <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                  <ErrorMessage message={message} />
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button 
+                type="submit"
+                disabled={loading || !selectedAddress}
+                className="w-full py-3 px-6 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Processing...' : 'Place Order'}
+              </button>
+            </form>
+          </div>
         </div>
       )}
 

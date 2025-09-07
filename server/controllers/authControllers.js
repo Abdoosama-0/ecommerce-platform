@@ -46,7 +46,7 @@ await editUser.save();
       const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
       
    
-      res.cookie("access_token", accessToken, { httpOnly: true, secure: false }); 
+      res.cookie("access_token", accessToken, { httpOnly: true, secure: false , maxAge: 1000 * 60 * 60 * 24 * 365 * 100}); 
       
      
       return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
@@ -210,4 +210,53 @@ const recreatePassword = async (req, res) => {
   return res.status(200).json({ message: "password recreated successfully, go back to login page" })
 
 }
-module.exports={register,localLogin,verifyOtp,forgetPassword,recreatePassword}
+
+//=========================================================================
+const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+//----------
+const googleAuthCallback = async (req, res, next) => {
+  passport.authenticate("google", { session: false }, async (err, user, info) => {
+    if (err ) {
+      console.log(err)
+      return res.status(400).json({ message: "Google authentication failed" });
+    }
+  if ( !user) {
+      return res.status(400).json({ message: "Google authentication failed1" });
+    }
+
+
+    //==========================================
+ const payload = { userID: user._id.toString(), isAdmin: user.isAdmin };
+      
+      const accessToken = jwt.sign(payload, process.env.SECRET_TOKEN);
+      
+   
+      res.cookie("access_token", accessToken, { httpOnly: true, secure: false }); 
+
+    //==========================================
+    return res.redirect('http://localhost:3000/')
+
+
+
+  })(req, res, next);
+};
+
+
+
+const isAuth = (req, res) => {
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
+    req.user = decoded;
+    return res.status(200).json({message:"user"})
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+};
+
+
+
+
+module.exports={register,localLogin,verifyOtp,forgetPassword,recreatePassword,isAuth,googleAuth, googleAuthCallback}

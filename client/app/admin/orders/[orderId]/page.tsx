@@ -111,7 +111,7 @@ export default function OrderId() {
                 <>
                   <div
                     onClick={() => setUpdateStatus(false)}
-                    className="fixed inset-0 z-20 bg-black bg-opacity-50"
+                    className="fixed inset-0 z-20 bg-slate-900/80"
                   ></div>
                   <UpdateStatus currentStatus={data?.status} />
                 </>

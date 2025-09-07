@@ -48,10 +48,10 @@ export default function ProductPage() {
           {!data ? (
             <ErrorMessage message={message} />
           ) : (
-            <main className="min-h-screen bg-gray-50 p-6 flex flex-col gap-6  mx-auto">
+            <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8 flex flex-col gap-6 mx-auto max-w-6xl">
               
               {/* main details */}
-              <section className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+              <section className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 transition-all hover:shadow-2xl">
                 <ProductDetails
                   imageUrls={data?.imageUrls ?? []}
                   price={data?.price ?? undefined}
@@ -64,9 +64,9 @@ export default function ProductPage() {
 
               {/* more details */}
               {data.details && (
-                <section className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                  <h2 className="text-xl font-bold text-primary mb-3">Product Details</h2>
-                  <p className="text-gray-700 leading-relaxed">{data.details}</p>
+                <section className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 transition-all hover:shadow-2xl">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 border-gray-100">product details</h2>
+                  <p className="text-gray-700 leading-relaxed text-lg">{data.details}</p>
                 </section>
               )}
 
