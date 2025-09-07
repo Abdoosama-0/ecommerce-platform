@@ -17,26 +17,26 @@ import { GiGymBag } from "react-icons/gi";
 
 
 export default function Nav() {
-  
 
-const [isLogged,setIsLogged]= useState<boolean |null >(null)
-const [isAdmin,setIsAdmin]= useState<boolean>(false)
+
+  const [isLogged, setIsLogged] = useState<boolean | null>(null)
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
   useEffect(() => {
     const verify = async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/me", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
           method: "GET",
-          credentials: "include", 
+          credentials: "include",
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          localStorage.setItem("isLogged", "true");
-          console.log("User verified ✅", data);
+           setIsLogged(JSON.parse("true"))
+          alert(data.message);
         } else {
-          localStorage.setItem("isLogged", "false");
-          console.log("Not verified ❌", data);
+              setIsLogged(JSON.parse("false"))
+          alert(data.message);
         }
       } catch (err) {
         console.error("Error verifying user:", err);
@@ -47,11 +47,11 @@ const [isAdmin,setIsAdmin]= useState<boolean>(false)
   }, []);
 
 
-useEffect(()=>{
+  // useEffect(() => {
 
-setIsLogged(JSON.parse(localStorage.getItem("isLogged")|| "false"))
-setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
-},[])
+  //   setIsLogged(JSON.parse(localStorage.getItem("isLogged") || "false"))
+  //   setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
+  // }, [])
 
   const handleLogout = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -71,57 +71,58 @@ setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
       }
       localStorage.setItem('isLogged', 'false');
       alert('Logged out successfully');
-   
-      window.location.href = '/'; 
+
+      window.location.href = '/';
     } catch (err) {
       alert('something went wrong please try again later')
       console.log(err);
     }
   };
-   const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
-    const fetchCategories = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            const data = await res.json();
+  const [categoryDetails, setCategoryDetails] = useState<categoriesDetails[]>()
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCategories`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      const data = await res.json();
 
-            if (!res.ok) {
-                alert(data.message);
-                return;
-            }
-            setCategoryDetails(data.categories);
-     
-        } catch (error) {
-            alert('something went wrong please try again later');
-            console.error('Error fetching data:', error);
-        } 
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
+      setCategoryDetails(data.categories);
+
+    } catch (error) {
+      alert('something went wrong please try again later');
+      console.error('Error fetching data:', error);
     }
+  }
 
-useEffect(()=>{
-fetchCategories()
+  useEffect(() => {
+    fetchCategories()
 
-},[])
-const [clicked,setClicked]=useState(false)
+  }, [])
+  const [clicked, setClicked] = useState(false)
 
   return (<>
     <main className="relative top-0 left-0 w-full h-[64px] bg-slate-900 border-b-2 border-slate-400/20  shadow-xl z-40 flex items-center text-2xl text-white font-bold justify-between">
 
-    
-    
-    
+
+
+
       <div className="ml-10 w-fit ">
-        <Link className="flex gap-1 items-center  hover:text-indigo-300 text-3xl" 
-        onClick={()=>{
-          if(clicked){
-          setClicked(false)}
-          }} 
-           href={`/`}>
-      <p className=" font-extrabold">muscular</p><GiGymBag />
+        <Link className="flex gap-1 items-center  hover:text-indigo-300 text-3xl"
+          onClick={() => {
+            if (clicked) {
+              setClicked(false)
+            }
+          }}
+          href={`/`}>
+          <p className=" font-extrabold">muscular</p><GiGymBag />
 
 
 
@@ -129,73 +130,77 @@ const [clicked,setClicked]=useState(false)
       </div>
 
       <div className="hidden lg:flex pointer-events-none md:pointer-events-auto mr-10 justify-end items-center w-full gap-8">
-    <div className="relative group">
-  <Link
-    className="  flex items-center hover:text-indigo-400"
-    title="categories"
-    href="#"
-  >
-    <MdOutlineArrowDropDown className="mr-1" />
-    <span>Categories</span>
-  </Link>
-
-  {/* Dropdown */}
-  <div className="absolute right-[20%]  top-full hidden w-40 rounded-md bg-white shadow-md group-hover:block">
-    <ul className="py-2">
-      {categoryDetails?.map((cat) => (
-        <li key={cat._id}>
+        <div className="relative group">
           <Link
-            href={`/${cat.name}`}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600"
+            className="  flex items-center hover:text-indigo-400"
+            title="categories"
+            href="#"
           >
-            {cat.name}
+            <MdOutlineArrowDropDown className="mr-1" />
+            <span>Categories</span>
           </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-</div>
-        <Link  className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/cart`}>
-       <AiOutlineShoppingCart /> 
-       <span>cart</span>
+
+
+          {/* Dropdown */}
+          <div className="absolute right-[20%]  top-full hidden w-40 rounded-md bg-white shadow-md group-hover:block">
+            <ul className="py-2">
+              {categoryDetails?.map((cat) => (
+                <li key={cat._id}>
+                  <Link
+                    href={`/${cat.name}`}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600"
+                  >
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <Link className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/cart`}>
+          <AiOutlineShoppingCart />
+          <span>cart</span>
+        </Link>
+              <Link className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/pay`}>
+    payment
         </Link>
 
         <>
-        {isLogged === null ? (<></>) : (<>
-          {!isLogged ? (
-            <Link  title="log in" className="hover:text-indigo-400 flex gap-1 items-center"  href={`/login`}>
-             <FiLogIn /><span>login</span>
+          {isLogged === null ? (<></>) : (<>
+            {!isLogged ? (
+              <Link title="log in" className="hover:text-indigo-400 flex gap-1 items-center" href={`/login`}>
+                <FiLogIn /><span>login</span>
 
-            </Link>
-          ) : (
-            <>
-           
-              <Link className="hover:text-indigo-400 flex gap-1"  title="user data" href={`/userdata`}>   <FiUser />  <span>userdata</span>
-</Link>
-              <Link className="hover:text-indigo-400 flex gap-1"  title=" orders" href={`/userOrders`}>      <BsClipboardCheck  />  <span>orders</span>
-</Link>
-              {isAdmin &&
-                <Link   title="admin dashboard" className="hover:text-indigo-400 flex gap-1"  href={'/admin'}>
-             
+              </Link>
+            ) : (
+              <>
+
+                <Link className="hover:text-indigo-400 flex gap-1" title="user data" href={`/userdata`}>   <FiUser />  <span>userdata</span>
+                </Link>
+                <Link className="hover:text-indigo-400 flex gap-1" title=" orders" href={`/userOrders`}>      <BsClipboardCheck />  <span>orders</span>
+                </Link>
+                {isAdmin &&
+                  <Link title="admin dashboard" className="hover:text-indigo-400 flex gap-1" href={'/admin'}>
+
                     <MdOutlineDashboard />  <span>dashboard</span>
 
-                </Link>
-              }
-                 <h1 className="hover:text-indigo-400 cursor-pointer flex gap-1"  title="Log out"  onClick={handleLogout}>
-               <FiLogOut /> 
-                <span>Log out</span>
-              </h1>
-            </>
+                  </Link>
+                }
+                <h1 className="hover:text-indigo-400 cursor-pointer flex gap-1" title="Log out" onClick={handleLogout}>
+                  <FiLogOut />
+                  <span>Log out</span>
+                </h1>
+              </>
 
-          )}
+            )}
           </>)}
         </>
       </div>
-    
-    {categoryDetails&&  
-    (<MobNav  categoryDetails={categoryDetails} clicked={clicked} setClicked={setClicked} logout={handleLogout} isAdmin={isAdmin}  isLogged={isLogged}/>
-    )
-        }</main>
-     
+
+      {categoryDetails &&
+        (<MobNav categoryDetails={categoryDetails} clicked={clicked} setClicked={setClicked} logout={handleLogout} isAdmin={isAdmin} isLogged={isLogged} />
+        )
+      }</main>
+
   </>);
 }

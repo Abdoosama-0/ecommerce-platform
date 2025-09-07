@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import NewAddress from "@/app/userdata/components/newAddress";
 import Loading from "@/components/loading";
 import ErrorMessage from "@/components/errorMessage";
+import Pay from "@/app/pay/page";
 
 interface address {
   _id: string;
@@ -57,6 +58,10 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    if(paymentMethod!=="cash on delivery"){
+      window.location.pathname='/pay';
+      return
+    }
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: "POST",
@@ -177,7 +182,8 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   className="w-full p-3 border border-slate-300 rounded-lg text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 >
-                  <option value="cash on delivery">Cash on Delivery</option>
+                  <option value="cash on delivery">cash on delivery</option>
+                  <option value="others">others</option>
                 </select>
               </div>
 
@@ -247,7 +253,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
 
               {/* Submit Button */}
               <button 
-                type="submit"
+                onClick={()=>{handleSubmit}}
                 disabled={loading || !selectedAddress}
                 className="w-full py-3 px-6 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
               >

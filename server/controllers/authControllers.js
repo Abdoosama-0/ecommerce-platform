@@ -19,7 +19,7 @@ const localLogin = (req, res, next) => {
   passport.authenticate('local', { session: false }, async(err, user, info) => {
     
       if (err) return res.status(500).json({ message: "Server error", error: err }) 
-      if (!user) return res.status(401).json({ message: info?.message|| "Invalid username or password" }) 
+      if (!user) return res.status(401).json({ message: info?.message|| "Invalid username or password" }) //err
 
         const cart=req.body.cart||[]
       
@@ -47,7 +47,6 @@ await editUser.save();
       
    
       res.cookie("access_token", accessToken, { httpOnly: true, secure: false , maxAge: 1000 * 60 * 60 * 24 * 365 * 100}); 
-      
      
       return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
   })(req, res, next)
@@ -245,12 +244,12 @@ const googleAuthCallback = async (req, res, next) => {
 
 const isAuth = (req, res) => {
   const token = req.cookies.access_token;
-  if (!token) return res.status(401).json({ message: "Not authenticated" });
+  if (!token) return res.status(401).json({ message: "Not authenticated (there is no access_token)" });
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     req.user = decoded;
-    return res.status(200).json({message:"user"})
+    return res.status(200).json({message:"authenticated"})
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });
   }

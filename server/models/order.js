@@ -24,7 +24,7 @@ const orderSchema = new Schema({
     totalQuantity: { type: Number, default: 0 },
     totalPrice: { type: Number, default: 0 },
     address:{ type: addressSchema,required:true },
-    paymentMethod:{ type: String, enum: ['cash on delivery'], default: 'cash on delivery' },
+    paymentMethod:{ type: String, enum: ['cash on delivery',"others"], default: 'cash on delivery' },
   });
 
   const Order = mongoose.model('Order', orderSchema); 

@@ -138,6 +138,7 @@ export default function ProductDetails({
           <div className="flex gap-3">
             <button
               onClick={() => {
+             
                 if (localStorage.getItem("isLogged") !== "true") {
                   router.push("/login");
                 } else {
