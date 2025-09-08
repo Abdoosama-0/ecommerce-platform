@@ -59,6 +59,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
     e.preventDefault();
     setLoading(true);
     if(paymentMethod!=="cash on delivery"){
+      localStorage.setItem('buyCart',JSON.stringify(orderData))
       window.location.pathname='/pay';
       return
     }
@@ -126,6 +127,7 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
           departmentNumber: "",
         },
     paymentMethod: paymentMethod,
+    totalPrice:totalPrice
   };
 
   return (

@@ -140,6 +140,7 @@ export default function ProductDetails({
               onClick={() => {
              
                 if (localStorage.getItem("isLogged") !== "true") {
+                  alert(localStorage.getItem("isLogged"))
                   router.push("/login");
                 } else {
                   setBuyClicked(true);

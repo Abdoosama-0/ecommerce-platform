@@ -360,7 +360,7 @@ const addresses =async (req,res)=>{
 }
 
 const logout = (req, res) => {
-  res.clearCookie('access_token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+  res.clearCookie('access_token', { httpOnly: true, secure: true, sameSite: 'none' });
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 

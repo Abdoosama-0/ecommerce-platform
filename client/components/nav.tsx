@@ -32,14 +32,13 @@ export default function Nav() {
         const data = await res.json();
 
         if (res.ok) {
+          localStorage.setItem('isLogged',"true")
            setIsLogged(JSON.parse("true"))
            if(data.isAdmin){
              setIsAdmin(JSON.parse("true"))
            }
-          alert(data.message);
         } else {
               setIsLogged(JSON.parse("false"))
-          alert(data.message);
         }
       } catch (err) {
         console.error("Error verifying user:", err);
@@ -163,9 +162,6 @@ export default function Nav() {
         <Link className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/cart`}>
           <AiOutlineShoppingCart />
           <span>cart</span>
-        </Link>
-              <Link className="hover:text-indigo-400  items-center gap-1 flex" title="cart" href={`/pay`}>
-    payment
         </Link>
 
         <>

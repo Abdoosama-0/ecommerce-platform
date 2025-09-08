@@ -33,7 +33,6 @@ const googleLogin = () => {
         setMessage(data.message);
         return;
       }
-      alert("Logged")
 
       localStorage.setItem('isLogged', 'true');
       localStorage.setItem('isAdmin', data.isAdmin.toString());
