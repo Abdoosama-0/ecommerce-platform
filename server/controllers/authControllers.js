@@ -46,7 +46,7 @@ await editUser.save();
       const accessToken = jwt.sign(Payload, process.env.SECRET_TOKEN);
       
    
-      res.cookie("access_token", accessToken, { httpOnly: true, secure: false , maxAge: 1000 * 60 * 60 * 24 * 365 * 100}); 
+      res.cookie("access_token", accessToken, { httpOnly: true, secure: true,sameSite: "none" , maxAge: 1000 * 60 * 60 * 24 * 365 * 100}); 
      
       return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
   })(req, res, next)
