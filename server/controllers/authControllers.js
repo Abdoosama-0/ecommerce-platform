@@ -47,8 +47,12 @@ await editUser.save();
       
    
       res.cookie("access_token", accessToken, { httpOnly: true, secure: true,sameSite: "none" , maxAge: 1000 * 60 * 60 * 24 * 365 * 100}); 
+<<<<<<< HEAD
 
       
+=======
+     
+>>>>>>> 35f883882c3add8ea22da10dbc6f33306d7ff7c2
       return res.json({message:'welcome ', isAdmin:user.isAdmin ,accessToken})
   })(req, res, next)
 }
