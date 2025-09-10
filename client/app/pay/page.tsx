@@ -70,7 +70,7 @@ const Pay = () => {
       // put config in window
       window.pluginConfig = {
         envType: "live",
-        hashKey: "257bc8b4e8f8ddb921e82f6499528da711da413dbaf470604ae6b058a7c8fb22",
+        hashKey: "459154ca1ae62abd2ff1e5ac6bc3b65760d6116472e3ae4fd8b3dd2413743686",
         style: {
           listing: "horizontal",
         },
