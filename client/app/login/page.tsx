@@ -35,6 +35,7 @@ const googleLogin = () => {
       }
 
       localStorage.setItem('isLogged', 'true');
+
       localStorage.setItem('isAdmin', data.isAdmin.toString());
       localStorage.removeItem('cart');
 

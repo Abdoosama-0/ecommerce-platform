@@ -34,6 +34,7 @@ export default function Nav() {
         if (res.ok) {
           localStorage.setItem('isLogged',"true")
            setIsLogged(JSON.parse("true"))
+           setIsAdmin(JSON.parse(localStorage.getItem("isAdmin") || "false"))
            if(data.isAdmin){
              setIsAdmin(JSON.parse("true"))
            }
