@@ -69,8 +69,8 @@ const Pay = () => {
 
       // put config in window
       window.pluginConfig = {
-        envType: "live",
-        hashKey: "459154ca1ae62abd2ff1e5ac6bc3b65760d6116472e3ae4fd8b3dd2413743686",
+        envType: "test",
+        hashKey: "19ccf69315a0c7a7d182d7465f4e116c9a1464d0281ae39a45d5e59351a0c11a",
         style: {
           listing: "horizontal",
         },
@@ -86,7 +86,7 @@ const Pay = () => {
             address: "test address",
           },
           redirectionUrls: {
-            successUrl: "https://dev.fawaterk.com/success",
+            successUrl: "https://9c81f9d68c374ce7211af0d5fb7be019.serveo.net",
             failUrl: "https://dev.fawaterk.com/fail",
             pendingUrl: "https://dev.fawaterk.com/pending",
           },
@@ -101,6 +101,7 @@ const Pay = () => {
             custom_field1: "xyz",
             custom_field2: "xyz2",
           },
+          redirectOutIframe	: true
         },
       };
 

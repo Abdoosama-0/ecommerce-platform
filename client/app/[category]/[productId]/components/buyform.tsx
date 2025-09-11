@@ -58,11 +58,11 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    if(paymentMethod!=="cash on delivery"){
-      localStorage.setItem('buyCart',JSON.stringify(orderData))
-      window.location.pathname='/pay';
-      return
-    }
+    // if(paymentMethod!=="cash on delivery"){
+      // localStorage.setItem('buyCart',JSON.stringify(orderData))
+      // window.location.pathname='/pay';
+      // return
+    // }
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: "POST",
