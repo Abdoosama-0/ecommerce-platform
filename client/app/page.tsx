@@ -3,7 +3,7 @@
 
 import Footer from "@/components/footer";
 import Categories from "./Categories"
-import Script from "next/script";
+
 
 
 
