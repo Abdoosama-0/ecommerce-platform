@@ -27,7 +27,22 @@ export default function RootLayout({
         className={` antialiased `}
       >
         <Nav />
-        {children}
+                {children}
+
+        {/* ExoClick Banner Zone */}
+        <script
+          async
+          type="application/javascript"
+          src="https://a.magsrv.com/ad-provider.js"
+        ></script>
+        <ins className="ea56a97888e2" data-zoneid="5725036"></ins>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (AdProvider = window.AdProvider || []).push({"serve": {}});
+            `,
+          }}
+        />
       </body>
     </html>
   );
