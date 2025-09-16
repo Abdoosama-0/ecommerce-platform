@@ -3,12 +3,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "@/components/nav";
 
+import Script from "next/script";
 
 
 export const metadata: Metadata = {
   title: "muscular Store",
   description: "store for gym supplements",
-    other: {
+  other: {
     "6a97888e-site-verification": "673dff43759a9f5951315b4f66201ccf"
   }
 };
@@ -27,22 +28,23 @@ export default function RootLayout({
         className={` antialiased `}
       >
         <Nav />
-                {children}
-
-        {/* ExoClick Banner Zone */}
-        <script
+        {children}
+        <Script
           async
-          type="application/javascript"
           src="https://a.magsrv.com/ad-provider.js"
-        ></script>
-        <ins className="ea56a97888e2" data-zoneid="5725036"></ins>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (AdProvider = window.AdProvider || []).push({"serve": {}});
-            `,
-          }}
+          strategy="afterInteractive"
         />
+        <ins className="ea56a97888e2" data-zoneid="5725036"></ins>
+        <Script
+          id="exoclick-init"
+          strategy="afterInteractive"
+        >{`
+          (AdProvider = window.AdProvider || []).push({"serve": {}});
+        `}
+        </Script>
+
+
+
       </body>
     </html>
   );
