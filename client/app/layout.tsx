@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "@/components/nav";
 
-import Script from "next/script";
 
 
 export const metadata: Metadata = {
@@ -29,19 +28,7 @@ export default function RootLayout({
       >
         <Nav />
         {children}
-        <Script
-          async
-          src="https://a.magsrv.com/ad-provider.js"
-          strategy="afterInteractive"
-        />
-        <ins className="ea56a97888e2" data-zoneid="5725036"></ins>
-        <Script
-          id="exoclick-init"
-          strategy="afterInteractive"
-        >{`
-          (AdProvider = window.AdProvider || []).push({"serve": {}});
-        `}
-        </Script>
+
 
 
 
