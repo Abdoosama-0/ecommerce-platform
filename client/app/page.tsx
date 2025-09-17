@@ -1,9 +1,7 @@
-'use client'
 
 
 import Footer from "@/components/footer";
 import Categories from "./Categories"
-
 
 
 declare global {
@@ -16,10 +14,23 @@ declare global {
 export default function Home() {
 
 
+
+
     return (
         <>
+
+
+
+
+
         <Categories/>
         <Footer/>
+
+
+
+
+
+     
         </>
     );
 }
