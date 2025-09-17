@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "muscular Store",
   description: "store for gym supplements",
   other: {
-    "6a97888e-site-verification": "673dff43759a9f5951315b4f66201ccf"
+    "google-adsense-account": "ca-pub-4436694169822850"
   }
 };
 
