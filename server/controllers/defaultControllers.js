@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 const User = require('../models/user');
 const Product = require('../models/product');
 const Order = require('../models/order');
@@ -501,9 +501,7 @@ const order = async (req, res) => {
     if (!userId || !products || !Array.isArray(products)) {
       return res.status(400).json({ message: 'Invalid request data' });
     }
-    if(paymentMethod!=='cash on delivery'){
-      return res.status(400).json({ message: 'the paymentMethods that allowed is [cash on delivery]' });
-    }
+ 
 
    
     const user = await User.findById(userId);
@@ -512,12 +510,17 @@ const order = async (req, res) => {
 
     let totalQuantity = 0;
     let totalPrice = 0;
-
+    let cartItems = []
     for (const item of products) {
       const product = await Product.findById(item.productId);
       if (!product) {
         return res.status(404).json({ message: `Product not found: ${item.productId}` });
       }
+      cartItems.push({
+    name: product.title,
+    price: product.price,
+    quantity: item.quantity,
+  });
       totalQuantity += item.quantity;
       totalPrice += item.quantity * product.price;
       if(product.quantity < item.quantity  ){
@@ -527,8 +530,71 @@ const order = async (req, res) => {
       await product.save();
     
     }
+let payment_method_id 
+let data ={}
+if(paymentMethod!=='cash on delivery'){
+  try {
 
-   
+if (paymentMethod==='Visa-Mastercard'){  payment_method_id = 2}
+if (paymentMethod==='Visa-Fawry'){  payment_method_id = 3}
+else{
+  
+    return res.status(404).json({
+      message: 'not valid payment method',
+    });
+}
+// if (paymentMethod==='Visa-Meeza'){  payment_method_id = 4}
+
+const customer={
+  first_name:user.name,
+  last_name:"none",
+  email:user.email,
+  phone:user.phone||"none",
+}
+
+    const body = {
+      payment_method_id,
+      cartTotal:totalPrice,
+      currency:'EGP',
+      customer,
+      redirectionUrls: {
+        successUrl: process.env.FRONT_URL,
+        failUrl: "https://dev.fawaterk.com/fail",
+        pendingUrl: "https://dev.fawaterk.com/pending",
+      },
+      cartItems,
+    };
+
+    const response = await fetch(
+      "https://staging.fawaterk.com/api/v2/invoiceInitPay",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${process.env.FAWATERAK_API_KEY}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+
+    if (!response.ok) {
+ 
+      console.log("=========================================")
+      return res
+        .status(response.status)
+        .json({ error: "Failed to execute payment" });
+    }
+     data = await response.json();
+  } catch (error) {
+    console.error("Error executing payment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+
+   }
+
+
 
 
     const newOrder = new Order({
@@ -537,17 +603,167 @@ const order = async (req, res) => {
       totalQuantity,
       totalPrice,
       address
-      ,paymentMethod
+      ,paymentMethod,
+      payment_method_id:payment_method_id||"0",
+      invoice_id:data.data.invoice_id|| null,
+      invoice_key:data.data.invoice_key|| null,
+      paymentStatus:'pending'
     });
 
     await newOrder.save();
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: 'Order placed successfully',
-    order:newOrder
+    order:newOrder,
+    payment_data:data.data.payment_data
+
     });
  
 };
 
+//==========
 
-module.exports={order,products,product,welcomeUser,address,cart,addToCart,clearCart,logout,addresses,cancelOrder,getCategories,increaseQuantity,getProductQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById,getUserOrders ,restoreOrder}
+const getPaymentMethods = async (req, res) => {
+  try {
+    const response = await fetch("https://staging.fawaterk.com/api/v2/getPaymentmethods", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.FAWATERAK_API_KEY}`,
+      },
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: "Failed to fetch payment methods" });
+    }
+
+    const data = await response.json();
+
+    
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching payment methods:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//==========
+const executePayment = async (req, res) => {
+  try {
+    const {
+      payment_method_id,
+      cartTotal,
+      currency,
+      invoice_number,
+      customer,
+      cartItems,
+    } = req.body;
+
+    const body = {
+      payment_method_id,
+      cartTotal,
+      currency,
+      invoice_number,
+      customer,
+      redirectionUrls: {
+        successUrl: "https://dev.fawaterk.com/success",
+        failUrl: "https://dev.fawaterk.com/fail",
+        pendingUrl: "https://dev.fawaterk.com/pending",
+      },
+      cartItems,
+    };
+
+    const response = await fetch(
+      "https://staging.fawaterk.com/api/v2/invoiceInitPay",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${process.env.FAWATERAK_API_KEY}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (!response.ok) {
+      return res
+        .status(response.status)
+        .json({ error: "Failed to execute payment" });
+    }
+
+    const data = await response.json();
+
+    // رجّع الرد زي ما هو للـ frontend
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error executing payment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+//=========
+const crypto = require("crypto");
+;
+const fawaterkWebhook=async(req,res)=>{
+    const data = req.body;
+  
+    console.log("Webhook data received:", data);
+
+    if (data.invoice_status === "paid") {
+      const query = `InvoiceId=${data.invoice_id}&InvoiceKey=${data.invoice_key}&PaymentMethod=${data.payment_method}`;
+  
+      const hash = crypto
+        .createHmac("sha256",  process.env.FAWATERAK_API_KEY)
+        .update(query)
+        .digest("hex");
+  
+      if (hash === data.hashKey) {
+        console.log("✅ Hash Verified, Payment is Valid!");
+           const order = await Order.findOne({invoice_id:data.invoice_id})
+            if (!order) return res.status(404).json({ message: 'Order not found' });
+            order.paymentStatus="paid"
+            await order.save()
+
+      } else {
+        console.log("❌ Hash Verification Failed!");
+      }
+    }
+  
+
+    if (data.status === "EXPIRED") {
+      const query = `referenceId=${data.referenceId}&PaymentMethod=${data.paymentMethod}`;
+  
+      const hash = crypto
+        .createHmac("sha256", process.env.FAWATERAK_API_KEY)
+        .update(query)
+        .digest("hex");
+  
+      if (hash === data.hashKey) {
+        console.log("✅ Hash Verified, Transaction Expired!");
+  
+      } else {
+        console.log("❌ Hash Verification Failed for Expired Transaction!");
+      }
+    }
+  
+    res.sendStatus(200); 
+}
+
+
+module.exports={
+getPaymentMethods,
+executePayment,
+fawaterkWebhook,
+
+order,
+  products,
+  product,
+  welcomeUser,
+  address,
+  cart,
+  addToCart,clearCart,
+  logout,addresses,cancelOrder,getCategories,increaseQuantity,getProductQuantity,decreaseQuantity,
+  deleteFromCart,userData,updateUserData,deleteAddress,updateAddress,getAddressById,getUserOrders ,
+  restoreOrder}

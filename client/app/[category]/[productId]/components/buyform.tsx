@@ -58,11 +58,6 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // if(paymentMethod!=="cash on delivery"){
-      // localStorage.setItem('buyCart',JSON.stringify(orderData))
-      // window.location.pathname='/pay';
-      // return
-    // }
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: "POST",
@@ -79,7 +74,15 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
       
       alert("Order placed successfully!");
       setClicked(false);
-      window.location.reload();
+        if(data.payment_data.redirectTo){
+       window.location.href = data.payment_data.redirectTo;
+
+        }
+      if(data.payment_data.fawryCode){
+       alert(data.payment_data.fawryCode)
+
+        }
+
     } catch (error) {
       console.error('Error submitting order:', error);
       setMessage("Something went wrong, please try again later");
@@ -185,7 +188,8 @@ export default function BuyForm({ productId, price, clicked, setClicked }: BuyPr
                   className="w-full p-3 border border-slate-300 rounded-lg text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 >
                   <option value="cash on delivery">cash on delivery</option>
-                  <option value="others">others</option>
+                  <option value="Fawry">Fawry</option>
+                  <option value="Visa-Mastercard">Visa-Mastercard</option>
                 </select>
               </div>
 

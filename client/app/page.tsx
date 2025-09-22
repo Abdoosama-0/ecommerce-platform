@@ -12,6 +12,8 @@ export default function Home() {
 
     return (
         <>
+        
+
 
         <Categories/>
         <Footer/>

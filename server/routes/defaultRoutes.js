@@ -2,8 +2,18 @@ const express = require('express')
 const router=express.Router()
 const {order,products,product,welcomeUser,address,cart,addToCart,getProductQuantity,
     clearCart,logout,addresses,increaseQuantity,decreaseQuantity,deleteFromCart,userData,updateUserData,
-    deleteAddress,updateAddress,getAddressById,getCategories,getUserOrders,cancelOrder,restoreOrder}=require('../controllers/defaultControllers')
+    deleteAddress,updateAddress,getAddressById,getCategories,getUserOrders,cancelOrder,restoreOrder 
+    
+    ,getPaymentMethods,
+    executePayment,
+    fawaterkWebhook
+}=require('../controllers/defaultControllers')
 const { isUser } = require('../Middleware/authMiddleware')
+
+router.get("/payment-methods", getPaymentMethods);
+router.post("/execute-payment", executePayment);
+router.post("/fawaterk/webhook_json", fawaterkWebhook);
+
 
 router.post('/order',isUser,order)
 router.get('/products/:category',products)

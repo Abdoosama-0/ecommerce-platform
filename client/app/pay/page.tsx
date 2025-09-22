@@ -70,7 +70,7 @@ const Pay = () => {
       // put config in window
       window.pluginConfig = {
         envType: "test",
-        hashKey: "19ccf69315a0c7a7d182d7465f4e116c9a1464d0281ae39a45d5e59351a0c11a",
+        hashKey: "25687dcef09f93863e501db8fb481a8dafeb9b69568a61355eb2f6d4dde8fc9e",
         style: {
           listing: "horizontal",
         },
@@ -86,7 +86,7 @@ const Pay = () => {
             address: "test address",
           },
           redirectionUrls: {
-            successUrl: "https://9c81f9d68c374ce7211af0d5fb7be019.serveo.net",
+            successUrl: "https://d7f001871cf0.ngrok-free.app",
             failUrl: "https://dev.fawaterk.com/fail",
             pendingUrl: "https://dev.fawaterk.com/pending",
           },
@@ -98,7 +98,7 @@ const Pay = () => {
             },
           ],
           payLoad: {
-            custom_field1: "xyz",
+            orderId: "order-01",
             custom_field2: "xyz2",
           },
           redirectOutIframe	: true

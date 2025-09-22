@@ -12,6 +12,12 @@ const addressSchema = new mongoose.Schema({
   });
 const orderSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    payment_method_id:{type: String},
+    invoice_id:{type: String},
+    invoice_key:{type: String},
+    paymentStatus:{type: String},
+
+   
     products: [
       {
         _id: false, 
@@ -24,7 +30,7 @@ const orderSchema = new Schema({
     totalQuantity: { type: Number, default: 0 },
     totalPrice: { type: Number, default: 0 },
     address:{ type: addressSchema,required:true },
-    paymentMethod:{ type: String, enum: ['cash on delivery',"others"], default: 'cash on delivery' },
+    paymentMethod:{ type: String, default: 'cash on delivery' },
   });
 
   const Order = mongoose.model('Order', orderSchema); 
