@@ -23,7 +23,8 @@ export default function ForgetPasswordPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message);
+        setMessage(data.message||"error");
+        alert(data.message ||"error");
         return;
       }
 
