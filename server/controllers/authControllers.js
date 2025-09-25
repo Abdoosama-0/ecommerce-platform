@@ -10,7 +10,8 @@ const {transporter, sendEmailWithLink } = require("../config/email");
 
 
 //=========================================
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const { error } = require('console');
 
 
 //=========================================================================
@@ -171,9 +172,11 @@ const linkUrl = `${process.env.FRONT_URL}/auth/recreatePassword?token=${token}`;
 const response = await sendEmailWithLink(email, subject, linkText, linkUrl);
 
 if (response.success) {
-  return res.status(200).json({ msg: "Email sent successfully. If you do not see it in your inbox, please check your spam or junk folder." });
+  return res.status(200).json({ message: "Email sent successfully. If you do not see it in your inbox, please check your spam or junk folder." });
 } else {
-  return res.status(500).json({ error: "Failed to send email", error: response.error });
+  console.log(response.error)
+  return res.status(500).json({ message: "Failed to send email"  ,error:response.error});
+  
 }
 }
 
