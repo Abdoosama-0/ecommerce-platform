@@ -1,12 +1,9 @@
 
 require('dotenv').config();
-const Redis = require("ioredis");
-    const redis = new Redis({
-  host: process.env.REDIS_HOST ,
-  port: process.env.REDIS_PORT ,
-  username: process.env.REDIS_USERNAME ,  
-  password: process.env.REDIS_PASSWORD ,
+const { createClient } = require("redis");
 
+const redis = createClient({
+  url: process.env.REDIS_URL,
 });
 
 redis.on("connect", () => {
@@ -17,4 +14,9 @@ redis.on("error", (err) => {
   console.error("❌ Redis error:", err);
 });
 
-module.exports = redis; 
+// 🔑 مهم: الاتصال
+(async () => {
+  await redis.connect();
+})();
+
+module.exports = redis;
