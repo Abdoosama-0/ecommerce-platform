@@ -168,7 +168,7 @@ export default function Nav() {
         <>
           {isLogged === null ? (<></>) : (<>
             {!isLogged ? (
-              <Link title="log in" className="hover:text-indigo-400 flex gap-1 items-center" href={`/login`}>
+              <Link title="log in" className="hover:text-indigo-400 flex gap-1 items-center" href={`auth/login`}>
                 <FiLogIn /><span>login</span>
 
               </Link>

@@ -16,10 +16,14 @@ router.patch('/editProduct',upload.array("images"),editProduct)
 router.get('/getOrders/:status',getOrders)
 router.get('/getOrder',getOrder)
 router.patch('/updateOrderStatus',updateOrderStatus)
+
 router.get('/getUsers',getUsers)
+
+
 router.get('/getDeletedProducts/:category',getDeletedProducts)
 router.post('/restoreProduct/:productId',restoreProduct)
 router.patch('/banUser',banUser)
+
 router.post('/addCategory',upload.single("categoryPhoto"),addCategory)
 
 router.delete('/deleteCategory/:categoryId',deleteCategory)

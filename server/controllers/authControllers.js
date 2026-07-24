@@ -7,7 +7,7 @@ const validator = require('validator');
 const redis = require('../config/redis')
 const crypto = require("crypto");
 const {transporter, sendEmailWithLink } = require("../config/email");
-
+const nodemailer = require("nodemailer");
 
 //=========================================
 const jwt=require('jsonwebtoken');
@@ -53,71 +53,72 @@ await editUser.save();
   })(req, res, next)
 }
 
-const register = async(req,res)=>{
-    const {name,email,username,password,phone}=req.body
-    if(
-      !name||!email||!username||!password||!phone
-    ){
-      return res.status(400).json({message:"complete the data please"})
+const register = async (req, res) => {
+  try {
+    const { name, email, username, password, phone } = req.body;
+
+    if (!name || !email || !username || !password || !phone) {
+      return res.status(400).json({ message: "Complete all fields" });
     }
-//===================================================================check email=============================================
-//is email valid
-     if(!validator.isEmail(email)){
-       return res.status(400).json({message:"this is not an email"})
-     }
-//is email already token
-     const emailIsExists=await User.findOne({email:email})
-     if(emailIsExists){
-        return res.status(400).json({message:"this email is already used"})
-     }
-//===================================================================check username=============================================
-//is username already token
-const usernameIsExists=await User.findOne({username:username})
-if(usernameIsExists){
-   return res.status(400).json({message:"this username is already used"})
-}
-//===================================================================check password=============================================
-if(!validator.isStrongPassword(password)){
-    return res.status(400).json({message:"Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."})
-}
 
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ message: "Invalid email" });
+    }
 
-//================================================================================================================
+    if (await User.findOne({ email })) {
+      return res.status(400).json({ message: "Email already used" });
+    }
 
+    if (await User.findOne({ username })) {
+      return res.status(400).json({ message: "Username already used" });
+    }
 
+    if (!validator.isStrongPassword(password)) {
+      return res.status(400).json({ message: "Weak password" });
+    }
 
-//================================================================================================================
-    const hashed =await bcrypt.hash(password,10)
+    // ================= OTP =================
     const otp = crypto.randomInt(100000, 999999).toString();
-    await redis.set(`OTP:${email}`, JSON.stringify({
-      otp,
-      name,
-      username,
-      email,
-      password: hashed,
-      phone,
-    }), 'EX', 300);
-    const sendVerificationEmail = async (email, otp) => {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Verify your email",
-        text: `Your verification code is: ${otp}`
-      });
-    };
-    const response = await sendVerificationEmail(email, otp);
-    if (response.success) {
-      res.status(200).json({ message: "OTP sent to your email. Please verify to complete registration." });    
-    } else {
-      return res.status(500).json({ message: "Failed to send email", error: response.error });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Save in Redis
+    await redis.set(
+      `OTP:${email}`,
+      JSON.stringify({
+        otp,
+        name,
+        username,
+        email,
+        password: hashedPassword,
+        phone,
+      }),
+      "EX",
+      300
+    );
+
+    // ================= SEND EMAIL =================
+    const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
-
- 
-
-   
-
-}
-
+  });
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verify your email",
+    text: `Your verification code is: ${otp}`
+  });
+//===========================================
+    return res.status(200).json({
+      message: "OTP sent to email successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
   const userDataB = await redis.get(`OTP:${email}`);

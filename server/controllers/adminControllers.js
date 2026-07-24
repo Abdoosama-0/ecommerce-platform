@@ -46,30 +46,54 @@ const deleteCategory = async (req, res) => {
 
 
 
+
 const addCategory = async (req, res) => {
-  const { name,description,categoryPhoto } = req.body;
-  if (!name) {
-    return res.status(400).json({ message: 'Category name is required' });
+  try {
+    const { name, description } = req.body;
+
+    // الصورة جاية من multer + cloudinary
+    const categoryPhoto = req.file?.path;
+
+    // ================= validation =================
+    if (!name || !description || !categoryPhoto) {
+      return res.status(400).json({
+        message: "name, description and categoryPhoto are required",
+      });
+    }
+
+    // ================= check duplicate =================
+    const existingCategory = await Category.findOne({ name });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        message: "Category already exists",
+      });
+    }
+
+    // ================= create category =================
+    const newCategory = new Category({
+      name,
+      description,
+      categoryPhoto, // 👈 URL من Cloudinary
+      createdBy: req.userID,
+    });
+
+    await newCategory.save();
+
+    return res.status(201).json({
+      message: "Category created successfully",
+      category: newCategory,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
   }
-  if (!description) {
-    return res.status(400).json({ message: 'Category description is required' });
-  }
-  if (!categoryPhoto) {
-    return res.status(400).json({ message: 'Category photo is required' });
-  }
-  const existingCategory = await Category.findOne({ name });
-  if (existingCategory) {
-    return res.status(400).json({ message: 'Category already exists' });
-  }
-  const newCategory = new Category({
-    name,
-    description,
-    categoryPhoto,
-    createdBy:  req.userID 
-  });
-  await newCategory.save();
-  return res.status(201).json({ message: 'Category created successfully', category: newCategory });
-}
+};
+
+module.exports = { addCategory };
 
 
 const banUser = async (req, res) => {

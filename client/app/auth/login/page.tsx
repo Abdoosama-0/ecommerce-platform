@@ -114,7 +114,7 @@ const googleLogin = () => {
         {/* Links */}
         <div className="flex justify-between items-center mt-6 text-sm text-slate-700">
           <p
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/auth/register")}
             className="cursor-pointer hover:text-indigo-600 hover:underline"
           >
             Don&apos;t have an account?

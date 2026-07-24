@@ -31,8 +31,8 @@ export default function RegisterForm() {
         return;
       }
 
-      alert('Registration successful!');
-      router.push('/login');
+      alert(data.message);
+     router.push(`auth/verify-otp?email=${email}`);
     } catch (err) {
       alert('Something went wrong, please try again later');
       console.log(err);
@@ -106,7 +106,7 @@ export default function RegisterForm() {
           </button>
 
           <div className='flex justify-between text-sm '>
-            <Link href="/login" className='text-slate-700 hover:text-indigo-600 hover:underline '>Already have an account?</Link>
+            <Link href="/auth/login" className='text-slate-700 hover:text-indigo-600 hover:underline '>Already have an account?</Link>
           </div>
         </form>
       </div>

@@ -13,27 +13,32 @@ const transporter = nodemailer.createTransport({
 const sendEmailWithLink = async (to, subject, linkText, linkUrl) => {
   try {
     const mailOptions = {
-      from: `"Support Team" <${process.env.EMAIL_USER}>`, 
+      from: `"Support Team" <${process.env.EMAIL_USER}>`,
       replyTo: process.env.EMAIL_USER,
       to,
       subject,
       html: `
         <h2>${subject}</h2>
-        <p>click on the next bottom to continue</p>
-        <a href="${linkUrl}" style="display: inline-block; padding: 10px 20px; color: white; background-color: blue; text-decoration: none; border-radius: 5px;">
+        <p>Click the button below to continue</p>
+        <a href="${linkUrl}" style="display:inline-block;padding:10px 20px;color:#fff;background:blue;text-decoration:none;border-radius:5px;">
           ${linkText}
         </a>
-        <p>if the bottom doesn't work you can copy this link and go to it in the browser</p>
+        <p>If the button doesn't work, copy this link:</p>
         <p>${linkUrl}</p>
+         <p>${linkUrl}</p>
+
       `,
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅the email sent successfully:",to ,info.messageId);
-    return { success: true, message: "Email sent successfully" };
+
+    console.log("✅ Email sent:", to, info.messageId);
+
+    return { success: true, info };
   } catch (error) {
-    console.error("❌ failed sending email", error);
-    return { success: false, error: "Failed to send email" };
+    console.error("❌ Failed sending email:", error);
+
+    return { success: false, error };
   }
 };
 module.exports = {

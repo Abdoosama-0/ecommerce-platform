@@ -29,6 +29,9 @@ const Categories = () => {
             if (data.categories.length > 0) {
                 setSelectedCategory(data.categories[0]);
             }
+            else {
+                setMessage('No categories found');
+            }
         } catch (error) {
             setMessage('something went wrong please try again later');
             console.error('Error fetching data:', error);
@@ -72,7 +75,7 @@ const Categories = () => {
 
 
                         <div className='absolute inset-0 z-10 bg-gray-900/70'></div>
-                        {!categoryDetails ? (<>
+                        {message ? (<>
                             <h1>{message}</h1>
                         </>) : (
                             <>
@@ -102,7 +105,7 @@ const Categories = () => {
                                         <img
                                             src={selectedCategory?.categoryPhoto}
                                             alt={selectedCategory?.name}
-                                            className="w-full h-full md:max-w-[1000px] max-w-[400px] md:max-h-[1000px] max-h-[400px]   object-cover"
+                                            className="w-full h-full md:max-w-[300px] max-w-[400px] md:max-h-[1000px] max-h-[400px]   object-cover"
                                         />
                                     </div>
                                         </div>

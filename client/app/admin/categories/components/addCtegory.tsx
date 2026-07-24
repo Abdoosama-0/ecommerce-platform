@@ -20,46 +20,63 @@ export default function AddCategory({ setRefresh, setCurrentCategory }: addCateg
 
     const [loading, setLoading] = useState(false)
 
-    const handleSubmit = async () => {
-        setLoading(true)
-        if (!categoryName.trim()) {
-            setMessage("Category name is required");
-            return;
-        }
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/addCategory`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: categoryName, description: "Default description", categoryPhoto: "default.jpg" })
-            });
-            const data = await res.json();
+const handleSubmit = async () => {
+  setLoading(true);
 
+  if (!categoryName.trim()) {
+    setMessage("Category name is required");
+    setLoading(false);
+    return;
+  }
 
-            if (!res.ok) {
-                setMessage(data.message || "something went wrong please try again later");
-                return
-            }
+  if (!categoryPhoto) {
+    setMessage("Category photo is required");
+    setLoading(false);
+    return;
+  }
 
-            alert("added successfully");
-            if (setCurrentCategory) {
-                setCurrentCategory(categoryName)
-            }
-            setRefresh((prev) => prev + 1)
-            setCategoryName('');
-            setMessage('');
-            setClicked(false);
+  try {
+    const formData = new FormData();
 
-        } catch (err) {
-            setMessage("something went wrong please try again later")
-            console.log(err);
+    formData.append("name", categoryName);
+    formData.append("description", categoryDescription);
+    formData.append("categoryPhoto", categoryPhoto); // 👈 file هنا
 
-        } finally {
-            setLoading(false)
-        }
-    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/addCategory`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: formData, // ❌ بدون headers
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMessage(data.message || "something went wrong");
+      return;
+    }
+
+    alert("added successfully");
+
+    if (setCurrentCategory) {
+      setCurrentCategory(categoryName);
+    }
+
+    setRefresh((prev) => prev + 1);
+    setCategoryName("");
+    setCategoryDescription("");
+    setCategoryPhoto(null);
+    setClicked(false);
+    setMessage("");
+  } catch (err) {
+    console.log(err);
+    setMessage("something went wrong please try again later");
+  } finally {
+    setLoading(false);
+  }
+};
 
     return (
         <>
